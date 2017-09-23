@@ -2,7 +2,7 @@
 
 namespace OFEC {
 
-	thread_local unique_ptr<int> dynamic::ms_init_num_peaks, dynamic::ms_init_num_dim, dynamic::ms_num_instance;
+	thread_local unique_ptr<int> dynamic::ms_init_num_peaks, dynamic::ms_init_num_variable, dynamic::ms_num_instance;
 
 #ifdef OFEC_DEMON
 #include "../../../ui/Buffer/Scene.h"
@@ -10,11 +10,11 @@ namespace OFEC {
 #endif
 
 
-	void dynamic::set_dimension_change(const bool flag) {
+	void dynamic::set_variable_change(const bool flag) {
 		m_flag_variable_change = flag;
 
 		size_t start, end;
-		start = m_parameters.str().find("dimensionalchange:");
+		start = m_parameters.str().find("VariableChange:");
 		for (size_t i = start; i < m_parameters.str().size(); i++) {
 			if (m_parameters.str()[i] == ';') {
 				end = i;
@@ -22,7 +22,7 @@ namespace OFEC {
 			}
 		}
 		stringstream ss;
-		ss << "dimensionalchange:" << m_flag_variable_change << "; ";
+		ss << "VariableChange:" << m_flag_variable_change << "; ";
 		string result = m_parameters.str();
 		result.replace(start, end - start + 1, ss.str());
 		m_parameters.str(result);
@@ -33,7 +33,7 @@ namespace OFEC {
 	}
 
 	dynamic::dynamic(const int size_var, const int num_peaks, const unsigned size_obj) :problem(string(), size_var, size_obj), m_change_counter(0)
-		, m_dim_number_temp(size_var), m_num_peaks(num_peaks), m_num_peaks_temp(num_peaks), m_noise_flag(false), m_time_linkage_flag(false), m_flag_trigger_time_linkage(false) {
+		, m_variable_number_temp(size_var), m_num_peaks(num_peaks), m_num_peaks_temp(num_peaks), m_noise_flag(false), m_time_linkage_flag(false), m_flag_trigger_time_linkage(false) {
 
 		m_change_interval = 5000;
 		m_change_type.type = change_type::CT_random;
@@ -55,15 +55,15 @@ namespace OFEC {
 		m_time_linkage_severity = 0.1;
 
 		m_parameters << "Change frequency:" << m_change_interval << "; " << "TotalEvals:" << global::ms_arg[param_maxEvals] << "; " << "Peaks:" << m_num_peaks << "; " << "NumPeaksChange:" << m_flag_num_peaks_change << "-" << m_num_peaks_change_mode << "; " <<
-			"NoisyEnvioronments:" << m_noise_flag << "; NoiseSeverity:" << m_noise_severity_ << "; TimeLinkageEnvironments:" << m_time_linkage_flag << "; TimeLinkageSeverity:" << m_time_linkage_severity << "; DimensionalChange:" << m_flag_variable_change << "; ";
+			"NoisyEnvioronments:" << m_noise_flag << "; NoiseSeverity:" << m_noise_severity_ << "; TimeLinkageEnvironments:" << m_time_linkage_flag << "; TimeLinkageSeverity:" << m_time_linkage_severity << "; VariableChange:" << m_flag_variable_change << "; ";
 
 		if (!ms_num_instance.get()) ms_num_instance.reset(new int(0));
 		if (!ms_init_num_peaks.get()) ms_init_num_peaks.reset(new int);
-		if (!ms_init_num_dim.get())ms_init_num_dim.reset(new int);
+		if (!ms_init_num_variable.get())ms_init_num_variable.reset(new int);
 		(*ms_num_instance)++;
 		if (*ms_num_instance == 1) {
 			*ms_init_num_peaks = m_num_peaks;
-			*ms_init_num_dim = m_variable_size;
+			*ms_init_num_variable = m_variable_size;
 		}
 		add_tag(problem_tag::DOP);
 	}
@@ -76,7 +76,7 @@ namespace OFEC {
 		if (this == &dynamic) return *this;
 
 		if (m_variable_size != dynamic.m_variable_size) {
-			throw myexcept("The number of dimensions must be same!@dynamic::operator=");
+			throw myexcept("The number of variables must be same!@dynamic::operator=");
 		}
 		if (m_change_type.type != dynamic.m_change_type.type) {
 			throw myexcept("The change type must be same!@dynamic::operator=");
@@ -188,16 +188,16 @@ namespace OFEC {
 
 		if (m_flag_variable_change) {
 
-			if (m_variable_size == msc_min_dimension_number)
+			if (m_variable_size == msc_min_variable_number)
 				m_dir_variable_change = true;
-			if (m_variable_size == msc_max_dimension_number)
+			if (m_variable_size == msc_max_variable_number)
 				m_dir_variable_change = false;
 
 			if (m_dir_variable_change == true) {
-				m_dim_number_temp += 1;
+				m_variable_number_temp += 1;
 			}
 			else {
-				m_dim_number_temp -= 1;
+				m_variable_number_temp -= 1;
 			}
 			change_variable();
 		}
@@ -304,7 +304,7 @@ namespace OFEC {
 	void dynamic::set_change_interval(const int change_interval) {
 		if (change_interval > 0) m_change_interval = change_interval;
 		else {
-			throw myexcept("Change frequncy must be greater than 0 @dynamic::set_change_fre");
+			throw myexcept("Change frequncy must be greater than 0 @dynamic::set_change_interval");
 		}
 
 		size_t start, end;

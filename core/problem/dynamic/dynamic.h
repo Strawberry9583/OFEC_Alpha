@@ -46,21 +46,21 @@ namespace OFEC {
 		int m_change_counter;			       // counter of number of changes
 		double m_noisy_severity;		       // deviation serverity from the trajactory of recurrent change
 
-		bool m_flag_variable_change;	       // flag=true, the number of dimensions change, otherwise no change,  default value is false
-		bool m_dir_variable_change;	           // direction of change, dir=true means increasing the dimension, otherwise decrease it
-		bool m_synchronize;                    // default=true all dimensions change at the same time
-		int m_dim_number_temp;                 //a temporal variable for dimensional change only
+		bool m_flag_variable_change;	       // flag=true, the number of variables change, otherwise no change,  default value is false
+		bool m_dir_variable_change;	           // direction of change, dir=true means increasing the variable, otherwise decrease it
+		bool m_synchronize;                    // default=true all variables change at the same time
+		int m_variable_number_temp;                 //a temporal variable for variable change only
 		int m_num_peaks;
 		bool m_flag_num_peaks_change;          // flag of the change of the number of peaks
 		bool m_dir_num_peaks_change;           // true for increasing the number of peaks, otherwise decreasing the number of peaks
 		int m_num_peaks_temp;                  // temporal varibal for number of peaks change only
 
-		static const unsigned msc_max_dimension_number = 15;
-		static const unsigned msc_min_dimension_number = 2;     //should be greater than 1
+		static const unsigned msc_max_variable_number = 15;
+		static const unsigned msc_min_variable_number = 2;     //should be greater than 1
 		static const int msc_max_num_peaks = 100;
 		static const int msc_min_num_peaks = 10;
 
-		static thread_local unique_ptr<int> ms_init_num_peaks, ms_init_num_dim, ms_num_instance;
+		static thread_local unique_ptr<int> ms_init_num_peaks, ms_init_num_variable, ms_num_instance;
 		double m_alpha, m_max_alpha;              // to control step severity
 		double m_chaotic_constant;
 
@@ -70,7 +70,7 @@ namespace OFEC {
 
 		double m_noise_severity_, m_time_linkage_severity; // severity of noise and time-linkage added in noisy and time-linkage enviroment
 
-		void set_dimension_change(const bool flag);
+		void set_variable_change(const bool flag);
 		void set_change_dirction(const bool flag);
 
 		bool m_flag_trigger_time_linkage;
@@ -115,10 +115,10 @@ namespace OFEC {
 		change_type get_change_type() const {
 			return m_change_type.type;
 		};
-		bool get_flag_dimension_change() const {
+		bool get_flag_variable_change() const {
 			return m_flag_variable_change;
 		};
-		bool get_dir_dimension_change() const {
+		bool get_dir_variable_change() const {
 			return m_dir_variable_change;
 		};
 		bool get_flag_synchronize_change()const {
@@ -151,11 +151,11 @@ namespace OFEC {
 		virtual void chaotic_change() {};
 		virtual void recurrent_noisy_change() {};
 
-		virtual void change_dimension() {};
+		virtual void change_variable() {};
 		virtual void change_num_peaks() {};
 
 
-		void copy(problem * dynamic_problem);
+		void copy(problem * dynamic_problem); // copy parameter values of a problem when it changes
 		virtual void  free_memory() {};
 	};
 }
