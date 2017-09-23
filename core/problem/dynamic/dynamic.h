@@ -13,7 +13,7 @@
 *  see https://github.com/Changhe160/OFEC for more information
 *
 *-------------------------------------------------------------------------------
-* class dynamic_problem defines dynamic optimization problems
+* class dynamic defines dynamic optimization problems
 *
 *********************************************************************************/
 #ifndef OFEC_DYNAMIC_PROBLEM_H
@@ -25,7 +25,7 @@
 enum class change_type { CT_small_step = 0, CT_large_step, CT_random, CT_recurrent, CT_chaotic, CT_recurrent_noisy };
 
 namespace OFEC {
-	class dynamic_problem : virtual public problem {
+	class dynamic : virtual public problem {
 
 		struct s_change_type {
 			change_type type;
@@ -77,10 +77,10 @@ namespace OFEC {
 	public:
 		static const int msc_num_change_types = 12;
 
-		dynamic_problem(const int dim_number, const int num_peaks, const unsigned num_obj = 1);
-		virtual ~dynamic_problem() = 0;
+		dynamic(const int size_var, const int num_peaks, const unsigned size_obj = 1);
+		virtual ~dynamic() = 0;
 
-		dynamic_problem & operator=(const dynamic_problem & dynamic_problem);
+		dynamic & operator=(const dynamic & dynamic);
 
 		void set_change_interval(const int change_interval);
 		virtual bool set_period(const int period);

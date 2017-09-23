@@ -1,10 +1,8 @@
-#include"dynamic_problem.h"
-
-
+#include"dynamic.h"
 
 namespace OFEC {
 
-	thread_local unique_ptr<int> dynamic_problem::ms_init_num_peaks, dynamic_problem::ms_init_num_dim, dynamic_problem::ms_num_instance;
+	thread_local unique_ptr<int> dynamic::ms_init_num_peaks, dynamic::ms_init_num_dim, dynamic::ms_num_instance;
 
 #ifdef OFEC_DEMON
 #include "../../../ui/Buffer/Scene.h"
@@ -12,13 +10,12 @@ namespace OFEC {
 #endif
 
 
-	void dynamic_problem::set_dimension_change(const bool flag)
-	{
+	void dynamic::set_dimension_change(const bool flag) {
 		m_flag_dimension_change = flag;
 
 		size_t start, end;
 		start = m_parameters.str().find("dimensionalchange:");
-		for (auto i = start; i<m_parameters.str().size(); i++) {
+		for (size_t i = start; i < m_parameters.str().size(); i++) {
 			if (m_parameters.str()[i] == ';') {
 				end = i;
 				break;
@@ -31,12 +28,11 @@ namespace OFEC {
 		m_parameters.str(result);
 	}
 
-	void dynamic_problem::set_change_dirction(const bool flag)
-	{
+	void dynamic::set_change_dirction(const bool flag) {
 		m_dir_dimension_change = flag;
 	}
 
-	dynamic_problem::dynamic_problem(const int size_var, const int num_peaks, const unsigned size_obj):problem(string(), size_var, size_obj), m_change_counter(0)
+	dynamic::dynamic(const int size_var, const int num_peaks, const unsigned size_obj) :problem(string(), size_var, size_obj), m_change_counter(0)
 		, m_dim_number_temp(size_var), m_num_peaks(num_peaks), m_num_peaks_temp(num_peaks), m_noise_flag(false), m_time_linkage_flag(false), m_flag_trigger_time_linkage(false) {
 
 		m_change_interval = 5000;
@@ -72,69 +68,64 @@ namespace OFEC {
 		add_tag(problem_tag::DOP);
 	}
 
-	dynamic_problem::~dynamic_problem()
-	{
+	dynamic::~dynamic() {
 		//dtor
 	}
 
-	dynamic_problem & dynamic_problem::operator=(const dynamic_problem & dynamic_problem)
-	{
-		if (this == &dynamic_problem) return *this;
+	dynamic & dynamic::operator=(const dynamic & dynamic) {
+		if (this == &dynamic) return *this;
 
-		if (m_variable_size != dynamic_problem.m_variable_size) {
-			throw myexcept("The number of dimensions must be same!@dynamic_problem::operator=");
+		if (m_variable_size != dynamic.m_variable_size) {
+			throw myexcept("The number of dimensions must be same!@dynamic::operator=");
 		}
-		if (m_change_type.type != dynamic_problem.m_change_type.type) {
-			throw myexcept("The change type must be same!@dynamic_problem::operator=");
+		if (m_change_type.type != dynamic.m_change_type.type) {
+			throw myexcept("The change type must be same!@dynamic::operator=");
 		}
-		if (m_num_peaks != dynamic_problem.m_num_peaks) {
-			throw myexcept("The number of peaks must be same!@dynamic_problem::operator=");
+		if (m_num_peaks != dynamic.m_num_peaks) {
+			throw myexcept("The number of peaks must be same!@dynamic::operator=");
 		}
-		problem::operator=(dynamic_problem);
+		problem::operator=(dynamic);
 
 
-		m_change_type.counter = dynamic_problem.m_change_type.counter;
-		m_change_interval = dynamic_problem.m_change_interval;
-		m_period = dynamic_problem.m_period;
-		m_flag_dimension_change = dynamic_problem.m_flag_dimension_change;
-		m_dir_dimension_change = dynamic_problem.m_dir_dimension_change;
-		m_synchronize = dynamic_problem.m_synchronize;
-		m_noisy_severity = dynamic_problem.m_noisy_severity;
+		m_change_type.counter = dynamic.m_change_type.counter;
+		m_change_interval = dynamic.m_change_interval;
+		m_period = dynamic.m_period;
+		m_flag_dimension_change = dynamic.m_flag_dimension_change;
+		m_dir_dimension_change = dynamic.m_dir_dimension_change;
+		m_synchronize = dynamic.m_synchronize;
+		m_noisy_severity = dynamic.m_noisy_severity;
 
-		m_alpha = dynamic_problem.m_alpha;
-		m_max_alpha = dynamic_problem.m_max_alpha;
-		m_chaotic_constant = dynamic_problem.m_chaotic_constant;
+		m_alpha = dynamic.m_alpha;
+		m_max_alpha = dynamic.m_max_alpha;
+		m_chaotic_constant = dynamic.m_chaotic_constant;
 
-		m_flag_num_peaks_change = dynamic_problem.m_flag_num_peaks_change;
-		m_flag_num_peaks_change = dynamic_problem.m_flag_num_peaks_change;
-		m_num_peaks_change_mode = dynamic_problem.m_num_peaks_change_mode;
+		m_flag_num_peaks_change = dynamic.m_flag_num_peaks_change;
+		m_flag_num_peaks_change = dynamic.m_flag_num_peaks_change;
+		m_num_peaks_change_mode = dynamic.m_num_peaks_change_mode;
 
-		m_noise_flag = dynamic_problem.m_noise_flag;
-		m_time_linkage_flag = dynamic_problem.m_time_linkage_flag;
+		m_noise_flag = dynamic.m_noise_flag;
+		m_time_linkage_flag = dynamic.m_time_linkage_flag;
 
-		m_noise_severity_ = dynamic_problem.m_noise_severity_;
-		m_time_linkage_severity = dynamic_problem.m_time_linkage_severity;
-		m_flag_trigger_time_linkage = dynamic_problem.m_flag_trigger_time_linkage;
+		m_noise_severity_ = dynamic.m_noise_severity_;
+		m_time_linkage_severity = dynamic.m_time_linkage_severity;
+		m_flag_trigger_time_linkage = dynamic.m_flag_trigger_time_linkage;
 		return *this;
 	}
 
-	void dynamic_problem::set_num_peak_change_mode(const int mode)
-	{
+	void dynamic::set_num_peak_change_mode(const int mode) {
 		m_num_peaks_change_mode = mode;
 	}
 
-	int dynamic_problem::get_num_peak_change_mode()
-	{
+	int dynamic::get_num_peak_change_mode() {
 		return m_num_peaks_change_mode;
 	}
 
-	void dynamic_problem::set_noise_flag(const bool flag)
-	{
+	void dynamic::set_noise_flag(const bool flag) {
 		m_noise_flag = flag;
 
 		size_t start, end;
 		start = m_parameters.str().find("NoisyEnvioronments:");
-		for (auto i = start; i<m_parameters.str().size(); i++) {
+		for (size_t i = start; i < m_parameters.str().size(); i++) {
 			if (m_parameters.str()[i] == ';') {
 				end = i;
 				break;
@@ -148,17 +139,15 @@ namespace OFEC {
 		m_parameters.str(result);
 	}
 
-	int dynamic_problem::get_number_of_peak() const
-	{
+	int dynamic::get_number_of_peak() const {
 		return m_num_peaks;
 	}
 
-	void dynamic_problem::set_time_linkage_flag(const bool flag)
-	{
+	void dynamic::set_time_linkage_flag(const bool flag) {
 		m_time_linkage_flag = flag;
 		size_t start, end;
 		start = m_parameters.str().find("TimeLinkageEnvironments:");
-		for (auto i = start; i<m_parameters.str().size(); i++) {
+		for (size_t i = start; i < m_parameters.str().size(); i++) {
 			if (m_parameters.str()[i] == ';') {
 				end = i;
 				break;
@@ -172,8 +161,7 @@ namespace OFEC {
 		m_parameters.str(result);
 	}
 
-	void dynamic_problem::change()
-	{
+	void dynamic::change() {
 		m_change_counter++;
 		switch (get_change_type()) {
 		case change_type::CT_random:
@@ -264,21 +252,19 @@ namespace OFEC {
 
 	}
 
-	double dynamic_problem::sin_value_noisy(const int x, const double min, const double max, const double amplitude, const double angle, const double noisy_severity)
-	{
+	double dynamic::sin_value_noisy(const int x, const double min, const double max, const double amplitude, const double angle, const double noisy_severity) {
 		double y;
 		double noisy, t;
 		y = min + amplitude*(sin(2 * OFEC_PI*(x + angle) / m_period) + 1) / 2.;
 		noisy = noisy_severity*global::ms_global->m_normal.at(caller::Problem)->next();
 		t = y + noisy;
-		if (t>min&&t<max) y = t;
+		if (t > min&&t < max) y = t;
 		else y = t - noisy;
 		return y;
 	}
 
-	double dynamic_problem::chaotic_step(const double x, const double min, const double max, const double scale)
-	{
-		if (min>max) return -1;
+	double dynamic::chaotic_step(const double x, const double min, const double max, const double scale) {
+		if (min > max) return -1;
 		double chaotic_value;
 		chaotic_value = (x - min) / (max - min);
 		chaotic_value = m_chaotic_constant*chaotic_value*(1 - chaotic_value);
@@ -286,20 +272,18 @@ namespace OFEC {
 		return chaotic_value*scale;
 	}
 
-	bool dynamic_problem::predict_change(const int evals_more)
-	{
+	bool dynamic::predict_change(const int evals_more) {
 		int fre = get_change_fre();
 		int evals = evaluations() % fre;
 		if (evals + evals_more >= fre) return true;
 		else return false;
 	}
 
-	void dynamic_problem::set_noise_severity_(double value)
-	{
+	void dynamic::set_noise_severity_(double value) {
 		m_noise_severity_ = value;
 		size_t start, end;
 		start = m_parameters.str().find("NoiseSeverity:");
-		for (auto i = start; i<m_parameters.str().size(); i++) {
+		for (size_t i = start; i < m_parameters.str().size(); i++) {
 			if (m_parameters.str()[i] == ';') {
 				end = i;
 				break;
@@ -317,16 +301,15 @@ namespace OFEC {
 
 
 
-	void dynamic_problem::set_change_interval(const int change_interval)
-	{
-		if (change_interval>0) m_change_interval = change_interval;
+	void dynamic::set_change_interval(const int change_interval) {
+		if (change_interval > 0) m_change_interval = change_interval;
 		else {
-			throw myexcept("Change frequncy must be greater than 0 @dynamic_problem::set_change_fre");
+			throw myexcept("Change frequncy must be greater than 0 @dynamic::set_change_fre");
 		}
 
 		size_t start, end;
 		start = m_parameters.str().find("Change frequency:");
-		for (auto i = start; i<m_parameters.str().size(); i++) {
+		for (size_t i = start; i < m_parameters.str().size(); i++) {
 			if (m_parameters.str()[i] == ';') {
 				end = i;
 				break;
@@ -339,31 +322,27 @@ namespace OFEC {
 		m_parameters.str(result);
 	}
 
-	bool dynamic_problem::set_period(const int period)
-	{
+	bool dynamic::set_period(const int period) {
 		if (period >= 0) m_period = period;
 		else {
-			throw myexcept("period must be positive@ dynamic_problem::set_period");
+			throw myexcept("period must be positive@ dynamic::set_period");
 		}
 		return true;
 	}
 
-	void dynamic_problem::set_change_type(const s_change_type & change_type)
-	{
+	void dynamic::set_change_type(const s_change_type & change_type) {
 		m_change_type = change_type;
 	}
 
-	void dynamic_problem::set_change_type(const change_type type)
-	{
+	void dynamic::set_change_type(const change_type type) {
 		m_change_type.type = type;
 	}
 
-	void dynamic_problem::set_num_peaks_change(const bool peaks_change)
-	{
+	void dynamic::set_num_peaks_change(const bool peaks_change) {
 		m_flag_num_peaks_change = peaks_change;
 		size_t start, end;
 		start = m_parameters.str().find("NumPeaksChange:");
-		for (auto i = start; i < m_parameters.str().size(); i++) {
+		for (size_t i = start; i < m_parameters.str().size(); i++) {
 			if (m_parameters.str()[i] == ';') {
 				end = i;
 				break;
@@ -371,23 +350,20 @@ namespace OFEC {
 		}
 	}
 
-	void dynamic_problem::set_synchronize(const bool flag)
-	{
+	void dynamic::set_synchronize(const bool flag) {
 		m_dir_dimension_change = flag;
 	}
 
-	void dynamic_problem::set_noisy_severity(const double severity)
-	{
+	void dynamic::set_noisy_severity(const double severity) {
 		m_noisy_severity = severity;
 	}
 
-	void dynamic_problem::set_timelinkage_severity(double value)
-	{
+	void dynamic::set_timelinkage_severity(double value) {
 		m_time_linkage_severity = value;
 
 		size_t start, end;
 		start = m_parameters.str().find("TimeLinkageSeverity:");
-		for (auto i = start; i<m_parameters.str().size(); i++) {
+		for (size_t i = start; i < m_parameters.str().size(); i++) {
 			if (m_parameters.str()[i] == ';') {
 				end = i;
 				break;
@@ -400,13 +376,11 @@ namespace OFEC {
 		m_parameters.str(result);
 	}
 
-	int dynamic_problem::get_initial_num_peaks()
-	{
+	int dynamic::get_initial_num_peaks() {
 		return *ms_init_num_peaks;
 	}
 
-	void dynamic_problem::parameter_setting(problem * rp)
-	{
+	void dynamic::parameter_setting(problem * rp) {
 
 	}
 
