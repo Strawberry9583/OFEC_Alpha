@@ -1,0 +1,102 @@
+﻿
+Renamed 'parameter_setting' to 'copy':
+--------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic_continuous.cpp(347, 27)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic_continuous.h(121, 8)
+
+Renamed 'change_dimension' to 'change_variable':
+------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(154, 16)
+
+Renamed 'set_dimension_change' to 'set_variable_change':
+--------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(13, 16)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(73, 8)
+
+Renamed 'msc_min_dimension_number' to 'msc_min_variable_number':
+----------------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(191, 27)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(59, 25)
+
+Renamed 'msc_max_dimension_number' to 'msc_max_variable_number':
+----------------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(193, 27)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(58, 25)
+
+Renamed 'm_dim_number_temp' to 'm_variable_number_temp':
+--------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(36, 5)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(197, 5)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(200, 5)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(52, 7)
+
+Renamed 'ms_init_num_dim' to 'ms_init_num_variable':
+----------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(5, 68)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(62, 8)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(62, 30)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(66, 5)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(63, 58)
+
+Renamed 'get_flag_dimension_change' to 'get_flag_variable_change':
+------------------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(118, 8)
+
+Renamed 'get_dir_dimension_change' to 'get_dir_variable_change':
+----------------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(121, 8)
+
+Renamed 'msc_max_variable_number' to 'msc_max_variable_size':
+-------------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(193, 27)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(58, 25)
+
+Renamed 'msc_min_variable_number' to 'msc_min_variable_size':
+-------------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(191, 27)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(59, 25)
+
+Renamed 'ms_init_num_variable' to 'ms_init_variable_size':
+----------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(5, 68)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(62, 8)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(62, 35)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(66, 5)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(63, 58)
+
+Renamed 'change_variable' to 'resize_variable':
+-----------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(202, 4)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(154, 16)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic_continuous.h(125, 16)
+
+Renamed 'm_variable_number_temp' to 'm_variable_size_temp':
+-----------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(36, 5)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(197, 5)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(200, 5)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(52, 7)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic_continuous.cpp(353, 13)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic_continuous.cpp(353, 57)
+
+Renamed 'ms_init_num_variable' to 'ms_init_variable_size':
+----------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(5, 68)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(62, 8)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(62, 35)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(66, 5)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(63, 58)
+
+Renamed 'get_flag_num_peaks_change' to 'flag_num_peaks_change':
+---------------------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(90, 8)
+
+Renamed 'get_change_fre' to 'get_change_interval':
+--------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(276, 13)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(106, 7)
+
+Renamed 'get_change_interval' to 'change_interval':
+---------------------------------------------------
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.cpp(276, 13)
+g:\OFEC_Alpha\core\problem\dynamic\dynamic.h(106, 7)

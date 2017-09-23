@@ -49,18 +49,18 @@ namespace OFEC {
 		bool m_flag_variable_change;	       // flag=true, the number of variables change, otherwise no change,  default value is false
 		bool m_dir_variable_change;	           // direction of change, dir=true means increasing the variable, otherwise decrease it
 		bool m_synchronize;                    // default=true all variables change at the same time
-		int m_variable_number_temp;                 //a temporal variable for variable change only
+		int m_variable_size_temp;                 //a temporal variable for variable change only
 		int m_num_peaks;
 		bool m_flag_num_peaks_change;          // flag of the change of the number of peaks
 		bool m_dir_num_peaks_change;           // true for increasing the number of peaks, otherwise decreasing the number of peaks
 		int m_num_peaks_temp;                  // temporal varibal for number of peaks change only
 
-		static const unsigned msc_max_variable_number = 15;
-		static const unsigned msc_min_variable_number = 2;     //should be greater than 1
+		static const unsigned msc_max_variable_size = 15;
+		static const unsigned msc_min_variable_size = 2;     //should be greater than 1
 		static const int msc_max_num_peaks = 100;
 		static const int msc_min_num_peaks = 10;
 
-		static thread_local unique_ptr<int> ms_init_num_peaks, ms_init_num_variable, ms_num_instance;
+		static thread_local unique_ptr<int> ms_init_num_peaks, ms_init_variable_size, ms_num_instance;
 		double m_alpha, m_max_alpha;              // to control step severity
 		double m_chaotic_constant;
 
@@ -87,7 +87,7 @@ namespace OFEC {
 		void set_change_type(const s_change_type &change_type);
 		void set_change_type(const change_type type);
 		void set_num_peaks_change(const bool peaks_change);
-		bool get_flag_num_peaks_change() {
+		bool flag_num_peaks_change() {
 			return m_flag_num_peaks_change;
 		}
 		void set_synchronize(const bool flag);
@@ -103,34 +103,40 @@ namespace OFEC {
 			m_chaotic_constant = value;
 		}
 
-		int get_change_fre()const {
+		int change_interval()const {
 			return m_change_interval;
 		};
-		int get_change_counter()const {
+		int change_counter()const {
 			return m_change_counter;
 		};
-		int get_period()const {
+		int period()const {
 			return m_period;
 		}
 		change_type get_change_type() const {
 			return m_change_type.type;
 		};
-		bool get_flag_variable_change() const {
+		bool flag_variable_change() const {
 			return m_flag_variable_change;
 		};
-		bool get_dir_variable_change() const {
+		bool dir_variable_change() const {
 			return m_dir_variable_change;
 		};
-		bool get_flag_synchronize_change()const {
+		bool flag_synchronize_change()const {
 			return m_synchronize;
 		};
 
-		void set_num_peak_change_mode(const int mode);
-		int get_num_peak_change_mode();
+		void set_num_peak_change_mode(const int mode) {
+			m_num_peaks_change_mode = mode;
+		}
+		int num_peak_change_mode() {
+			return m_num_peaks_change_mode;
+		}
 		void set_noise_flag(const bool flag);
-		int get_number_of_peak()const;
+		int number_of_peak()const {
+			return m_num_peaks;
+		}
 		void set_time_linkage_flag(const bool flag);
-		bool get_flag_time_linkage() {
+		bool flag_time_linkage() {
 			return m_time_linkage_flag;
 		}
 		void change();
@@ -139,10 +145,10 @@ namespace OFEC {
 		bool predict_change(const int evals_more);
 		void set_noise_severity_(double value);
 		void set_timelinkage_severity(double value);
-		bool &get_trigger_timelinkage() {
+		bool &trigger_timelinkage() { //TODO:Why a bool return value should add a "&" suffix?
 			return m_flag_trigger_time_linkage;
 		}
-		static int get_initial_num_peaks();
+		static int initial_num_peaks();
 	protected:
 		virtual void random_change() {};
 		virtual void small_step_change() {};
@@ -151,7 +157,7 @@ namespace OFEC {
 		virtual void chaotic_change() {};
 		virtual void recurrent_noisy_change() {};
 
-		virtual void change_variable() {};
+		virtual void change_variable() {}; //TODO: change is change, resize is resize. But what is the difference?
 		virtual void change_num_peaks() {};
 
 

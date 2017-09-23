@@ -2,7 +2,7 @@
 
 namespace OFEC {
 
-	thread_local unique_ptr<int> dynamic::ms_init_num_peaks, dynamic::ms_init_num_variable, dynamic::ms_num_instance;
+	thread_local unique_ptr<int> dynamic::ms_init_num_peaks, dynamic::ms_init_variable_size, dynamic::ms_num_instance;
 
 #ifdef OFEC_DEMON
 #include "../../../ui/Buffer/Scene.h"
@@ -33,7 +33,7 @@ namespace OFEC {
 	}
 
 	dynamic::dynamic(const int size_var, const int num_peaks, const unsigned size_obj) :problem(string(), size_var, size_obj), m_change_counter(0)
-		, m_variable_number_temp(size_var), m_num_peaks(num_peaks), m_num_peaks_temp(num_peaks), m_noise_flag(false), m_time_linkage_flag(false), m_flag_trigger_time_linkage(false) {
+		, m_variable_size_temp(size_var), m_num_peaks(num_peaks), m_num_peaks_temp(num_peaks), m_noise_flag(false), m_time_linkage_flag(false), m_flag_trigger_time_linkage(false) {
 
 		m_change_interval = 5000;
 		m_change_type.type = change_type::CT_random;
@@ -59,11 +59,11 @@ namespace OFEC {
 
 		if (!ms_num_instance.get()) ms_num_instance.reset(new int(0));
 		if (!ms_init_num_peaks.get()) ms_init_num_peaks.reset(new int);
-		if (!ms_init_num_variable.get())ms_init_num_variable.reset(new int);
+		if (!ms_init_variable_size.get())ms_init_variable_size.reset(new int);
 		(*ms_num_instance)++;
 		if (*ms_num_instance == 1) {
 			*ms_init_num_peaks = m_num_peaks;
-			*ms_init_num_variable = m_variable_size;
+			*ms_init_variable_size = m_variable_size;
 		}
 		add_tag(problem_tag::DOP);
 	}
@@ -112,14 +112,6 @@ namespace OFEC {
 		return *this;
 	}
 
-	void dynamic::set_num_peak_change_mode(const int mode) {
-		m_num_peaks_change_mode = mode;
-	}
-
-	int dynamic::get_num_peak_change_mode() {
-		return m_num_peaks_change_mode;
-	}
-
 	void dynamic::set_noise_flag(const bool flag) {
 		m_noise_flag = flag;
 
@@ -137,10 +129,6 @@ namespace OFEC {
 		string result = m_parameters.str();
 		result.replace(start, end - start + 1, ss.str());
 		m_parameters.str(result);
-	}
-
-	int dynamic::get_number_of_peak() const {
-		return m_num_peaks;
 	}
 
 	void dynamic::set_time_linkage_flag(const bool flag) {
@@ -163,7 +151,7 @@ namespace OFEC {
 
 	void dynamic::change() {
 		m_change_counter++;
-		switch (get_change_type()) {
+		switch (change_type()) {
 		case change_type::CT_random:
 			random_change();
 			break;
@@ -188,16 +176,16 @@ namespace OFEC {
 
 		if (m_flag_variable_change) {
 
-			if (m_variable_size == msc_min_variable_number)
+			if (m_variable_size == msc_min_variable_size)
 				m_dir_variable_change = true;
-			if (m_variable_size == msc_max_variable_number)
+			if (m_variable_size == msc_max_variable_size)
 				m_dir_variable_change = false;
 
 			if (m_dir_variable_change == true) {
-				m_variable_number_temp += 1;
+				m_variable_size_temp += 1;
 			}
 			else {
-				m_variable_number_temp -= 1;
+				m_variable_size_temp -= 1;
 			}
 			change_variable();
 		}
@@ -273,7 +261,7 @@ namespace OFEC {
 	}
 
 	bool dynamic::predict_change(const int evals_more) {
-		int fre = get_change_fre();
+		int fre = change_interval();
 		int evals = evaluations() % fre;
 		if (evals + evals_more >= fre) return true;
 		else return false;
@@ -376,7 +364,7 @@ namespace OFEC {
 		m_parameters.str(result);
 	}
 
-	int dynamic::get_initial_num_peaks() {
+	int dynamic::initial_num_peaks() {
 		return *ms_init_num_peaks;
 	}
 
