@@ -46,8 +46,8 @@ namespace OFEC {
 		int m_change_counter;			       // counter of number of changes
 		double m_noisy_severity;		       // deviation serverity from the trajactory of recurrent change
 
-		bool m_flag_dimension_change;	       // flag=true, the number of dimensions change, otherwise no change,  default value is false
-		bool m_dir_dimension_change;	       // direction of change, dir=true means increasing the dimension, otherwise decrease it
+		bool m_flag_variable_change;	       // flag=true, the number of dimensions change, otherwise no change,  default value is false
+		bool m_dir_variable_change;	           // direction of change, dir=true means increasing the dimension, otherwise decrease it
 		bool m_synchronize;                    // default=true all dimensions change at the same time
 		int m_dim_number_temp;                 //a temporal variable for dimensional change only
 		int m_num_peaks;
@@ -116,10 +116,10 @@ namespace OFEC {
 			return m_change_type.type;
 		};
 		bool get_flag_dimension_change() const {
-			return m_flag_dimension_change;
+			return m_flag_variable_change;
 		};
 		bool get_dir_dimension_change() const {
-			return m_dir_dimension_change;
+			return m_dir_variable_change;
 		};
 		bool get_flag_synchronize_change()const {
 			return m_synchronize;
@@ -155,7 +155,7 @@ namespace OFEC {
 		virtual void change_num_peaks() {};
 
 
-		void parameter_setting(problem * rp);
+		void copy(problem * dynamic_problem);
 		virtual void  free_memory() {};
 	};
 }

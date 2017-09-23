@@ -11,7 +11,7 @@ namespace OFEC {
 
 
 	void dynamic::set_dimension_change(const bool flag) {
-		m_flag_dimension_change = flag;
+		m_flag_variable_change = flag;
 
 		size_t start, end;
 		start = m_parameters.str().find("dimensionalchange:");
@@ -22,14 +22,14 @@ namespace OFEC {
 			}
 		}
 		stringstream ss;
-		ss << "dimensionalchange:" << m_flag_dimension_change << "; ";
+		ss << "dimensionalchange:" << m_flag_variable_change << "; ";
 		string result = m_parameters.str();
 		result.replace(start, end - start + 1, ss.str());
 		m_parameters.str(result);
 	}
 
 	void dynamic::set_change_dirction(const bool flag) {
-		m_dir_dimension_change = flag;
+		m_dir_variable_change = flag;
 	}
 
 	dynamic::dynamic(const int size_var, const int num_peaks, const unsigned size_obj) :problem(string(), size_var, size_obj), m_change_counter(0)
@@ -39,8 +39,8 @@ namespace OFEC {
 		m_change_type.type = change_type::CT_random;
 		m_change_type.counter = 0;
 		m_period = 0;
-		m_flag_dimension_change = false;
-		m_dir_dimension_change = true;
+		m_flag_variable_change = false;
+		m_dir_variable_change = true;
 		m_synchronize = true;
 		m_noisy_severity = 0.8;
 
@@ -55,7 +55,7 @@ namespace OFEC {
 		m_time_linkage_severity = 0.1;
 
 		m_parameters << "Change frequency:" << m_change_interval << "; " << "TotalEvals:" << global::ms_arg[param_maxEvals] << "; " << "Peaks:" << m_num_peaks << "; " << "NumPeaksChange:" << m_flag_num_peaks_change << "-" << m_num_peaks_change_mode << "; " <<
-			"NoisyEnvioronments:" << m_noise_flag << "; NoiseSeverity:" << m_noise_severity_ << "; TimeLinkageEnvironments:" << m_time_linkage_flag << "; TimeLinkageSeverity:" << m_time_linkage_severity << "; DimensionalChange:" << m_flag_dimension_change << "; ";
+			"NoisyEnvioronments:" << m_noise_flag << "; NoiseSeverity:" << m_noise_severity_ << "; TimeLinkageEnvironments:" << m_time_linkage_flag << "; TimeLinkageSeverity:" << m_time_linkage_severity << "; DimensionalChange:" << m_flag_variable_change << "; ";
 
 		if (!ms_num_instance.get()) ms_num_instance.reset(new int(0));
 		if (!ms_init_num_peaks.get()) ms_init_num_peaks.reset(new int);
@@ -90,8 +90,8 @@ namespace OFEC {
 		m_change_type.counter = dynamic.m_change_type.counter;
 		m_change_interval = dynamic.m_change_interval;
 		m_period = dynamic.m_period;
-		m_flag_dimension_change = dynamic.m_flag_dimension_change;
-		m_dir_dimension_change = dynamic.m_dir_dimension_change;
+		m_flag_variable_change = dynamic.m_flag_variable_change;
+		m_dir_variable_change = dynamic.m_dir_variable_change;
 		m_synchronize = dynamic.m_synchronize;
 		m_noisy_severity = dynamic.m_noisy_severity;
 
@@ -186,20 +186,20 @@ namespace OFEC {
 			break;
 		}
 
-		if (m_flag_dimension_change) {
+		if (m_flag_variable_change) {
 
 			if (m_variable_size == msc_min_dimension_number)
-				m_dir_dimension_change = true;
+				m_dir_variable_change = true;
 			if (m_variable_size == msc_max_dimension_number)
-				m_dir_dimension_change = false;
+				m_dir_variable_change = false;
 
-			if (m_dir_dimension_change == true) {
+			if (m_dir_variable_change == true) {
 				m_dim_number_temp += 1;
 			}
 			else {
 				m_dim_number_temp -= 1;
 			}
-			change_dimension();
+			change_variable();
 		}
 
 		if (m_flag_num_peaks_change) {
@@ -351,7 +351,7 @@ namespace OFEC {
 	}
 
 	void dynamic::set_synchronize(const bool flag) {
-		m_dir_dimension_change = flag;
+		m_dir_variable_change = flag;
 	}
 
 	void dynamic::set_noisy_severity(const double severity) {
@@ -380,8 +380,29 @@ namespace OFEC {
 		return *ms_init_num_peaks;
 	}
 
-	void dynamic::parameter_setting(problem * rp) {
+	void dynamic::copy(problem * dynamic_problem) {
+		problem::copy(dynamic_problem);
 
+		dynamic *d_p = dynamic_cast<dynamic*>(dynamic_problem);
+		m_change_type = d_p->m_change_type;
+		m_change_interval = d_p->m_change_interval;
+		m_period = d_p->m_period;
+		m_flag_variable_change = d_p->m_flag_variable_change;
+		m_dir_variable_change = d_p->m_dir_variable_change;
+		m_synchronize = d_p->m_synchronize;
+		m_noisy_severity = d_p->m_noisy_severity;
+		m_alpha = d_p->m_alpha;
+		m_max_alpha = d_p->m_max_alpha;
+		m_chaotic_constant = d_p->m_chaotic_constant;
+
+		m_flag_num_peaks_change = d_p->m_flag_num_peaks_change;
+		m_dir_num_peaks_change = d_p->m_dir_num_peaks_change;
+		m_num_peaks_change_mode = d_p->m_num_peaks_change_mode;
+		m_noise_flag = d_p->m_noise_flag;
+		m_time_linkage_flag = d_p->m_time_linkage_flag;
+		m_noise_severity_ = d_p->m_noise_severity_;
+		m_time_linkage_severity = d_p->m_time_linkage_severity;
+		m_flag_trigger_time_linkage = d_p->m_flag_trigger_time_linkage;
 	}
 
 }
