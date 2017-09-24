@@ -152,9 +152,10 @@
     <ClCompile Include="core\algorithm\algorithm.cpp" />
     <ClCompile Include="core\algorithm\termination.cpp" />
     <ClCompile Include="core\global.cpp" />
-    <ClCompile Include="core\problem\dynamic\dynamic_problem.cpp" />
+    <ClCompile Include="core\problem\dynamic\dynamic_continuous.cpp" />
+    <ClCompile Include="core\problem\dynamic\dynamic.cpp" />
     <ClCompile Include="core\problem\problem.cpp" />
-    <ClCompile Include="test\test_dynamic_problem.cpp" />
+    <ClCompile Include="test\test_dynamic.cpp" />
     <ClCompile Include="utility\random\extreal.cpp" />
     <ClCompile Include="utility\random\newran.cpp" />
     <ClCompile Include="utility\typevar\arithmetic.cpp" />
@@ -174,7 +175,7 @@
     <ClInclude Include="core\algorithm\termination.h" />
     <ClInclude Include="core\definition.h" />
     <ClInclude Include="core\global.h" />
-    <ClInclude Include="core\problem\dynamic\dynamic_problem.h" />
+    <ClInclude Include="core\problem\dynamic\dynamic.h" />
     <ClInclude Include="core\problem\dynamic\dynamic_continuous.h" />
     <ClInclude Include="core\problem\dynamic\moving_peak.h" />
     <ClInclude Include="core\problem\problem.h" />

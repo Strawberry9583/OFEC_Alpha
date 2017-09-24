@@ -75,7 +75,7 @@
     <ClInclude Include="core\problem\dynamic\moving_peak.h">
       <Filter>core\problem</Filter>
     </ClInclude>
-    <ClInclude Include="core\problem\dynamic\dynamic_problem.h">
+    <ClInclude Include="core\problem\dynamic\dynamic.h">
       <Filter>core\problem</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,11 +116,12 @@
     <ClCompile Include="core\algorithm\algorithm.cpp">
       <Filter>core\algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="core\problem\dynamic\dynamic_problem.cpp">
+    <ClCompile Include="core\problem\dynamic\dynamic_continuous.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
-    <ClCompile Include="test\test_dynamic_problem.cpp">
-      <Filter>test</Filter>
+    <ClCompile Include="test\test_dynamic.cpp" />
+    <ClCompile Include="core\problem\dynamic\dynamic.cpp">
+      <Filter>core\problem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

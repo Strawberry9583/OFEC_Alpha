@@ -45,7 +45,7 @@ namespace OFEC{
 	protected:
 		continuous& operator=(const continuous& rhs);
 		continuous& operator=(continuous&& rhs);
-		void copy(const problem * rhs);
+		void copy(const problem * rhs); //TODO: is this the original function parameter_setting?
 		void resize_variable(size_t n);
 		void resize_objective(size_t n);
 	protected:
