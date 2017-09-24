@@ -16,8 +16,8 @@
 * class dynamic defines dynamic optimization problems
 *
 *********************************************************************************/
-#ifndef OFEC_DYNAMIC_PROBLEM_H
-#define OFEC_DYNAMIC_PROBLEM_H
+#ifndef OFEC_DYNAMIC_H
+#define OFEC_DYNAMIC_H
 
 #include"../problem.h"
 #include"../../global.h"
@@ -166,4 +166,4 @@ namespace OFEC {
 	};
 }
 
-#endif // !OFEC_DYNAMIC_PROBLEM_H
+#endif // !OFEC_DYNAMIC_H
