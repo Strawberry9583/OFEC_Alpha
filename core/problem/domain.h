@@ -29,7 +29,7 @@ namespace OFEC {
 	public:
 		struct single_set {
 			bool limited = true;
-			std::pair<ValueType,ValueType> limit;
+			std::pair<ValueType,ValueType> limit; //TODO: Not intuitive enough
 		};
 		domain(int n=1):m_range(n){}
 		void set_boundary_false(int i=0) {

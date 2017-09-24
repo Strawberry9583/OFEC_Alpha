@@ -13,7 +13,7 @@ namespace OFEC {
 	void dynamic_continuous::print_fun(std::ofstream & out) {
 		for (size_t i = 0; i < m_num_peaks; i++) {
 			for (size_t j = 0; j < m_variable_size; j++)
-				out << m_peak[i][j] << " "; // 传出内容似乎也并没有什么不妥
+				out << m_peak[i][j] << " ";
 			out << endl;
 		}
 	}
@@ -343,7 +343,7 @@ namespace OFEC {
 		}
 		return m_peak[nearest];*/
 	}
-	void dynamic_continuous::copy(problem * p) { //TODO: should I use a pointer or a reference?
+	void dynamic_continuous::copy(problem * p) {
 		dynamic::copy(p);
 		continuous::copy(p);
 
@@ -405,7 +405,7 @@ namespace OFEC {
 		//if (m_opt_mode[0] == optimization_mode::Maximization) m_global_optima = *max_element(m_height.begin(), m_height.end());
 		//else m_global_optima = *min_element(m_height.begin(), m_height.end());
 
-		////TODO: need a clear function number in class optima
+		////TODO: need a clear() function mumber in class optima
 		////m_optima.clear();
 		//m_max_peaks_number = 0;
 		//double mindis = LONG_MAX;
