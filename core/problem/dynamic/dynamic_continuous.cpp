@@ -6,6 +6,16 @@ namespace OFEC {
 		return m_global_optima_idx[idx];
 	}
 
+	dynamic_continuous::dynamic_continuous(const int size_var, const int num_peaks, const unsigned size_obj) :\
+		dynamic(size_var, num_peaks, size_obj), continuous(string(), size_var, size_obj), \
+		m_num_change_peaks(num_peaks), m_change_peak_ratio(1.0) {
+		m_objective_accuracy = 0.01;
+		allocate_memory(size_var, num_peaks);
+		for (int i = 0; i< num_peaks; i++) m_whether_change[i] = true;
+		m_parameters << "Changing peaks ratio:" << m_change_peak_ratio << "; ";
+	}
+
+
 	double dynamic_continuous::get_global_max() const {
 		return m_global_optima;
 	}
@@ -398,7 +408,7 @@ namespace OFEC {
 		m_peak_qaulity = dcp->m_peak_qaulity;
 	}
 	void dynamic_continuous::allocate_memory(const int size_var, const int num_peaks) {
-
+		//TODO: complete it
 	}
 	// need a class my_vector here
 	void dynamic_continuous::calculate_global_optima() {

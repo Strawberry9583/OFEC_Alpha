@@ -154,6 +154,7 @@
     <ClCompile Include="core\global.cpp" />
     <ClCompile Include="core\problem\dynamic\dynamic_continuous.cpp" />
     <ClCompile Include="core\problem\dynamic\dynamic.cpp" />
+    <ClCompile Include="core\problem\dynamic\moving_peak.cpp" />
     <ClCompile Include="core\problem\problem.cpp" />
     <ClCompile Include="test\test_dynamic.cpp" />
     <ClCompile Include="utility\random\extreal.cpp" />

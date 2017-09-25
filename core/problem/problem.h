@@ -139,7 +139,6 @@ namespace OFEC {
 	protected:
 		problem& operator=(const problem& rhs);  // assignment is not allowed outside
 		problem& operator=(problem&& rhs);
-		//TODO: Is this function copy which I should complete, isn't it? not the one in class continuous
 		virtual void copy(const problem *); // copy parameter values of a problem when it changes
 		virtual void resize_variable(size_t n);
 		virtual void resize_objective(size_t n);

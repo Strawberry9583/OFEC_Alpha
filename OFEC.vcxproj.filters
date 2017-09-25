@@ -123,5 +123,6 @@
     <ClCompile Include="core\problem\dynamic\dynamic.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
+    <ClCompile Include="core\problem\dynamic\moving_peak.cpp" />
   </ItemGroup>
 </Project>

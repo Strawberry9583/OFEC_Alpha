@@ -24,9 +24,7 @@
 
 namespace OFEC {
 	class dynamic_continuous : public dynamic, public continuous {
-		
-		// TODO: why don't store those mumbers of single peak to one class named peak? this class has so much data number now
-		// TODO: What should I use, vector or unique_ptr?
+	protected:
 		// int m_numPeaks;						        // number of peaks in Rotation_DBG , number of function in Composition_DBG
 		vector<vector<double>> m_peak;          // positions of local or global optima(local optima in Rotation_DBG
 		vector<vector<double>> m_pre_peak;		// global optima of basic function in Composition_DBG)
@@ -118,6 +116,7 @@ namespace OFEC {
 		virtual void chaotic_change() {};
 		virtual void recurrent_noisy_change() {};
 
+		//TODO: add "const" in parameter type.
 		void copy(problem * p); // copy parameter values of a problem when it changes
 		//HACK: deleted it
 		//virtual void free_memory();
