@@ -2,8 +2,8 @@
 #include<fstream> 
 #include<xutility> //TODO: the old version has an include.h
 namespace OFEC {
-	bool dynamic_continuous::is_global_opt(int idx) {
-		return m_global_optima_idx[idx];
+	bool dynamic_continuous::is_global_optima(int idx) {
+		return m_optima_idx[idx];
 	}
 
 	dynamic_continuous::dynamic_continuous(const int size_var, const int num_peaks, const unsigned size_obj) :\
@@ -72,7 +72,7 @@ namespace OFEC {
 	}
 
 	const vector<bool>& dynamic_continuous::get_global_optima_idx() const {
-		return m_global_optima_idx;
+		return m_optima_idx;
 	}
 
 	int dynamic_continuous::get_number_of_global_opt_peak() const {
@@ -165,7 +165,7 @@ namespace OFEC {
 		m_width_severity = dynamic_continuous_pro.m_width_severity;
 
 		m_global_optima = dynamic_continuous_pro.m_global_optima;
-		m_global_optima_idx = dynamic_continuous_pro.m_global_optima_idx;
+		m_optima_idx = dynamic_continuous_pro.m_optima_idx;
 
 		m_current_best = dynamic_continuous_pro.m_current_best;
 		m_current_peak = dynamic_continuous_pro.m_current_peak;
@@ -333,7 +333,7 @@ namespace OFEC {
 	bool dynamic_continuous::is_global_optima_tracked() {
 		// the global optimum is assumed to be tracked if any one of the global optima is tracked	
 		for (int i = 0; i < m_num_peaks; i++) {
-			if (m_global_optima_idx[i] && m_found[i]) return true;
+			if (m_optima_idx[i] && m_found[i]) return true;
 		}
 		return false;
 	}
@@ -384,7 +384,7 @@ namespace OFEC {
 		m_width_severity = dcp->m_width_severity;
 
 		m_global_optima = dcp->m_global_optima;
-		m_global_optima_idx = dcp->m_global_optima_idx;
+		m_optima_idx = dcp->m_optima_idx;
 
 		m_current_best = dcp->m_current_best;
 		m_current_peak = dcp->m_current_peak;
@@ -420,7 +420,7 @@ namespace OFEC {
 		//m_max_peaks_number = 0;
 		//double mindis = LONG_MAX;
 		//for (int i = 0; i<m_num_peaks; i++) {
-		//	m_global_optima_idx[i] = false;
+		//	m_optima_idx[i] = false;
 		//	if (m_height[i] == m_global_optima) {
 		//		for (int j = 0; j<m_num_peaks; ++j) {
 		//			if (j == i) continue;
@@ -432,7 +432,7 @@ namespace OFEC {
 		//			}
 		//		}
 		//		m_max_peaks_number++;
-		//		m_global_optima_idx[i] = true;
+		//		m_optima_idx[i] = true;
 		//		solution<variable<real>,real> s(m_variable_size, m_objective_size);
 		//		std::copy(m_peak[i].begin(), m_peak[i].end(), s.get_variable().begin());
 		//		s.get_objective()[0] = m_height[i];
@@ -451,7 +451,7 @@ namespace OFEC {
 		//// make sure the global optimum changes always
 		//int gopt = 0;
 		//for (int i = 0; i<m_num_peaks; i++) {
-		//	if (m_global_optima_idx[i]) {
+		//	if (m_optima_idx[i]) {
 		//		gopt = i;
 		//		break;
 		//	}

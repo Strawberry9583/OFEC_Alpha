@@ -119,10 +119,14 @@
     <ClCompile Include="core\problem\dynamic\dynamic_continuous.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
-    <ClCompile Include="test\test_dynamic.cpp" />
     <ClCompile Include="core\problem\dynamic\dynamic.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
-    <ClCompile Include="core\problem\dynamic\moving_peak.cpp" />
+    <ClCompile Include="core\problem\dynamic\moving_peak.cpp">
+      <Filter>core\problem</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_dynamic.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

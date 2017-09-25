@@ -45,10 +45,10 @@ namespace OFEC {
 		int m_period;				           // definite period for values repeating
 		int m_change_counter;			       // counter of number of changes
 		double m_noisy_severity;		       // deviation serverity from the trajactory of recurrent change
-
 		bool m_flag_variable_change;	       // flag=true, the number of variables change, otherwise no change,  default value is false
 		bool m_dir_variable_change;	           // direction of change, dir=true means increasing the variable, otherwise decrease it
 		bool m_synchronize;                    // default=true all variables change at the same time
+
 		int m_variable_size_temp;                 //a temporal variable for variable change only
 		int m_num_peaks;
 		bool m_flag_num_peaks_change;          // flag of the change of the number of peaks
@@ -144,7 +144,7 @@ namespace OFEC {
 		double chaotic_step(const double x, const double min, const double max, const double scale = 1.0);
 		bool predict_change(const int evals_more);
 		void set_noise_severity_(double value);
-		void set_timelinkage_severity(double value);
+		void set_time_linkage_severity(double value);
 		bool &trigger_timelinkage() { //TODO:Why a bool return value should add a "&" suffix?
 			return m_flag_trigger_time_linkage;
 		}
@@ -161,7 +161,7 @@ namespace OFEC {
 		virtual void change_num_peaks() {};
 
 
-		void copy(problem * dynamic_problem); // copy parameter values of a problem when it changes
+		void copy(const problem * dynamic_problem); // copy parameter values of a problem when it changes
 		virtual void  free_memory() {};
 	};
 }

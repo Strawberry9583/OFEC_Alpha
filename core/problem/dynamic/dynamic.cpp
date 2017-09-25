@@ -346,7 +346,7 @@ namespace OFEC {
 		m_noisy_severity = severity;
 	}
 
-	void dynamic::set_timelinkage_severity(double value) {
+	void dynamic::set_time_linkage_severity(double value) {
 		m_time_linkage_severity = value;
 
 		size_t start, end;
