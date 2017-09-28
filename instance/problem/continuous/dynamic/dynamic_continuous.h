@@ -20,7 +20,7 @@
 #define OFEC_DYNAMIC_CONTINUOUS_H
 
 #include"dynamic.h"
-#include"../continuous/continuous.h"
+#include"../../../../core/problem/continuous/continuous.h"
 
 namespace OFEC {
 	class dynamic_continuous : public dynamic, public continuous {
@@ -65,7 +65,7 @@ namespace OFEC {
 		vector<double> m_associate_radius; /*actual radius in the fitness landscape*/
 		double m_peak_qaulity;	/*to evaluate qaulity of peaks trcked  in terms of peaks heights*/
 		//added 04/07/2014
-		bool is_global_optima(int idx); // TODO: is global optima exists in dynamic problem?
+		bool is_global_optima(int idx);
 	public:
 		dynamic_continuous(const int size_var, const int num_peaks, const unsigned size_obj = 1);
 		virtual ~dynamic_continuous() = 0;
@@ -100,14 +100,13 @@ namespace OFEC {
 		bool is_visable(const int idx); // TODO: Should I take out the "is_" in the function name?
 		int get_track_number(int idex);
 		bool is_tracked(vector<double> &gen, vector<double> &obj); // is any peak tracked for the first time
-		bool is_tracked(double *gen, vector<double> &obj); //TODO:Should I use template to recompose the two functions
+		bool is_tracked(double *gen, vector<double> &obj); //TODO:Can I use template to recompose the two functions
 		int get_peaks_found();
 		double get_associate_radius(int idx);
 		double get_peaks_traced_qaulity();
 		//15-07-2013
 		bool is_global_optima_tracked();
-		// TODO: Need a class my_vector here
-		const double * get_nearest_peak(const vector<double>& p);
+		const vector<double> get_nearest_peak(const vector<double>& p);
 	protected:
 		virtual void random_change() {};
 		virtual void small_step_change() {};
@@ -128,7 +127,9 @@ namespace OFEC {
 		void calculate_global_optima();
 		void update_number_of_changes();
 		void compute_num_visable_peaks();
+		//TODO: use template to recompose the two functions
 		void add_noise(double *x_);
+		void add_noise(vector<double>& x_);
 		void update_time_linkage();
 		void move_peak(const int idx);
 		virtual void calculate_associate_radius() {};

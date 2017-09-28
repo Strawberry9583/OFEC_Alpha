@@ -46,6 +46,7 @@ namespace OFEC {
 		for (auto i = 0; i < d; ++i) 
 			m_domain[i] = p->m_domain[i];
 		
+		//如果当前problem中的optima已经给了variable, 那么就...不拷贝了?
 		if (m_optima.variable_given()) {
 
 		}
@@ -53,7 +54,6 @@ namespace OFEC {
 		if (m_optima.objective_given()) {
 
 		}
-
 	}
 
 	bool continuous::is_optimal_given() {

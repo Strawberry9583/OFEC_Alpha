@@ -45,15 +45,23 @@ namespace OFEC {
 
 		bool readData();
 
+		// TODO: delete those functions with pointer paramater?
 		/* the following basis functions are provided :*/
 		double constant_basis_func(const double *gen);
+		double constant_basis_func(const vector<double>& gen);
 		double five_peak_basis_func(const double *gen);
+		double five_peak_basis_func(const vector<double>& gen);
 		/* the following peak functions are provided: */
 		double peak_function1(const double *gen, int peak_number);
+		double peak_function1(const std::vector<double>& gen, int peak_number);
 		double peak_function_cone(const double *gen, const int &peak_number);
+		double peak_function_cone(const std::vector<double>& gen, const int &peak_number);
 		double peak_function_hilly(const double *gen, int peak_number);
+		double peak_function_hilly(const std::vector<double>& gen, int peak_number);
 		double peak_function_twin(const double  *gen, int peak_number);
+		double peak_function_twin(const std::vector<double>&  gen, int peak_number);
 		double function_selection(const double  *gen, const int &peak_number);
+		double function_selection(const std::vector<double>& gen, const int & peak_number);
 		double dummy_eval(const double *gen);
 		void initialize();
 
@@ -99,7 +107,7 @@ namespace OFEC {
 		double v_Length();
 		//TODO: complete it
 		// effective_fes: effective function evaluations constructed: is this problem object has been constructed
-		evaluation_tag evaluate_(base &s, caller call, bool effective_fes, bool constructed);
+		evaluation_tag evaluate_(base &ss, caller call, bool effective_fes, bool constructed);
 	};
 }
 

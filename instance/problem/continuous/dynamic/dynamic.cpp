@@ -202,7 +202,6 @@ namespace OFEC {
 				else step = 2;
 
 				if (m_num_peaks_change_mode == 2) {
-					// TODO: too long
 					step = static_cast<int>(step / 2 + (5 * step / 2 - step / 2)*global::ms_global->m_uniform.at(caller::Problem)->next());
 				}
 
@@ -217,22 +216,21 @@ namespace OFEC {
 			}
 			else {
 				//random change
-				//TODO: too long
 				m_num_peaks_temp = static_cast<int>(msc_min_num_peaks + (msc_max_num_peaks - msc_min_num_peaks)*global::ms_global->m_uniform.at(caller::Problem)->next());
 			}
 			change_num_peaks();
 		}
 
-		//TODO: need measure module and a get_optima function in class continuous, and the run_id in class global
-		//if (mSingleObj::getSingleObj() != nullptr) {
-		//	vector<double> gOpt;
-		//	if (global::ms_global->m_problem->getObjglobalOpt(gOpt)) {
-		//		mSingleObj::getSingleObj()->addGOpt(global::ms_global->m_runId, gOpt[0]);
-		//	}
-		//	else {
-		//		std::cout << "err" << endl;
-		//	}
-		//}
+		//TODO: need measure module and a get_optima function in class continuous
+		/*if (m_single_obj::get_single_obj() != nullptr) {
+			vector<double> global_opt;
+			if (global::ms_global->m_problem->get_optima(global_opt)) {
+				m_single_obj::get_single_obj()->add_global_optima(global_opt[0]);
+			}
+			else {
+				std::cout << "err" << endl;
+			}
+		}*/
 
 #ifdef OFEC_DEMON
 		msp_buffer->updateFitnessLandsacpe_();

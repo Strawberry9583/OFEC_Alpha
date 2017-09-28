@@ -19,8 +19,8 @@
 #ifndef OFEC_DYNAMIC_H
 #define OFEC_DYNAMIC_H
 
-#include"../problem.h"
-#include"../../global.h"
+#include"../../../../core/problem/problem.h"
+#include"../../../../core/global.h"
 
 enum class change_type { CT_small_step = 0, CT_large_step, CT_random, CT_recurrent, CT_chaotic, CT_recurrent_noisy };
 
@@ -145,7 +145,7 @@ namespace OFEC {
 		bool predict_change(const int evals_more);
 		void set_noise_severity_(double value);
 		void set_time_linkage_severity(double value);
-		bool &trigger_timelinkage() { //TODO:Why a bool return value should add a "&" suffix?
+		bool &trigger_time_linkage() { //TODO:Why a bool return value should add a "&" suffix?
 			return m_flag_trigger_time_linkage;
 		}
 		static int initial_num_peaks();
@@ -160,8 +160,8 @@ namespace OFEC {
 		virtual void change_variable() {}; //TODO: change is change, resize is resize. But what is the difference?
 		virtual void change_num_peaks() {};
 
-
-		void copy(const problem * dynamic_problem); // copy parameter values of a problem when it changes
+		//TODO: aad const to parameter's type
+		void copy(problem * dynamic_problem); // copy parameter values of a problem when it changes
 		virtual void  free_memory() {};
 	};
 }

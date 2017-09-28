@@ -152,10 +152,12 @@
     <ClCompile Include="core\algorithm\algorithm.cpp" />
     <ClCompile Include="core\algorithm\termination.cpp" />
     <ClCompile Include="core\global.cpp" />
-    <ClCompile Include="core\problem\dynamic\dynamic_continuous.cpp" />
-    <ClCompile Include="core\problem\dynamic\dynamic.cpp" />
-    <ClCompile Include="core\problem\dynamic\moving_peak.cpp" />
+    <ClCompile Include="core\problem\continuous\continuous.cpp" />
+    <ClCompile Include="core\problem\continuous\function.cpp" />
     <ClCompile Include="core\problem\problem.cpp" />
+    <ClCompile Include="instance\problem\continuous\dynamic\dynamic.cpp" />
+    <ClCompile Include="instance\problem\continuous\dynamic\dynamic_continuous.cpp" />
+    <ClCompile Include="instance\problem\continuous\dynamic\moving_peak.cpp" />
     <ClCompile Include="test\test_dynamic.cpp" />
     <ClCompile Include="utility\random\extreal.cpp" />
     <ClCompile Include="utility\random\newran.cpp" />
@@ -165,6 +167,7 @@
     <ClCompile Include="utility\typevar\dynamic.cpp" />
     <ClCompile Include="utility\typevar\relational.cpp" />
     <ClCompile Include="utility\typevar\types.cpp" />
+    <ClCompile Include="utility\vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\algorithm\algorithm.h" />
@@ -176,15 +179,18 @@
     <ClInclude Include="core\algorithm\termination.h" />
     <ClInclude Include="core\definition.h" />
     <ClInclude Include="core\global.h" />
-    <ClInclude Include="core\problem\dynamic\dynamic.h" />
-    <ClInclude Include="core\problem\dynamic\dynamic_continuous.h" />
-    <ClInclude Include="core\problem\dynamic\moving_peak.h" />
+    <ClInclude Include="core\problem\continuous\continuous.h" />
+    <ClInclude Include="core\problem\continuous\function.h" />
     <ClInclude Include="core\problem\problem.h" />
+    <ClInclude Include="instance\problem\continuous\dynamic\dynamic.h" />
+    <ClInclude Include="instance\problem\continuous\dynamic\dynamic_continuous.h" />
+    <ClInclude Include="instance\problem\continuous\dynamic\moving_peak.h" />
     <ClInclude Include="utility\functional.h" />
     <ClInclude Include="utility\myexcept.h" />
     <ClInclude Include="utility\random\extreal.h" />
     <ClInclude Include="utility\random\newran.h" />
     <ClInclude Include="utility\typevar\typevar.h" />
+    <ClInclude Include="utility\vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

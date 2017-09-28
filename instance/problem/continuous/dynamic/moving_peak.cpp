@@ -53,7 +53,11 @@ namespace OFEC {
 	double moving_peak::constant_basis_func(const double * gen) {
 		return 0.0;
 	}
+	double moving_peak::constant_basis_func(const vector<double>& gen) {
+		return 0.0;
+	}
 
+	//TODO: delete it?
 	double moving_peak::five_peak_basis_func(const double * gen) {
 		double maximum = -100000.0, dummy = 0;
 		for (int i = 0; i < 5; i++) {
@@ -64,16 +68,42 @@ namespace OFEC {
 		}
 		return maximum;
 	}
+	double moving_peak::five_peak_basis_func(const vector<double>& gen) {
+		double maximum = -100000.0, dummy = 0;
+		for (int i = 0; i < 5; i++) {
+			dummy = (gen[0] - basis_peak[i][0])*(gen[0] - basis_peak[i][0]);
+			for (int j = 1; j < m_variable_size; j++)  dummy += (gen[j] - basis_peak[i][j])*(gen[j] - basis_peak[i][j]);
+			dummy = basis_peak[i][m_variable_size + 1] - (basis_peak[i][m_variable_size] * dummy);
+			if (dummy > maximum)       maximum = dummy;
+		}
+		return maximum;
+	}
 
+	//TODO: can I delete this function?
 	double moving_peak::peak_function1(const double * gen, int peak_number) {
 		double dummy = (gen[0] - m_peak[peak_number][0])*(gen[0] - m_peak[peak_number][0]);
 		for (int j = 1; j < m_variable_size; j++)
 			dummy += (gen[j] - m_peak[peak_number][j])*(gen[j] - m_peak[peak_number][j]);
-
+		return m_height[peak_number] / (1 + m_width[peak_number] * dummy);
+	}
+	double moving_peak::peak_function1(const std::vector<double>& gen, int peak_number) {
+		double dummy = (gen[0] - m_peak[peak_number][0])*(gen[0] - m_peak[peak_number][0]);
+		for (int j = 1; j < m_variable_size; j++)
+			dummy += (gen[j] - m_peak[peak_number][j])*(gen[j] - m_peak[peak_number][j]);
 		return m_height[peak_number] / (1 + m_width[peak_number] * dummy);
 	}
 
+	//TODO: delete it?
 	double moving_peak::peak_function_cone(const double * gen, const int & peak_number) {
+		double val, dummy = 0;
+		for (int j = 0; j < m_variable_size; j++) {
+			val = gen[j] - m_peak[peak_number][j];
+			dummy += val*val;
+		}
+		if (dummy != 0)  dummy = m_height[peak_number] - m_width[peak_number] * sqrt(dummy);
+		return dummy;
+	}
+	double moving_peak::peak_function_cone(const std::vector<double>& gen, const int & peak_number) {
 		double val, dummy = 0;
 		for (int j = 0; j < m_variable_size; j++) {
 			val = gen[j] - m_peak[peak_number][j];
@@ -84,6 +114,14 @@ namespace OFEC {
 	}
 
 	double moving_peak::peak_function_hilly(const double * gen, int peak_number) {
+		int j = 0;
+		double dummy = (gen[0] - m_peak[peak_number][0])*(gen[0] - m_peak[peak_number][0]);
+		for (j = 1; j < m_variable_size; j++)
+			dummy += (gen[j] - m_peak[peak_number][j])*(gen[j] - m_peak[peak_number][j]);
+
+		return m_height[peak_number] - m_width[peak_number] * dummy - 0.01*sin(20.0*dummy);
+	}
+	double moving_peak::peak_function_hilly(const std::vector<double>& gen, int peak_number) {
 		int j = 0;
 		double dummy = (gen[0] - m_peak[peak_number][0])*(gen[0] - m_peak[peak_number][0]);
 		for (j = 1; j < m_variable_size; j++)
@@ -112,7 +150,58 @@ namespace OFEC {
 		return maximum;
 	}
 
+	double moving_peak::peak_function_twin(const std::vector<double>& gen, int peak_number) {
+		int j;
+		double maximum = -100000.0, dummy = pow(gen[0] - m_peak[peak_number][0], 2);
+		for (j = 1; j < m_variable_size; j++)
+			dummy += pow(gen[j] - m_peak[peak_number][j], 2);
+
+		dummy = m_height[peak_number] - m_width[peak_number] * dummy;
+
+		maximum = dummy;
+		dummy = pow(gen[0] - (m_peak[peak_number][0] + twin_peak[0]), 2);
+		for (j = 1; j < m_variable_size; j++)
+			dummy += pow(gen[j] - (m_peak[peak_number][j] + twin_peak[0]), 2);
+
+		dummy = m_height[peak_number] + twin_peak[m_variable_size + 1] - ((m_width[peak_number] + twin_peak[m_variable_size])*dummy);
+		if (dummy > maximum)
+			maximum = dummy;
+
+		return maximum;
+	}
+
+	//TODO: can I delete this function?
 	double moving_peak::function_selection(const double * gen, const int & peak_number) {
+		double dummy = 0;
+		switch (m_f) {
+		case 1: {
+			dummy = constant_basis_func(gen);
+			break;
+		}
+		case 2: {
+			dummy = five_peak_basis_func(gen);
+			break;
+		}
+		case 3: {
+			dummy = peak_function1(gen, peak_number);
+			break;
+		}
+		case 4: {
+			dummy = peak_function_cone(gen, peak_number);
+			break;
+		}
+		case 5: {
+			dummy = peak_function_hilly(gen, peak_number);
+			break;
+		}
+		case 6: {
+			dummy = peak_function_twin(gen, peak_number);
+			break;
+		}
+		}
+		return dummy;
+	}
+	double moving_peak::function_selection(const std::vector<double>& gen, const int & peak_number) {
 		double dummy = 0;
 		switch (m_f) {
 		case 1: {
@@ -301,7 +390,7 @@ namespace OFEC {
 		update_number_of_changes();
 
 	}
-	// TODO:kill pointer, and complete the pure virtual function
+
 	void moving_peak::change_num_peaks() {
 		// TODO:need same() in class continuous
 		// TODO:the constraint_value() in class problem can't be pure virtual
@@ -310,10 +399,6 @@ namespace OFEC {
 
 		mpb->copy(this);
 		mpb->calculate_global_optima();
-
-		// HACK: delete it
-		// freeMemory();
-		// dynamic_continuous::freeMemory();
 
 		allocate_memory(m_variable_size, m_num_peaks_temp);
 		dynamic_continuous::allocate_memory(m_variable_size, m_num_peaks_temp);
@@ -363,81 +448,81 @@ namespace OFEC {
 
 	// TODO: should konw how to use the new evaluate()
 	void moving_peak::calculate_associate_radius() {
-		//// to calculate an associate radius of peak i, find the nearest peak j, get the valley point, the distance
-		//// between peak i and the valley point is the associate radius of peak i
-		//vector<double> point(m_variable_size);
-		//vector<double> as_r(m_variable_size);
+		// to calculate an associate radius of peak i, find the nearest peak j, get the valley point, the distance
+		// between peak i and the valley point is the associate radius of peak i
+		vector<double> point(m_variable_size);
+		vector<double> as_r(m_variable_size);
 
-		//for (int i = 0; i < m_num_peaks; i++) {
-		//	double dis; int nearest = -1;
-		//	if (!is_visable(i)) continue;
-		//	for (int j = 0, count = 0; j < m_num_peaks; j++, count++) {
-		//		if (j == i || !is_visable(j)) { count--; continue; }
-		//		double d = 0;
-		//		for (int dim = 0; dim < m_variable_size; dim++) {
-		//			d += (m_peak[i][dim] - m_peak[j][dim])*(m_peak[i][dim] - m_peak[j][dim]);
-		//		}
-		//		d = sqrt(d);
-		//		if (0 == count) {
-		//			dis = d;
-		//			nearest = j;
-		//		}
-		//		else if (dis > d) {
-		//			dis = d;
-		//			nearest = j;
-		//		}
-		//	}
-		//	if (nearest != -1) {
-		//		//normalize vector point
-		//		for (int dim = 0; dim < m_variable_size; dim++) {
-		//			point[dim] = m_peak[nearest][dim] - m_peak[i][dim];
-		//			point[dim] /= dis;
-		//		}
+		for (int i = 0; i < m_num_peaks; i++) {
+			double dis; int nearest = -1;
+			if (!is_visable(i)) continue;
+			for (int j = 0, count = 0; j < m_num_peaks; j++, count++) {
+				if (j == i || !is_visable(j)) { count--; continue; }
+				double d = 0;
+				for (int dim = 0; dim < m_variable_size; dim++) {
+					d += (m_peak[i][dim] - m_peak[j][dim])*(m_peak[i][dim] - m_peak[j][dim]);
+				}
+				d = sqrt(d);
+				if (0 == count) {
+					dis = d;
+					nearest = j;
+				}
+				else if (dis > d) {
+					dis = d;
+					nearest = j;
+				}
+			}
+			if (nearest != -1) {
+				//normalize vector point
+				for (int dim = 0; dim < m_variable_size; dim++) {
+					point[dim] = m_peak[nearest][dim] - m_peak[i][dim];
+					point[dim] /= dis;
+				}
 
 
-		//		double height, asHeight;
-		//		height = asHeight = m_height[i];
-		//		as_r = m_peak[i];
-		//		//test in direction of point with a step of dis/100
-		//		while (asHeight <= height) {
-		//			bool flagBreak = false;
-		//			for (int dim = 0; dim < m_variable_size; dim++) {
-		//				as_r[dim] += dis / 100 * point[dim];
-		//				if ((as_r[dim] - m_peak[i][dim])*(m_peak[nearest][dim] - as_r[dim]) < 0) {
-		//					flagBreak = true;
-		//					break;
-		//				}
-		//			}
-		//			if (flagBreak) break;
-		//			height = asHeight;
-		//			solution<variable<real>,real> s(m_objective_size, m_variable_size);
-		//			std::copy(as_r.begin(), as_r.end(), s.get_variable().begin());
-		//			// TODO: should konw how to use the new evaluate()
-		//			evaluate_(s, false);
-		//			asHeight = s.get_objective()[0];
-		//		}
+				double height, asHeight;
+				height = asHeight = m_height[i];
+				as_r = m_peak[i];
+				//test in direction of point with a step of dis/100
+				while (asHeight <= height) {
+					bool flagBreak = false;
+					for (int dim = 0; dim < m_variable_size; dim++) {
+						as_r[dim] += dis / 100 * point[dim];
+						if ((as_r[dim] - m_peak[i][dim])*(m_peak[nearest][dim] - as_r[dim]) < 0) {
+							flagBreak = true;
+							break;
+						}
+					}
+					if (flagBreak) break;
+					height = asHeight;
+					solution<variable<real>,real> s(m_objective_size, m_variable_size);
+					std::copy(as_r.begin(), as_r.end(), s.get_variable().begin());
+					// TODO: should konw how to use the new evaluate()
+					evaluate_(s, caller::Problem, false, true);
+					asHeight = s.get_objective()[0];
+				}
 
-		//		m_associate_radius[i] = 0;
-		//		for (int dim = 0; dim < m_variable_size; dim++) {
-		//			// correction for one step backward
-		//			as_r[dim] -= dis / 200 * point[dim];
-		//			m_associate_radius[i] += (as_r[dim] - m_peak[i][dim])*(as_r[dim] - m_peak[i][dim]);
-		//		}
-		//		m_associate_radius[i] = sqrt(m_associate_radius[i]);
-		//	}
-		//	else {
-		//		vector<double> r(2 * m_variable_size);
-		//		for (int dim = 0; dim < m_variable_size; dim++) {
-		//			double u, l;
-		//			//HACK: no getSearchRange in class domain
-		//			l = m_domain[dim].limit.first;
-		//			u = m_domain[dim].limit.second;
-		//			r[dim * 2] = fabs(l - m_peak[i][dim]);
-		//			r[dim * 2 + 1] = fabs(u - m_peak[i][dim]);
-		//		}
-		//		m_associate_radius[i] = *min_element(r.begin(), r.end());
-		//	}
-		//}
+				m_associate_radius[i] = 0;
+				for (int dim = 0; dim < m_variable_size; dim++) {
+					// correction for one step backward
+					as_r[dim] -= dis / 200 * point[dim];
+					m_associate_radius[i] += (as_r[dim] - m_peak[i][dim])*(as_r[dim] - m_peak[i][dim]);
+				}
+				m_associate_radius[i] = sqrt(m_associate_radius[i]);
+			}
+			else {
+				vector<double> r(2 * m_variable_size);
+				for (int dim = 0; dim < m_variable_size; dim++) {
+					double u, l;
+					//HACK: no getSearchRange in class domain
+					l = m_domain[dim].limit.first;
+					u = m_domain[dim].limit.second;
+					r[dim * 2] = fabs(l - m_peak[i][dim]);
+					r[dim * 2 + 1] = fabs(u - m_peak[i][dim]);
+				}
+				m_associate_radius[i] = *min_element(r.begin(), r.end());
+			}
+		}
 	}
 
 	void moving_peak::set_severity() {
@@ -616,6 +701,72 @@ namespace OFEC {
 		return m_vlength;
 	}
 	//TODO: complete it
-	evaluation_tag moving_peak::evaluate_(base & s, caller call, bool effective_fes, bool constructed) {
+	evaluation_tag moving_peak::evaluate_(base & ss, caller call, bool effective_fes, bool constructed) {
+		solution<variable<real>,real> &s = dynamic_cast<solution<variable<real>, real> &>(ss);
+		std:vector<real>x(m_variable_size);
+		std::copy(s.get_variable().begin(), s.get_variable().end(), x.begin());
+		if (this->m_noise_flag)	add_noise(x);
+
+		double maximum = LONG_MIN, dummy;
+
+		for (int i = 0; i < m_num_peaks; i++) {
+			//if(maximum>mp_height[i]) continue; //optimization on the obj evaluation
+			dummy = function_selection(x, i);
+			if (dummy > maximum)      maximum = dummy;
+		}
+
+		if (m_use_basis_function) {
+			dummy = function_selection(x, -1);
+			/* If value of basis function is higher return it */
+			if (maximum < dummy)     maximum = dummy;
+		}
+		s.get_objective[0] = maximum;
+
+		//TODO: need a initialize_world_best() in class solution
+		/*if (effective_fes&&m_effective_eval%m_change_interval == 0) {
+			solution<variable<real>,real>::initilizeWB(s);
+		}*/
+
+		if (effective_fes&&is_tracked(x, s.get_objective())) update_peak_qaulity();
+		if (effective_fes)    m_effective_eval++;
+		bool flag;
+#ifdef OFEC_CONSOLE
+		if (global::ms_global->m_algorithm != nullptr)	flag = !global::ms_global->m_algorithm->terminating();
+		else flag = true;
+#endif
+#ifdef OFEC_DEMON
+		flag = true;
+#endif
+		if (effective_fes&&m_effective_eval%m_change_interval == 0 && flag) {
+
+			//g_mutexStream.lock();
+			//cout<<"The number of changes: "<<m_changeCounter<<endl;
+			//g_mutexStream.unlock();
+			//for(int i=0;i<m_num_peaks;i++)		printPeak(i);
+			dynamic::change();
+			//for(int i=0;i<m_num_peaks;i++)		printPeak(i);
+			//getchar();
+		}
+		evaluation_tag rf = evaluation_tag::Normal;
+		if (effective_fes) {
+			if (global::ms_global->m_algorithm != nullptr) {
+				if (global::ms_global->m_algorithm->terminating()) { rf = evaluation_tag::Terminate; }
+				else if (global::ms_global->m_problem->is_tag(problem_tag::DOP)) {
+					if (dynamic_cast<dynamic*>(global::ms_global->m_problem.get())->flag_time_linkage() && dynamic_cast<dynamic*>(global::ms_global->m_problem.get())->trigger_time_linkage()) {
+						rf = evaluation_tag::Change_timelinkage;
+					}
+					if ((global::ms_global->m_problem->evaluations() + 1) % (dynamic_cast<dynamic*>(global::ms_global->m_problem.get())->change_interval()) == 0) {
+						rf = evaluation_tag::Problem_change_next_eval;
+					}
+					if (global::ms_global->m_problem->evaluations() % (dynamic_cast<dynamic*>(global::ms_global->m_problem.get())->change_interval()) == 0) {
+						if (dynamic_cast<dynamic*>(global::ms_global->m_problem.get())->flag_variable_change()) {
+							rf = evaluation_tag::Change_dimension;
+						}
+						rf = evaluation_tag::Problem_change;
+					}
+				}
+			}
+		}
+		return rf;
 	}
 

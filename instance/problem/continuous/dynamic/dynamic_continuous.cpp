@@ -1,6 +1,7 @@
 #include "dynamic_continuous.h"
 #include<fstream> 
-#include<xutility> //TODO: the old version has an include.h
+#include<xutility>
+#include<../../utility/vector.h>
 namespace OFEC {
 	bool dynamic_continuous::is_global_optima(int idx) {
 		return m_optima_idx[idx];
@@ -338,20 +339,20 @@ namespace OFEC {
 		return false;
 	}
 
-	// TODO: Need a class my_vector here
-	const double * dynamic_continuous::get_nearest_peak(const vector<double>& p) {
-		/*int nearest = 0;
-		my_vector peak(global::ms_global->m_problem->variable_size(), m_peak[0]);
-		double dis = peak.getDis(p);
+	// Get nearest peak from p
+	const vector<double> dynamic_continuous::get_nearest_peak(const vector<double>& p) {
+		int nearest = 0;
+		Vector peak(m_peak[0]);
+		double dis = peak.distance(p);
 		for (int i = 1; i<m_num_peaks; i++) {
-			copy(m_peak[i], m_peak[i] + global::ms_global->m_problem->variable_size(), peak.begin());
-			double d = peak.getDis(p);
+			peak = m_peak[i];
+			double d = peak.distance(p);
 			if (d<dis) {
 				dis = d;
 				nearest = i;
 			}
 		}
-		return m_peak[nearest];*/
+		return m_peak[nearest];
 	}
 	void dynamic_continuous::copy(problem * p) {
 		dynamic::copy(p);
@@ -363,7 +364,7 @@ namespace OFEC {
 		int peaks = m_num_peaks < dcp->number_of_peak() ? m_num_peaks : dcp->number_of_peak();
 
 		for (int i = 0; i < peaks; i++) {
-			m_peak[i] = dcp->m_peak[i]; //TODO: Does it will cause some problem to use "=" rather than copy()?
+			m_peak[i] = dcp->m_peak[i];
 			m_pre_peak[i] = dcp->m_pre_peak[i];
 			m_initial_peak[i] = dcp->m_initial_peak[i];
 		}
@@ -408,76 +409,108 @@ namespace OFEC {
 		m_peak_qaulity = dcp->m_peak_qaulity;
 	}
 	void dynamic_continuous::allocate_memory(const int size_var, const int num_peaks) {
-		//TODO: complete it
+		m_peak            .resize(num_peaks);
+		m_pre_peak        .resize(num_peaks);
+		m_initial_peak    .resize(num_peaks);
+		m_width           .resize(num_peaks);
+		m_height          .resize(num_peaks);
+		m_pre_height      .resize(num_peaks);
+		m_pre_width       .resize(num_peaks);
+		m_fit             .resize(num_peaks);
+		m_width_severity  .resize(num_peaks);
+		m_height_severity .resize(num_peaks);
+
+		for (int i = 0; i< num_peaks; i++) {
+			m_peak[i]         .resize(size_var);
+			m_pre_peak[i]     .resize(size_var);
+			m_initial_peak[i] .resize(size_var);
+		}
+		m_whether_change          .resize(num_peaks);
+		m_optima_idx              .resize(num_peaks);
+
+		m_is_tracked              .resize(num_peaks);
+		m_height_order            .resize(num_peaks);
+		m_found                   .resize(num_peaks);
+
+		m_time_linkage            .resize(num_peaks);
+		m_amended_height_order    .resize(num_peaks);
+		m_associate_radius        .resize(num_peaks);
+		for (int i = 0; i < num_peaks; ++i) {
+			m_found[i] = false;
+			m_optima_idx[i] = false;
+			m_whether_change[i] = true;
+			m_associate_radius[i] = 0;
+			m_height_order[i] = -1;
+		}
 	}
-	// need a class my_vector here
 	void dynamic_continuous::calculate_global_optima() {
-		//if (m_opt_mode[0] == optimization_mode::Maximization) m_global_optima = *max_element(m_height.begin(), m_height.end());
-		//else m_global_optima = *min_element(m_height.begin(), m_height.end());
+		if (m_opt_mode[0] == optimization_mode::Maximization) m_global_optima = *max_element(m_height.begin(), m_height.end());
+		else m_global_optima = *min_element(m_height.begin(), m_height.end());
 
-		////TODO: need a clear() function mumber in class optima
-		////m_optima.clear();
-		//m_max_peaks_number = 0;
-		//double mindis = LONG_MAX;
-		//for (int i = 0; i<m_num_peaks; i++) {
-		//	m_optima_idx[i] = false;
-		//	if (m_height[i] == m_global_optima) {
-		//		for (int j = 0; j<m_num_peaks; ++j) {
-		//			if (j == i) continue;
-		//			my_vector s1(m_variable_size, m_peak[i]), s2(m_variable_size, m_peak[j]);
+		//TODO: need a clear() function mumber in class optima
+		m_optima.clear();
+		m_max_peaks_number = 0;
+		double mindis = LONG_MAX;
+		for (int i = 0; i < m_num_peaks; i++) {
+			m_optima_idx[i] = false;
+			if (m_height[i] == m_global_optima) {
+				for (int j = 0; j < m_num_peaks; ++j) {
+					if (j == i) continue;
+					OFEC::Vector s1(m_peak[i]), s2(m_peak[j]);
 
-		//			double dis = s1.getDis(s2);
-		//			if (mindis>dis) {
-		//				mindis = dis;
-		//			}
-		//		}
-		//		m_max_peaks_number++;
-		//		m_optima_idx[i] = true;
-		//		solution<variable<real>,real> s(m_variable_size, m_objective_size);
-		//		std::copy(m_peak[i].begin(), m_peak[i].end(), s.get_variable().begin());
-		//		s.get_objective()[0] = m_height[i];
-		//		m_optima.append(s.get_variable());
-		//	}
+					double dis = s1.distance(s2);
+					if (mindis > dis) {
+						mindis = dis;
+					}
+				}
+				m_max_peaks_number++;
+				m_optima_idx[i] = true;
+				solution<variable<real>, real> s(m_variable_size, m_objective_size);
+				std::copy(m_peak[i].begin(), m_peak[i].end(), s.get_variable().begin());
+				s.get_objective()[0] = m_height[i];
+				m_optima.append(s.get_variable());
+			}
+		}
 	}
 	//TODO:need a shuffleIndex() in class global
 	void dynamic_continuous::update_number_of_changes() {
-		//if (m_num_change_peaks == m_num_peaks) {
-		//	for (int i = 0; i<m_num_peaks; i++) m_whether_change[i] = true;
-		//	return;
-		//}
-		//std::vector<int> a(m_num_peaks);
+		if (m_num_change_peaks == m_num_peaks) {
+			for (int i = 0; i<m_num_peaks; i++) m_whether_change[i] = true;
+			return;
+		}
+		std::vector<int> a(m_num_peaks);
 
-		//global::ms_global->shuffleIndex(a, m_num_peaks, caller::Problem);
-		//// make sure the global optimum changes always
-		//int gopt = 0;
-		//for (int i = 0; i<m_num_peaks; i++) {
-		//	if (m_optima_idx[i]) {
-		//		gopt = i;
-		//		break;
-		//	}
-		//}
-		//int gidx;
-		//for (int i = 0; i<m_num_peaks; i++) {
-		//	if (a[i] == gopt) {
-		//		gidx = i;
-		//		break;
-		//	}
-		//}
-		//int t = a[0];
-		//a[0] = a[gidx];
-		//a[gidx] = t;
+		global::ms_global->shuffleIndex(a, m_num_peaks, caller::Problem);
+		// make sure the global optimum changes always
+		int gopt = 0;
+		for (int i = 0; i<m_num_peaks; i++) {
+			if (m_optima_idx[i]) {
+				gopt = i;
+				break;
+			}
+		}
+		int gidx;
+		for (int i = 0; i<m_num_peaks; i++) {
+			if (a[i] == gopt) {
+				gidx = i;
+				break;
+			}
+		}
+		int t = a[0];
+		a[0] = a[gidx];
+		a[gidx] = t;
 
-		//for (int i = 0; i<m_num_peaks; i++) m_whether_change[i] = false;
-		//for (int i = 0; i<m_num_change_peaks; i++) m_whether_change[a[i]] = true;
+		for (int i = 0; i<m_num_peaks; i++) m_whether_change[i] = false;
+		for (int i = 0; i<m_num_change_peaks; i++) m_whether_change[a[i]] = true;
 
 	}
-	//TODO: the evaluate_() in class problem looks so different that I can't use
+
 	void dynamic_continuous::compute_num_visable_peaks() {
-		/*m_num_visable_peaks = m_num_peaks;
+		m_num_visable_peaks = m_num_peaks;
 		for (int i = 0; i<m_num_peaks; i++) {
 			solution<variable<real>,real> s(m_variable_size, m_objective_size);
 			std::copy(m_peak[i].begin(), m_peak[i].end(), s.get_variable().begin());
-			evaluate_(s,caller::Problem);
+			evaluate_(s,caller::Problem, false, true);
 			double height = s.get_objective()[0];
 			switch (m_opt_mode[0]) {
 			case optimization_mode::Minimization:
@@ -487,13 +520,23 @@ namespace OFEC {
 				if (height>m_height[i]) m_num_visable_peaks--;
 				break;
 			}
-		}*/
+		}
 	}
+	//TODO: can I delete this function with pointer?
 	void dynamic_continuous::add_noise(double * x_) {
 		for (int d = 0; d<m_variable_size; d++) {
 			double x = x_[d];
 			x += m_noise_severity_*global::ms_global->m_normal[caller::Problem]->next();
-			if (m_domain[d].limit.second<x) x = m_domain[d].limit.second; //TODO: not intuitive enough
+			if (m_domain[d].limit.second<x) x = m_domain[d].limit.second;
+			if (m_domain[d].limit.first>x) x = m_domain[d].limit.first;
+			x_[d] = x;
+		}
+	}
+	void dynamic_continuous::add_noise(vector<double>& x_) {
+		for (int d = 0; d<m_variable_size; d++) {
+			double x = x_[d];
+			x += m_noise_severity_*global::ms_global->m_normal[caller::Problem]->next();
+			if (m_domain[d].limit.second<x) x = m_domain[d].limit.second;
 			if (m_domain[d].limit.first>x) x = m_domain[d].limit.first;
 			x_[d] = x;
 		}
