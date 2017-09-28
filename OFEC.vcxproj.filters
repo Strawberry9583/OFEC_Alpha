@@ -78,13 +78,13 @@
     <ClInclude Include="instance\problem\continuous\dynamic\dynamic_continuous.h">
       <Filter>core\problem</Filter>
     </ClInclude>
-    <ClInclude Include="instance\problem\continuous\dynamic\moving_peak.h">
-      <Filter>core\problem</Filter>
-    </ClInclude>
     <ClInclude Include="core\problem\continuous\continuous.h">
       <Filter>core\problem</Filter>
     </ClInclude>
     <ClInclude Include="core\problem\continuous\function.h">
+      <Filter>core\problem</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.h">
       <Filter>core\problem</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,13 +137,13 @@
     <ClCompile Include="instance\problem\continuous\dynamic\dynamic_continuous.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
-    <ClCompile Include="instance\problem\continuous\dynamic\moving_peak.cpp">
-      <Filter>core\problem</Filter>
-    </ClCompile>
     <ClCompile Include="core\problem\continuous\continuous.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
     <ClCompile Include="core\problem\continuous\function.cpp">
+      <Filter>core\problem</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
   </ItemGroup>

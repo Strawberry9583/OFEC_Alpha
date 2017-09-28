@@ -20,7 +20,7 @@ TODO: compete the introduction of this class
 #ifndef OFEC_MOVINGPEAK_H
 #define OFEC_MOVINGPEAK_H
 
-#include "dynamic_continuous.h"
+#include "../dynamic_continuous.h"
 
 namespace OFEC {
 	class moving_peak: public dynamic_continuous{
