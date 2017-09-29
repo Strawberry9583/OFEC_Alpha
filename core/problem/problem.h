@@ -13,7 +13,11 @@
 *  see https://github.com/Changhe160/OFEC for more information
 *
 *-------------------------------------------------------------------------------
+<<<<<<< HEAD
 * class problem defines optimization problems
+=======
+* the base of different types of problems
+>>>>>>> master
 *
 *
 *********************************************************************************/
