@@ -53,7 +53,7 @@ namespace OFEC {
 		int m_num_peaks;
 		bool m_flag_num_peaks_change;          // flag of the change of the number of peaks
 		bool m_dir_num_peaks_change;           // true for increasing the number of peaks, otherwise decreasing the number of peaks
-		int m_num_peaks_temp;                  // temporal varibal for number of peaks change only
+		int m_num_peaks_temp;                  // temporal variable for number of peaks change only
 
 		static const unsigned msc_max_variable_size = 15;
 		static const unsigned msc_min_variable_size = 2;     //should be greater than 1

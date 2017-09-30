@@ -87,6 +87,12 @@
     <ClInclude Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.h">
       <Filter>core\problem</Filter>
     </ClInclude>
+    <ClInclude Include="instance\problem\continuous\dynamic\GDBG\real_DBG.h">
+      <Filter>core\problem</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\matrix.h">
+      <Filter>utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utility\random\extreal.cpp">
@@ -146,5 +152,9 @@
     <ClCompile Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
+    <ClCompile Include="utility\matrix.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\dynamic\GDBG\real_DBG.cpp" />
   </ItemGroup>
 </Project>
