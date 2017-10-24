@@ -156,10 +156,7 @@
     <ClCompile Include="core\problem\continuous\function.cpp" />
     <ClCompile Include="core\problem\problem.cpp" />
     <ClCompile Include="instance\problem\continuous\dynamic\dynamic.cpp" />
-    <ClCompile Include="instance\problem\continuous\dynamic\dynamic_continuous.cpp" />
-    <ClCompile Include="instance\problem\continuous\dynamic\GDBG\real_DBG.cpp" />
-    <ClCompile Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.cpp" />
-    <ClCompile Include="test\test_dynamic.cpp" />
+    <ClCompile Include="test\test_shuffle_index.cpp" />
     <ClCompile Include="utility\matrix.cpp" />
     <ClCompile Include="utility\random\extreal.cpp" />
     <ClCompile Include="utility\random\newran.cpp" />
@@ -185,9 +182,6 @@
     <ClInclude Include="core\problem\continuous\function.h" />
     <ClInclude Include="core\problem\problem.h" />
     <ClInclude Include="instance\problem\continuous\dynamic\dynamic.h" />
-    <ClInclude Include="instance\problem\continuous\dynamic\dynamic_continuous.h" />
-    <ClInclude Include="instance\problem\continuous\dynamic\GDBG\real_DBG.h" />
-    <ClInclude Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.h" />
     <ClInclude Include="utility\functional.h" />
     <ClInclude Include="utility\matrix.h" />
     <ClInclude Include="utility\myexcept.h" />

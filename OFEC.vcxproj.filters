@@ -75,19 +75,10 @@
     <ClInclude Include="instance\problem\continuous\dynamic\dynamic.h">
       <Filter>core\problem</Filter>
     </ClInclude>
-    <ClInclude Include="instance\problem\continuous\dynamic\dynamic_continuous.h">
-      <Filter>core\problem</Filter>
-    </ClInclude>
     <ClInclude Include="core\problem\continuous\continuous.h">
       <Filter>core\problem</Filter>
     </ClInclude>
     <ClInclude Include="core\problem\continuous\function.h">
-      <Filter>core\problem</Filter>
-    </ClInclude>
-    <ClInclude Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.h">
-      <Filter>core\problem</Filter>
-    </ClInclude>
-    <ClInclude Include="instance\problem\continuous\dynamic\GDBG\real_DBG.h">
       <Filter>core\problem</Filter>
     </ClInclude>
     <ClInclude Include="utility\matrix.h">
@@ -131,16 +122,10 @@
     <ClCompile Include="core\algorithm\algorithm.cpp">
       <Filter>core\algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="test\test_dynamic.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
     <ClCompile Include="utility\vector.cpp">
       <Filter>utility</Filter>
     </ClCompile>
     <ClCompile Include="instance\problem\continuous\dynamic\dynamic.cpp">
-      <Filter>core\problem</Filter>
-    </ClCompile>
-    <ClCompile Include="instance\problem\continuous\dynamic\dynamic_continuous.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
     <ClCompile Include="core\problem\continuous\continuous.cpp">
@@ -149,12 +134,11 @@
     <ClCompile Include="core\problem\continuous\function.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
-    <ClCompile Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.cpp">
-      <Filter>core\problem</Filter>
-    </ClCompile>
     <ClCompile Include="utility\matrix.cpp">
       <Filter>utility</Filter>
     </ClCompile>
-    <ClCompile Include="instance\problem\continuous\dynamic\GDBG\real_DBG.cpp" />
+    <ClCompile Include="test\test_shuffle_index.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

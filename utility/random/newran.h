@@ -75,6 +75,18 @@ public:
    T next_non_standard(T min, T max) { // get a value within [min,max)
 	   return min + static_cast<T>((max - min)*next());
    }
+   //HACK:added a shuffel_index to generate a set of radom numbers from 0-(variable-1) without repeat
+   template<typename T>
+   void shuffle_index(T& arr, const int variable, caller mode = caller::Algorithm) {
+	   for (int i = 0; i<variable; i++)	arr[i] = i;
+	   for (int i = 0, t, x; i<variable; i++) {
+		   if (mode == caller::Algorithm) t = (int)(i + (variable - i)*next());
+		   else t = (int)(i + (variable - i)*next());
+		   x = arr[i];
+		   arr[i] = arr[t];
+		   arr[t] = x;
+	   }
+   }
 };
 
 

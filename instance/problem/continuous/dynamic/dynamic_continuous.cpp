@@ -242,7 +242,19 @@ namespace OFEC {
 	}
 
 	bool dynamic_continuous::is_visable(const int idx) {
-
+		solution<variable<real>,real> s(m_variable_size, m_objective_size);
+		std::copy(m_peak[idx].begin(), m_peak[idx].end(), s.get_variable().begin());
+		evaluate_(s, caller::Problem,false,true); // return the obj of s
+		double height = s.get_objective()[0]; //
+		switch (m_opt_mode[0]) {
+		case optimization_mode::Minimization:
+			if (height<m_height[idx]) return false;
+			break;
+		case optimization_mode::Maximization:
+			if (height>m_height[idx]) return false;
+			break;
+		}
+		return true;
 	}
 
 	int dynamic_continuous::get_track_number(int idex) {
@@ -479,8 +491,7 @@ namespace OFEC {
 			return;
 		}
 		std::vector<int> a(m_num_peaks);
-
-		global::ms_global->shuffleIndex(a, m_num_peaks, caller::Problem);
+		global::ms_global->m_uniform[caller::Problem]->shuffle_index<std::vector<int>>(a, m_num_peaks, caller::Problem);
 		// make sure the global optimum changes always
 		int gopt = 0;
 		for (int i = 0; i<m_num_peaks; i++) {
