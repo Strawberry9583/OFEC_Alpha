@@ -24,6 +24,7 @@
 
 #include <cmath>
 #include <vector>
+#include "random\newran.h"
 
 #include "../core/definition.h"
 using namespace std;
@@ -228,6 +229,23 @@ namespace OFEC {
 		quick_sort(data, up - pivot, index, min, pivot + 1, up, num, false);
 	}
 
+	// generate a set of radom numbers from 0-(variable-1) without repeat
+	template<typename T>
+	void shuffle_index(T& arr, const int variable, uniform* const uni) {
+		for (int i = 0; i<variable; i++)	arr[i] = i;
+		for (int i = 0, t, x; i<variable; i++) {
+			t = (int)(i + (variable - i)*uni->next());
+			x = arr[i];
+			arr[i] = arr[t];
+			arr[t] = x;
+		}
+	}
+	// Hack: added a get_random to get random number in range from min to max
+	template<typename T>
+	T get_random(const T min, const T max, uniform* const uni) {
+		if (min == max) return min;
+		return min + (max - min)*uni->next();
+	}
 }
 #endif // !OFEC_FINCTIONAL_H
 

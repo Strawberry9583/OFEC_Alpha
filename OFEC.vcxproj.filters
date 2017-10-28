@@ -22,6 +22,18 @@
     <Filter Include="utility\typevar">
       <UniqueIdentifier>{88684ca9-9be1-4fff-8443-ddf322dd59e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="instance">
+      <UniqueIdentifier>{3ddcb667-d113-49ee-8f27-45f0f0f57687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="instance\problem">
+      <UniqueIdentifier>{0b71892f-a9bb-4f27-8a35-17b1730e7b16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="instance\problem\continuous">
+      <UniqueIdentifier>{e05549e3-175c-4b52-a5fc-482732aa429e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="instance\problem\continuous\dynamic">
+      <UniqueIdentifier>{a8edb2fe-d829-473b-b03a-23b7842dc1ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\algorithm\encoding.h">
@@ -72,9 +84,6 @@
     <ClInclude Include="utility\vector.h">
       <Filter>utility</Filter>
     </ClInclude>
-    <ClInclude Include="instance\problem\continuous\dynamic\dynamic.h">
-      <Filter>core\problem</Filter>
-    </ClInclude>
     <ClInclude Include="core\problem\continuous\continuous.h">
       <Filter>core\problem</Filter>
     </ClInclude>
@@ -83,6 +92,15 @@
     </ClInclude>
     <ClInclude Include="utility\matrix.h">
       <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\dynamic\dynamic_continuous.h">
+      <Filter>instance\problem\continuous\dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\dynamic\dynamic_problem.h">
+      <Filter>instance\problem\continuous\dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.h">
+      <Filter>instance\problem\continuous\dynamic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,9 +143,6 @@
     <ClCompile Include="utility\vector.cpp">
       <Filter>utility</Filter>
     </ClCompile>
-    <ClCompile Include="instance\problem\continuous\dynamic\dynamic.cpp">
-      <Filter>core\problem</Filter>
-    </ClCompile>
     <ClCompile Include="core\problem\continuous\continuous.cpp">
       <Filter>core\problem</Filter>
     </ClCompile>
@@ -137,7 +152,16 @@
     <ClCompile Include="utility\matrix.cpp">
       <Filter>utility</Filter>
     </ClCompile>
-    <ClCompile Include="test\test_shuffle_index.cpp">
+    <ClCompile Include="instance\problem\continuous\dynamic\dynamic_continuous.cpp">
+      <Filter>instance\problem\continuous\dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\dynamic\dynamic_problem.cpp">
+      <Filter>instance\problem\continuous\dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.cpp">
+      <Filter>instance\problem\continuous\dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_functional2.cpp">
       <Filter>test</Filter>
     </ClCompile>
   </ItemGroup>
