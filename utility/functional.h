@@ -240,11 +240,20 @@ namespace OFEC {
 			arr[t] = x;
 		}
 	}
-	// Hack: added a get_random to get random number in range from min to max
+	// HACK: added a get_random to get random number in range from min to max
 	template<typename T>
 	T get_random(const T min, const T max, uniform* const uni) {
 		if (min == max) return min;
 		return min + (max - min)*uni->next();
+	}
+
+	// HACK: return a value calculated by logistic map
+	double chaotic_value(const double x, const double min, const double max, const double chaotic_constant = 3.54) {
+		if (min>max) return -1;
+		double chaotic_value;
+		chaotic_value = (x - min) / (max - min); // πÈ“ªªØ
+		chaotic_value = chaotic_constant*chaotic_value*(1 - chaotic_value); // ???
+		return min + chaotic_value*(max - min);
 	}
 }
 #endif // !OFEC_FINCTIONAL_H
