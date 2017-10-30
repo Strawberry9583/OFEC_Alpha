@@ -76,11 +76,11 @@ namespace OFEC {
 		virtual void recurrent_change() { random_change(); };
 		virtual void chaotic_change() { random_change(); };
 		virtual void recurrent_noisy_change() { random_change(); };
-		virtual void change_dimension() { random_change(); };
+		virtual void change_variable() { random_change(); };
 		// TODO:kill pointer, and complete the pure virtual function
 		virtual void change_num_peaks();
 		//TODO: add "const" in parameter type.
-		void copy(problem * problem);
+		void copy(const problem * rhs);
 		//16/05/2013
 		virtual void update_peak_qaulity(); //TODO:???
 		// TODO: should konw how to use the new evaluate()
@@ -92,7 +92,7 @@ namespace OFEC {
 			const bool flag_num_peak_change = false, const int peak_num_change_mode = 1, const bool flag_noise = false, const bool flag_time_linkage = false);
 		moving_peak(param_map &v);
 		//HACK: deleted it
-		/*~moving_peak();*/
+		~moving_peak() {};
 
 		/* assigns vlength a value from a normal distribution */
 		void change_stepsize_random();

@@ -249,14 +249,15 @@ namespace OFEC {
 		return(maximum);
 	}
 
-	//TODO: need a set_record_flag in class optima.
 	void moving_peak::initialize() {
 		int i = 0;
-		m_objective_accuracy =0.1;
+		m_objective_accuracy = 0.1;
 		m_variable_accuracy = 0.2;
 		set_range(0, 100);
 		m_opt_mode[0] = optimization_mode::Maximization;
-		m_optima.set_record_flag(false);
+		//TODO: need a set_record_flag in class optima, but there are two monitors and have the default value, I don't have to set the default value
+		/*m_variable_monitor = false;
+		m_objective_monitor = false;*/
 		update_time_linkage();
 		for (i = 0; i < m_num_peaks; i++)
 			for (int j = 0; j < m_variable_size; j++) {
@@ -322,10 +323,10 @@ namespace OFEC {
 
 		for (int i = 0; i < peaks; i++) {
 			m_prev_movement.resize(var_size);
+		}
+
+
 	}
-
-
-}
 
 	void moving_peak::random_change() {
 		int i = 0, j = 0;
@@ -357,12 +358,12 @@ namespace OFEC {
 			for (j = 0; j < m_variable_size; j++) {
 				m_shift[j] *= sum2;
 				m_prev_movement[i][j] = m_shift[j];
-				if (m_domain[j].limit.first >(m_peak[i][j] + m_prev_movement[i][j])) {
+				if (m_domain[j].limit.first > (m_peak[i][j] + m_prev_movement[i][j])) {
 					m_peak[i][j] = 2.0*m_domain[j].limit.first - m_peak[i][j] - m_prev_movement[i][j];
 					m_prev_movement[i][j] *= -1.0;
 				}
-				else if (m_domain[j].limit.second< (m_peak[i][j] + m_prev_movement[i][j])) {
-					m_peak[i][j] = 2.0*m_domain[j].limit.second- m_peak[i][j] - m_prev_movement[i][j];
+				else if (m_domain[j].limit.second < (m_peak[i][j] + m_prev_movement[i][j])) {
+					m_peak[i][j] = 2.0*m_domain[j].limit.second - m_peak[i][j] - m_prev_movement[i][j];
 					m_prev_movement[i][j] *= -1.0;
 				}
 				else
@@ -393,9 +394,8 @@ namespace OFEC {
 
 	void moving_peak::change_num_peaks() {
 		// TODO:need same() in class continuous
-		// TODO:the constraint_value() in class problem can't be pure virtual
-		unique_ptr<moving_peak> mpb = new moving_peak(m_variable_size, m_num_peaks_temp, m_change_peak_ratio, m_flag_variable_change
-			, m_flag_num_peaks_change, m_num_peaks_change_mode, m_noise_flag, m_time_linkage_flag);
+		unique_ptr<moving_peak> mpb(new moving_peak(m_variable_size, m_num_peaks_temp, m_change_peak_ratio, m_flag_variable_change
+			, m_flag_num_peaks_change, m_num_peaks_change_mode, m_noise_flag, m_time_linkage_flag));
 
 		mpb->copy(this);
 		mpb->calculate_global_optima();
@@ -408,10 +408,10 @@ namespace OFEC {
 	}
 
 	//TODO: const parameter
-	void moving_peak::copy(problem * problem) {
-		dynamic_continuous::copy(problem);
+	void moving_peak::copy(const problem * rhs) {
+		dynamic_continuous::copy(rhs);
 
-		moving_peak *mpb = dynamic_cast<moving_peak *>(problem);
+		const moving_peak *mpb = dynamic_cast<const moving_peak *>(rhs);
 		unsigned dim = m_variable_size_temp < mpb->variable_size() ? m_variable_size_temp : mpb->variable_size();
 		int peaks = m_num_peaks < mpb->number_of_peak() ? m_num_peaks : mpb->number_of_peak();
 
@@ -495,7 +495,7 @@ namespace OFEC {
 					}
 					if (flagBreak) break;
 					height = asHeight;
-					solution<variable<real>,real> s(m_objective_size, m_variable_size);
+					solution<variable<real>, real> s(m_objective_size, m_variable_size);
 					std::copy(as_r.begin(), as_r.end(), s.get_variable().begin());
 					// TODO: should konw how to use the new evaluate()
 					evaluate_(s, caller::Problem, false, true);
@@ -527,9 +527,8 @@ namespace OFEC {
 
 	void moving_peak::set_severity() {
 		for (int i = 0; i < m_num_peaks; i++) {
-			auto get_rand_float = [](double min, double max)->double {return min + (max - min)*global::ms_global->m_uniform[caller::Problem]->next(); };
-			m_height_severity[i] = get_rand_float(1, 10);//1.+9.*i/m_num_peaks;//severity of height changes, larger numbers  mean larger severity. in the contex of ROOT, peaks have different values
-			m_width_severity[i] = get_rand_float(0.1, 1);// 0.1+0.9*i/m_num_peaks;severity of width changes, larger numbers mean larger severity
+			m_height_severity[i] = get_random(1.0, 10.0, global::ms_global->m_uniform[caller::Problem].get());//1.+9.*i/m_num_peaks;//severity of height changes, larger numbers  mean larger severity. in the contex of ROOT, peaks have different values
+			m_width_severity[i] = get_random(0.1, 1.0, global::ms_global->m_uniform[caller::Problem].get());// 0.1+0.9*i/m_num_peaks;severity of width changes, larger numbers mean larger severity
 		}
 	}
 
@@ -553,7 +552,7 @@ namespace OFEC {
 		m_parameters << "Vlength:" << m_vlength << "; ";
 	}
 
-	moving_peak::moving_peak(param_map & v):problem(string(), (v[param_numDim]),  1), \
+	moving_peak::moving_peak(param_map & v) :problem(string(), (v[param_numDim]), 1), \
 		dynamic_continuous((v[param_numDim]), (v[param_numPeak]), 1) {
 		set_variable_change((v[param_flagNumDimChange]));
 		set_num_peak_change_mode((v[param_peakNumChangeMode]));
@@ -702,8 +701,8 @@ namespace OFEC {
 	}
 	//TODO: complete it
 	evaluation_tag moving_peak::evaluate_(base & ss, caller call, bool effective_fes, bool constructed) {
-		solution<variable<real>,real> &s = dynamic_cast<solution<variable<real>, real> &>(ss);
-		std:vector<real>x(m_variable_size);
+		solution<variable<real>, real> &s = dynamic_cast<solution<variable<real>, real> &>(ss);
+	std:vector<real>x(m_variable_size);
 		std::copy(s.get_variable().begin(), s.get_variable().end(), x.begin());
 		if (this->m_noise_flag)	add_noise(x);
 
@@ -720,14 +719,14 @@ namespace OFEC {
 			/* If value of basis function is higher return it */
 			if (maximum < dummy)     maximum = dummy;
 		}
-		s.get_objective[0] = maximum;
+		s.get_objective()[0] = maximum;
 
-		//TODO: need a initialize_world_best() in class solution
+		//TODO: need a initialize_worst_best() in class solution
 		/*if (effective_fes&&m_effective_eval%m_change_interval == 0) {
 			solution<variable<real>,real>::initilizeWB(s);
 		}*/
 
-		if (effective_fes&&is_tracked(x, s.get_objective())) update_peak_qaulity();
+		if (effective_fes&&is_tracked(x.data(), s.get_objective())) update_peak_qaulity();
 		if (effective_fes)    m_effective_eval++;
 		bool flag;
 #ifdef OFEC_CONSOLE
@@ -769,4 +768,5 @@ namespace OFEC {
 		}
 		return rf;
 	}
+}
 
