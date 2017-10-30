@@ -19,8 +19,12 @@
 #ifndef OFEC_DYNAMIC_CONTINUOUS_H
 #define OFEC_DYNAMIC_CONTINUOUS_H
 
-#include"dynamic.h"
+#include"dynamic_problem.h"
 #include"../../../../core/problem/continuous/continuous.h"
+
+#include<fstream> 
+#include<xutility>
+#include<../../utility/vector.h>
 
 namespace OFEC {
 	class dynamic_continuous : public dynamic, public continuous {
@@ -97,10 +101,9 @@ namespace OFEC {
 		void print_peak(const int idx);
 		void print_peaks(ofstream & out);
 		int get_num_of_visable_peaks();
-		bool is_visable(const int idx); // TODO: Should I take out the "is_" in the function name?
+		bool is_visable(const int idx);
 		int get_track_number(int idex);
-		bool is_tracked(vector<double> &gen, vector<double> &obj); // is any peak tracked for the first time
-		bool is_tracked(double *gen, vector<double> &obj); //TODO:Can I use template to recompose the two functions
+		bool is_tracked(double *gen, vector<double> &obj); // is any peak tracked for the first time
 		int get_peaks_found();
 		double get_associate_radius(int idx);
 		double get_peaks_traced_qaulity();
@@ -114,9 +117,9 @@ namespace OFEC {
 		virtual void recurrent_change() {};
 		virtual void chaotic_change() {};
 		virtual void recurrent_noisy_change() {};
-
+		
 		//TODO: add "const" in parameter type.
-		void copy(problem * p); // copy parameter values of a problem when it changes
+		void copy(const problem * rhs); // copy parameter values of a problem when it changes
 		//HACK: deleted it
 		//virtual void free_memory();
 		virtual void allocate_memory(const int size_var, const int num_peaks);

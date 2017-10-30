@@ -1,7 +1,5 @@
 #include "dynamic_continuous.h"
-#include<fstream> 
-#include<xutility>
-#include<../../utility/vector.h>
+
 namespace OFEC {
 	bool dynamic_continuous::is_global_optima(int idx) {
 		return m_optima_idx[idx];
@@ -14,6 +12,10 @@ namespace OFEC {
 		allocate_memory(size_var, num_peaks);
 		for (int i = 0; i< num_peaks; i++) m_whether_change[i] = true;
 		m_parameters << "Changing peaks ratio:" << m_change_peak_ratio << "; ";
+	}
+
+	dynamic_continuous::~dynamic_continuous() {
+		//TODO:nothing
 	}
 
 
@@ -261,42 +263,6 @@ namespace OFEC {
 		return m_is_tracked[idex];
 	}
 
-	bool dynamic_continuous::is_tracked(vector<double>& gen, vector<double>& obj) {
-		bool flag = false, movepeaks = false;
-		for (int i = 0; i < m_num_peaks; i++) {
-			double dis = 0, dis1 = fabs(obj[0] - m_height[i]);
-			for (int j = 0; j < m_variable_size; j++) dis += (gen[j] - m_peak[i][j])*(gen[j] - m_peak[i][j]);
-			dis = sqrt(dis);
-			if (dis <= m_variable_accuracy&&dis1 <= m_objective_accuracy) {
-				// peak[i] assumed to be found
-				int j = 0;
-				while (m_height_order[j++] != i&&j < m_num_peaks);
-				if (!m_found[i]) {
-					m_is_tracked[j - 1]++;
-					m_found[i] = true;
-					m_peaks_found++;
-					flag = true;
-				}
-
-			}
-			if (dis < m_time_linkage_severity) {
-				// move peak[i] to a near random position when it was tracked
-				if (m_time_linkage_flag) {
-					move_peak(i);
-					update_time_linkage();
-					movepeaks = true;
-					m_flag_trigger_time_linkage = true;
-				}
-			}
-		}
-		if (movepeaks) {
-#ifdef DEMON_OFEC
-			calculateSamplePoints();
-#endif
-		}
-		return flag;
-	}
-
 	bool dynamic_continuous::is_tracked(double * gen, vector<double>& obj) {
 		bool flag = false, movepeaks = false;
 		for (int i = 0; i < m_num_peaks; i++) {
@@ -366,13 +332,13 @@ namespace OFEC {
 		}
 		return m_peak[nearest];
 	}
-	void dynamic_continuous::copy(problem * p) {
-		dynamic::copy(p);
-		continuous::copy(p);
+	void dynamic_continuous::copy(const problem * rhs) {
+		dynamic::copy(rhs);
+		continuous::copy(rhs);
 
-		dynamic_continuous *dcp = dynamic_cast<dynamic_continuous *>(p);
+		const dynamic_continuous *dcp = dynamic_cast<const dynamic_continuous *>(rhs);
 
-		int dim = m_variable_size_temp < p->variable_size() ? m_variable_size_temp : p->variable_size();
+		int dim = m_variable_size_temp < rhs->variable_size() ? m_variable_size_temp : rhs->variable_size();
 		int peaks = m_num_peaks < dcp->number_of_peak() ? m_num_peaks : dcp->number_of_peak();
 
 		for (int i = 0; i < peaks; i++) {
@@ -491,7 +457,7 @@ namespace OFEC {
 			return;
 		}
 		std::vector<int> a(m_num_peaks);
-		global::ms_global->m_uniform[caller::Problem]->shuffle_index<std::vector<int>>(a, m_num_peaks, caller::Problem);
+		shuffle_index(a, m_num_peaks, global::ms_global->m_uniform[caller::Algorithm].get());
 		// make sure the global optimum changes always
 		int gopt = 0;
 		for (int i = 0; i<m_num_peaks; i++) {

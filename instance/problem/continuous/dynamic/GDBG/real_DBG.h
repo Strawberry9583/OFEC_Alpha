@@ -27,8 +27,8 @@ namespace OFEC {
 	class real_DBG: public dynamic_continuous {
 	protected:
 		bool m_prediction;						// the next change of function can be predictable or not
-		std::vector<matrix> mp_rotationMatrix;				// orthogonal rotation matrixes for each function
-		std::vector<std::vector<std::vector<int>>> mppp_rotationPlanes;					// save the planes rotated during one periodicity
+		std::vector<matrix> m_rotation_matrix;				// orthogonal rotation matrixes for each function
+		std::vector<std::vector<std::vector<int>>> m_rotation_planes;					// save the planes rotated during one periodicity
 
 	public:
 		real_DBG(const int size_var, const int number_peaks, const int size_object = 1);
@@ -41,29 +41,29 @@ namespace OFEC {
 		void reset();
 		void reinitialize();
 	protected:
-		//TODO: delete this function?
-		void correctSolution(double *x);
-		void correctSolution(vector<double> x);
-		void heightStandardChange();
-		void positionStandardChange(double angle);
+		//TODO: delete this function? 
+		void correct_solution(double *x);
+		void correct_solution(vector<double> x);
+		void height_standard_change();
+		void position_standard_change(double angle);
 
-		virtual void randomChange() {};
-		virtual void smallStepChange() {};
-		virtual void largeStepChange() {};
-		virtual void recurrentChange() {};
-		virtual void chaoticChange() {};
-		virtual void recurrentNoisyChange() {};
+		virtual void random_change() {};
+		virtual void small_step_change() {};
+		virtual void large_step_change() {};
+		virtual void recurrent_change() {};
+		virtual void chaotic_change() {};
+		virtual void recurrent_noisy_change() {};
 
 
-		void copy(problem * p);
-		double  standardChange(const change_type T, const double min, const double max);
-		virtual void allocateMemory(const int size_var, const int peaks);
+		void copy(const problem * p);
+		double  standard_change(const change_type T, const double min, const double max);
+		virtual void allocate_memory(const int size_var, const int peaks);
 
-		void initialize(const change_type t, const bool flag_var_change, const bool flag_number_peak_change,
+		void initialize(const change_type type, const bool flag_var_change, const bool flag_number_peak_change,
 			const int peak_number_change_mode, const bool flag_noise, const bool flag_time_linkage);
-		void restoreInfor();
-		virtual void changeDimension() {};
-		virtual void changeNumPeaks() {};
+		void restore_infor();
+		virtual void change_variable() {};
+		virtual void change_num_peaks() {};
 	};
 }
 
