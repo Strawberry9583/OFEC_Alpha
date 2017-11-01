@@ -15,7 +15,7 @@ namespace OFEC {
 	}
 
 	void problem::copy(const problem * rhs) {
-
+	
 	}
 	void problem::resize_variable(size_t n) {
 		m_variable_size = n;

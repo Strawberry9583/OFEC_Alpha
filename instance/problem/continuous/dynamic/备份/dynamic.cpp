@@ -72,6 +72,7 @@ namespace OFEC {
 		//dtor
 	}
 
+
 	dynamic & dynamic::operator=(const dynamic & dynamic) {
 		if (this == &dynamic) return *this;
 
@@ -283,6 +284,24 @@ namespace OFEC {
 
 	}
 
+	void dynamic::set_time_linkage_severity(double value) {
+		m_time_linkage_severity = value;
+
+		size_t start, end;
+		start = m_parameters.str().find("TimeLinkageSeverity:");
+		for (size_t i = start; i < m_parameters.str().size(); i++) {
+			if (m_parameters.str()[i] == ';') {
+				end = i;
+				break;
+			}
+		}
+		stringstream ss;
+		ss << "TimeLinkageSeverity:" << m_time_linkage_severity << "; ";
+		string result = m_parameters.str();
+		result.replace(start, end - start + 1, ss.str());
+		m_parameters.str(result);
+	}
+
 
 
 
@@ -306,14 +325,6 @@ namespace OFEC {
 		string result = m_parameters.str();
 		result.replace(start, end - start + 1, ss.str());
 		m_parameters.str(result);
-	}
-
-	bool dynamic::set_period(const int period) {
-		if (period >= 0) m_period = period;
-		else {
-			throw myexcept("period must be positive@ dynamic::set_period");
-		}
-		return true;
 	}
 
 	void dynamic::set_change_type(const s_change_type & change_type) {
@@ -344,32 +355,14 @@ namespace OFEC {
 		m_noisy_severity = severity;
 	}
 
-	void dynamic::set_time_linkage_severity(double value) {
-		m_time_linkage_severity = value;
-
-		size_t start, end;
-		start = m_parameters.str().find("TimeLinkageSeverity:");
-		for (size_t i = start; i < m_parameters.str().size(); i++) {
-			if (m_parameters.str()[i] == ';') {
-				end = i;
-				break;
-			}
-		}
-		stringstream ss;
-		ss << "TimeLinkageSeverity:" << m_time_linkage_severity << "; ";
-		string result = m_parameters.str();
-		result.replace(start, end - start + 1, ss.str());
-		m_parameters.str(result);
-	}
-
 	int dynamic::initial_num_peaks() {
 		return *ms_init_num_peaks;
 	}
 
-	void dynamic::copy(problem * dynamic_problem) {
-		problem::copy(dynamic_problem);
+	void dynamic::copy(const problem * rhs) {
+		problem::copy(rhs);
 
-		dynamic *d_p = dynamic_cast<dynamic*>(dynamic_problem);
+		const dynamic *d_p = dynamic_cast<const dynamic*>(rhs);
 		m_change_type = d_p->m_change_type;
 		m_change_interval = d_p->m_change_interval;
 		m_period = d_p->m_period;

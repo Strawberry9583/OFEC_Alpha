@@ -163,6 +163,8 @@
     <ClCompile Include="core\problem\problem.cpp" />
     <ClCompile Include="instance\problem\continuous\dynamic\dynamic_problem.cpp" />
     <ClCompile Include="instance\problem\continuous\dynamic\dynamic_continuous.cpp" />
+    <ClCompile Include="instance\problem\continuous\dynamic\GDBG\composition_DBG\composition_DBG.cpp" />
+    <ClCompile Include="instance\problem\continuous\dynamic\GDBG\real_DBG.cpp" />
     <ClCompile Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.cpp" />
     <ClCompile Include="test\test_functional2.cpp" />
     <ClCompile Include="utility\matrix.cpp" />
@@ -191,6 +193,8 @@
     <ClInclude Include="core\problem\problem.h" />
     <ClInclude Include="instance\problem\continuous\dynamic\dynamic_problem.h" />
     <ClInclude Include="instance\problem\continuous\dynamic\dynamic_continuous.h" />
+    <ClInclude Include="instance\problem\continuous\dynamic\GDBG\composition_DBG\composition_DBG.h" />
+    <ClInclude Include="instance\problem\continuous\dynamic\GDBG\real_DBG.h" />
     <ClInclude Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.h" />
     <ClInclude Include="utility\functional.h" />
     <ClInclude Include="utility\matrix.h" />

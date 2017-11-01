@@ -28,6 +28,7 @@
 #include "../../utility/functional.h"
 
 namespace OFEC {
+	//
 	class base {
 	public:
 		virtual evaluation_tag evaluate(bool=true) = 0;
@@ -39,7 +40,7 @@ namespace OFEC {
 		base& operator=(base&&) = default;
 	};
 
-
+	// Ä¿±ê
 	template<typename T = double>
 	class objective {
 	public:
@@ -137,12 +138,14 @@ namespace OFEC {
 	
 	};
 
+	//
 	class variable_base {
 	public:
 		virtual void resize(size_t n) = 0;
 		virtual size_t size() noexcept = 0;
 	};
 
+	// ½â
 	template <typename VariableType>
 	class variable:public variable_base {
 	public:

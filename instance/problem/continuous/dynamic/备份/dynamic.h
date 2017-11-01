@@ -83,7 +83,13 @@ namespace OFEC {
 		dynamic & operator=(const dynamic & dynamic);
 
 		void set_change_interval(const int change_interval);
-		virtual bool set_period(const int period);
+		virtual bool set_period(const int period) {
+			if (period >= 0) m_period = period;
+			else {
+				throw myexcept("period must be positive@ dynamic::set_period");
+			}
+			return true;
+		}
 		void set_change_type(const s_change_type &change_type);
 		void set_change_type(const change_type type);
 		void set_num_peaks_change(const bool peaks_change);
@@ -160,8 +166,7 @@ namespace OFEC {
 		virtual void change_variable() {}; //TODO: change is change, resize is resize. But what is the difference?
 		virtual void change_num_peaks() {};
 
-		//TODO: aad const to parameter's type
-		void copy(problem * dynamic_problem); // copy parameter values of a problem when it changes
+		void copy(const problem * rhs); // copy parameter values of a problem when it changes
 		virtual void  free_memory() {};
 	};
 }

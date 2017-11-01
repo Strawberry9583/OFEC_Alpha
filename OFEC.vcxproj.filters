@@ -102,6 +102,12 @@
     <ClInclude Include="instance\problem\continuous\dynamic\moving_prak\moving_peak.h">
       <Filter>instance\problem\continuous\dynamic</Filter>
     </ClInclude>
+    <ClInclude Include="instance\problem\continuous\dynamic\GDBG\real_DBG.h">
+      <Filter>instance\problem\continuous\dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\dynamic\GDBG\composition_DBG\composition_DBG.h">
+      <Filter>instance\problem\continuous\dynamic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utility\random\extreal.cpp">
@@ -163,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="test\test_functional2.cpp">
       <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\dynamic\GDBG\real_DBG.cpp">
+      <Filter>instance\problem\continuous\dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\dynamic\GDBG\composition_DBG\composition_DBG.cpp">
+      <Filter>instance\problem\continuous\dynamic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -13,11 +13,7 @@
 *  see https://github.com/Changhe160/OFEC for more information
 *
 *-------------------------------------------------------------------------------
-<<<<<<< HEAD
-* class problem defines optimization problems
-=======
 * the base of different types of problems
->>>>>>> master
 *
 *
 *********************************************************************************/
@@ -74,8 +70,7 @@ namespace OFEC {
 		virtual violation_type check_constraint_violation(const base &) const { 
 			return violation_type::None;
 		}
-		//TODO: comment it...
-		virtual void constraint_value(const base &, std::pair<double,vector<double>>&)=0;
+		virtual void constraint_value(const base &, std::pair<double, vector<double>>&) {};
 		
 		template<typename Solution>
 		static void initialize_objective_minmax(const Solution &s) {
@@ -141,6 +136,11 @@ namespace OFEC {
 		size_t total_evaluations() {
 			return m_total_eval;
 		}
+
+		void set_opt_mode(optimization_mode m, size_t idx=0) {
+			m_opt_mode[idx]=m;
+		}
+
 	protected:
 		problem& operator=(const problem& rhs);  // assignment is not allowed outside
 		problem& operator=(problem&& rhs);

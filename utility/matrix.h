@@ -27,6 +27,7 @@ namespace OFEC {
 	class matrix final {								// *****************Orthogonal rotation matrix***********************
 	public:
 		matrix(size_t dim = 0);
+		// Attention: the order has been reversed compared with original edition
 		matrix(size_t r, size_t c);
 		matrix & operator*=(const matrix & m);
 		matrix & operator*=(double x);
