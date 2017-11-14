@@ -8,7 +8,7 @@ namespace OFEC {
 		std::stringstream os;
 		os << global::ms_arg[param_workingDir] << "Test_result/";
 		os << global::ms_arg[param_proName] << "(" << global::ms_arg[param_numObj] << ")_";
-		os << global::ms_arg[param_algName] << "(" << global::ms_arg[param_popSize] << ").txt";
+		os << global::ms_arg[param_algName] << ".txt";
 		std::ofstream out(os.str());
 		std::vector<double> sum;
 		size_t max = mvv_data[0].size();

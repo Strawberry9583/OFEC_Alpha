@@ -45,7 +45,6 @@ namespace OFEC {
 				ofile.close();
 			}
 		}
-		size_t numObj = global::ms_arg[param_numObj];
 		std::ifstream infile(os.str());
 		if (!infile)
 			throw myexcept("please std::set your own pareto front @DTLZ::generatePF()");
@@ -58,8 +57,8 @@ namespace OFEC {
 		infile.clear();
 		infile.open(os.str());
 		for (size_t i = 0; i < line; i++) {
-			std::vector<real> temp_obj(numObj);
-			for (size_t j = 0; j < numObj; j++)
+			std::vector<real> temp_obj(m_objective_size);
+			for (size_t j = 0; j < m_objective_size; j++)
 				infile >> temp_obj[j];
 			m_optima.set_objective(temp_obj, i);
 		}

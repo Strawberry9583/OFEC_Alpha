@@ -106,10 +106,10 @@ namespace OFEC {
 	class term_mean_remain :public termination {
 	protected:
 		int m_max_iter;
-		int m_suc_iter = 0;
+		double m_epsilon = 1.E-2;
 		double m_previous = 0;
 		double m_current = 0;
-		double m_epsilon = 1.E-2;
+		int m_suc_iter = 0;
 	public:
 		using termination::terminating;
 		term_mean_remain(param_map &v) :termination(v) {

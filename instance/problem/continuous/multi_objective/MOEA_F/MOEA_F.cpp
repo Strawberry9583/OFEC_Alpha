@@ -317,10 +317,9 @@ namespace OFEC {
 		infile.close();
 		infile.clear();
 		infile.open(os.str());
-		size_t numObj = 2;
-		std::vector<real> temp_obj(numObj);
+		std::vector<real> temp_obj(m_objective_size);
 		for (size_t i = 0; i < lines; i++) {
-			for (size_t j = 0; j < numObj; j++)
+			for (size_t j = 0; j < m_objective_size; j++)
 				infile >> temp_obj[j];
 			m_optima.set_objective(temp_obj, i);
 		}

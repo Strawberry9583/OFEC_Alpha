@@ -2,7 +2,7 @@
 
 namespace OFEC {
 	DTLZ1::DTLZ1(param_map & v) : problem(v[param_proName], (v[param_numObj] + v[param_interTest1] - 1), v[param_numObj]), \
-		DTLZ(v[param_proName], (v[param_numObj] + v[param_interTest1] - 1), v[param_numObj]) {
+		DTLZ(v[param_proName], (v[param_numObj] + v[param_interTest1] - 1), v[param_numObj]) { // param_interTest1 = 5 is recommended
 	}
 
 	DTLZ1::DTLZ1(const std::string & name, size_t size_var, size_t size_obj) : problem(name, size_var, size_obj), \
