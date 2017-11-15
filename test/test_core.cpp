@@ -21,9 +21,9 @@ BOOST_AUTO_TEST_CASE(test_case1)
 	std::vector<double> a = { 1,1 }, b = { 0,0 };
 	solution<> s1(b.size(), a.size());
 	solution<> s2(s1);
-	if (s1 > s2) {}
-	if (s1 >= s2) {}
-	if (s1 < s2) {}
+
+	if (s1.dominate( s2)) {}
+	if (s1.dominate_equal( s2)) {}
 
 	double d = s1.objective_distance(s2);
 }
@@ -34,8 +34,14 @@ BOOST_AUTO_TEST_CASE(test_case2)
 	i.initialize(0);
 	population<individual<>> p;
 
+
 }
 
+BOOST_AUTO_TEST_CASE(test_case3)
+{
+
+
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 

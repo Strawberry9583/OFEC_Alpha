@@ -46,7 +46,7 @@ namespace OFEC {
 		using value_type = T;
 		using encoding = std::vector<value_type>;
 		using iterator_type = typename std::vector<value_type>::iterator;
-
+		using const_iterator = typename std::vector<value_type>::const_iterator;
 		objective(size_t n=0) :m_o(n) {}
 		objective(const objective& rhs) :m_o(rhs.m_o) {}
 		objective(const std::vector<value_type>& rhs) :m_o(rhs) {}
@@ -74,26 +74,6 @@ namespace OFEC {
 
 		objective(objective&& rhs) :m_o(std::move(rhs.m_o)) {}
 
-		template<typename Compare = objective_compare<value_type>>
-		dominationship compare(const std::vector<value_type>& rhs, const vector<optimization_mode> &mode, Compare comp = Compare()) const{
-			return comp(m_o, rhs, mode);
-		}
-
-		template<typename Compare = objective_compare<value_type> >
-		dominationship compare(const objective& rhs, const vector<optimization_mode> &mode, Compare comp = Compare()) const {
-			return comp(m_o, rhs.m_o, mode);
-		}
-
-		template<typename Compare = objective_compare<value_type>>
-		dominationship compare(const std::vector<value_type>& rhs, optimization_mode mode, Compare comp = Compare()) const {
-			return comp(m_o, rhs, mode);
-		}
-
-		template<typename Compare = objective_compare<value_type> >
-		dominationship compare(const objective& rhs, optimization_mode mode, Compare comp = Compare()) const {
-			return comp(m_o, rhs.m_o, mode);
-		}
-
 		void resize(size_t n) {
 			m_o.resize(n);
 		}
@@ -112,19 +92,19 @@ namespace OFEC {
 			return m_o[n];
 		}
 
-		typename vector<value_type>::iterator begin() noexcept {
+		iterator_type begin() noexcept {
 			return m_o.begin();
 		}
 
-		typename vector<value_type>::const_iterator begin() const noexcept {
+		const_iterator begin() const noexcept {
 			return m_o.cbegin();
 		}
 
-		typename vector<value_type>::iterator end() noexcept {
+		iterator_type end() noexcept {
 			return m_o.end();
 		}
 
-		typename vector<value_type>::const_iterator end() const noexcept {
+		const_iterator end() const noexcept {
 			return m_o.cend();
 		}
 
@@ -146,10 +126,10 @@ namespace OFEC {
 	template <typename VariableType>
 	class variable:public variable_base {
 	public:
-		using  value_type = typename VariableType;
+		using value_type = VariableType;
 		using encoding = std::vector<value_type>;
 		using iterator_type = typename std::vector<value_type>::iterator;
-
+		using const_iterator = typename std::vector<value_type>::const_iterator;
 		variable(size_t n=0) :m_x(n){}
 		variable(const variable& rhs) : m_x(rhs.m_x) {}
 		variable(variable&& rhs) :m_x(std::move(rhs.m_x)) {}
@@ -184,11 +164,26 @@ namespace OFEC {
 		iterator_type end() noexcept {
 			return m_x.end();
 		}
+		
+		const_iterator begin() const noexcept {
+			return m_x.begin();
+		}
+
+		const_iterator end() const noexcept {
+			return m_x.end();
+		}
+
 		const value_type& operator[](size_t i)const{
 			return m_x[i];
 		}
 		value_type& operator[](size_t i){
 			return m_x[i];
+		}
+		value_type* data() noexcept {
+			return m_x.data();
+		}
+		const value_type* data() const noexcept {
+			return m_x.data();
 		}
 	protected:
 		std::vector<value_type> m_x;

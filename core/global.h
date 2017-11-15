@@ -24,8 +24,8 @@
 
 #include "../utility/random/newran.h"
 #include "problem/problem.h"
-#include "definition.h"
-#include "../utility/typevar/typevar.h"
+#include "algorithm/algorithm.h"
+#include "../utility/factory.h"
 
 namespace OFEC{
 
@@ -34,12 +34,14 @@ namespace OFEC{
 #endif // USING_GPU
 
 	struct global{
-		//global();
+		global(const int runID, double seed_pro, double seed_alg);
+
+		const int m_runID;
 
 		std::unique_ptr<problem> m_problem;
-		//std::unique_ptr<algorithm> m_algorithm;
+		std::unique_ptr<algorithm> m_algorithm;
 
-		std::mutex m_mutex, m_stream_mutex;
+		std::mutex m_mutex;
 		std::map<caller, std::unique_ptr<uniform>> m_uniform;
 		std::map<caller, std::unique_ptr<normal>> m_normal;
 		std::map<caller, std::unique_ptr<cauchy>> m_cauchy;
@@ -59,6 +61,9 @@ namespace OFEC{
 		compute::context context;
 #endif // USING_GPU
 		static param_map ms_arg;
+		static std::map<std::string, parameter> ms_param;
+		static factory<problem> ms_reg_problem;
+		static factory<algorithm> ms_reg_algorithm;
 	};
 }
 #endif // !OFEC_GLOBAL_H

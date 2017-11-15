@@ -23,15 +23,14 @@
 #define OFEC_SOLUTION_H
 #include <utility>
 
-#include "encoding.h"
-#include "../definition.h"
+
+
 #include "../global.h"
 
 namespace  OFEC {
 
 	template<typename VariableEncoding = variable<real>, 
-		typename ObjetiveType = real, 
-		typename ObjetiveCompare = objective_compare<ObjetiveType>
+		typename ObjetiveType = real
 	>
 	class solution:public base{
 	public:
@@ -41,28 +40,24 @@ namespace  OFEC {
 		template<typename ... Args>
 		solution(size_t no, Args&& ... args ):m_var(std::forward<Args>(args)...),m_obj(no){ }		
 		solution(){}
-		solution(const solution& rhs) :base(rhs),m_compare(rhs.m_compare), m_var(rhs.m_var), 
-			m_obj(rhs.m_obj),m_constraint_value(rhs.m_constraint_value),m_violation(rhs.m_violation){}
-		solution(solution&& rhs) :base(rhs), m_compare(std::move(rhs.m_compare)), m_var(std::move(rhs.m_var)), 
-			m_obj(std::move(rhs.m_obj)), m_constraint_value(std::move(rhs.m_constraint_value)),	m_violation(std::move(rhs.m_violation)) {}
+		solution(const solution& rhs) :base(rhs), m_var(rhs.m_var), 
+			m_obj(rhs.m_obj),m_constraint_value(rhs.m_constraint_value){}
+		solution(solution&& rhs) :base(rhs),  m_var(std::move(rhs.m_var)), 
+			m_obj(std::move(rhs.m_obj)), m_constraint_value(std::move(rhs.m_constraint_value)) {}
 		solution(const variable_encoding& var, const objective<objective_type> &obj) :m_var(var), m_obj(obj) {}
 
 		solution& operator =(const solution& rhs) {
 			if (this == &rhs) return *this;
 			m_var=rhs.m_var;
 			m_obj=rhs.m_obj;
-			m_compare = rhs.m_compare;
 			m_constraint_value = rhs.m_constraint_value;
-			m_violation = rhs.m_violation;
 			return *this;
 		}
 
 		solution& operator =(solution&& rhs) {
 			m_var = std::move(rhs.m_var);
 			m_obj = std::move(rhs.m_obj);
-			m_compare = std::move(rhs.m_compare);
 			m_constraint_value = std::move(rhs.m_constraint_value);
-			m_violation = std::move(rhs.m_violation);
 			return *this;
 		}
 
@@ -80,54 +75,42 @@ namespace  OFEC {
 		void resize_objective(int n) { m_obj.resize(n); }
 		void resize_variable(int n) { m_var.resize(n); }
 
-		bool operator>( const objective<objective_type>& o) const{ //this soluton donimates objective o
-			return  dominationship::Dominating == m_compare(m_obj.vect(), o.vect(),  global::ms_global->m_problem->opt_mode());
-		}
-		bool operator>(const solution& s) const {//this solution donimates solution s
-			return dominationship::Dominating == m_compare(m_obj.vect(), s.m_obj.vect(), global::ms_global->m_problem->opt_mode());
-		}
-		bool operator>(const std::vector<objective_type>& o)const {//this solution donimates solution s
-			return dominationship::Dominating == m_compare(m_obj.vect(), o, global::ms_global->m_problem->opt_mode());
+		bool dominate( const objective<objective_type>& o) const{ //this soluton donimates objective o
+			return  dominationship::Dominating == objective_compare(m_obj.vect(), o.vect(),  global::ms_global->m_problem->opt_mode()).first;
 		}
 
-		bool operator>=(const objective<objective_type>& o)const { //this soluton weakly donimates objective o
-			 dominationship r = m_compare(m_obj.vect(),o.vect(), global::ms_global->m_problem->opt_mode());
+		bool dominate(const solution& s) const {//this solution donimates solution s
+			return dominationship::Dominating == objective_compare(m_obj.vect(), s.m_obj.vect(), global::ms_global->m_problem->opt_mode()).first;
+		}
+		bool dominate(const std::vector<objective_type>& o)const {//this solution donimates solution s
+			return dominationship::Dominating == objective_compare(m_obj.vect(), o, global::ms_global->m_problem->opt_mode()).first;
+		}
+
+		bool dominate_equal(const objective<objective_type>& o)const { //this soluton weakly donimates objective o
+			 dominationship r = objective_compare(m_obj.vect(),o.vect(), global::ms_global->m_problem->opt_mode()).first;
 			 return r == dominationship::Dominating || r == dominationship::Equal;
 		}
-		bool operator>=(const solution& s)const {//this solution weakly donimates solution s
-			dominationship r = m_compare(m_obj.vect(),s.m_obj.vect(), global::ms_global->m_problem->opt_mode() );
+		bool dominate_equal(const solution& s)const {//this solution weakly donimates solution s
+			dominationship r = objective_compare(m_obj.vect(),s.m_obj.vect(), global::ms_global->m_problem->opt_mode() ).first;
 			return r == dominationship::Dominating || r == dominationship::Equal;
 		}
-		bool operator>=(const std::vector<objective_type>& o)const { //this soluton weakly donimates objective o
-			dominationship r = m_compare(m_obj.vect(), o, global::ms_global->m_problem->opt_mode());
+		bool dominate_equal(const std::vector<objective_type>& o)const { //this soluton weakly donimates objective o
+			dominationship r = objective_compare(m_obj.vect(), o, global::ms_global->m_problem->opt_mode()).first;
 			return r == dominationship::Dominating || r == dominationship::Equal;
-		}
-
-		bool operator<(const objective<objective_type>& o)const { //this solution is donimated by o
-			return  dominationship::Dominated == m_compare(m_obj.vect(),o.vect(), global::ms_global->m_problem->opt_mode());
-		}
-		bool operator<(const solution& s)const {//this solution is donimated s
-			return  dominationship::Dominated == m_compare(m_obj.vect(),s.m_obj.vect(), global::ms_global->m_problem->opt_mode());
-		}
-		bool operator<(const std::vector<objective_type>& o)const { //this solution is donimated by o
-			return  dominationship::Dominated == m_compare(m_obj.vect(), o, global::ms_global->m_problem->opt_mode());
 		}
 
 		bool nondominate(const objective<objective_type>& o)const { //two solutions non-donimate with each other
-			return  dominationship::Non_dominated == m_compare(m_obj.vect(), o.vect(), global::ms_global->m_problem->opt_mode());
+			return  dominationship::Non_dominated == objective_compare(m_obj.vect(), o.vect(), global::ms_global->m_problem->opt_mode()).first;
 		}
 		bool nondominate(const solution& s)const {//two solutions non-donimate with each other
-			return  dominationship::Non_dominated == m_compare(m_obj.vect(), s.m_obj.vect(), global::ms_global->m_problem->opt_mode());
+			return  dominationship::Non_dominated == objective_compare(m_obj.vect(), s.m_obj.vect(), global::ms_global->m_problem->opt_mode()).first;
 		}
 		bool nondominate(const std::vector<objective_type>& o)const { //two solutions non-donimate with each other
-			return  dominationship::Non_dominated == m_compare(m_obj.vect(), o, global::ms_global->m_problem->opt_mode());
+			return  dominationship::Non_dominated == objective_compare(m_obj.vect(), o, global::ms_global->m_problem->opt_mode()).first;
 		}
 	 
-		bool operator ==(const solution& rhs) {
-			return dominationship::Equal == m_compare(m_obj.vect(), rhs.m_obj.vect(), global::ms_global->m_problem->opt_mode());
-			//if (dominationship::Equal != m_compare(m_obj.vect(), rhs.vect(), global::ms_global->m_problem->opt_mode()))
-			//	return false;
-			//return global::ms_global->m_problem->same(*this, &rhs);
+		bool equal(const solution& rhs) const {
+			return dominationship::Equal == objective_compare(m_obj.vect(), rhs.m_obj.vect(), global::ms_global->m_problem->opt_mode()).first;
 		}
 
 		bool same(const solution& x)const {//two solutions non-donimate with each other
@@ -139,13 +122,8 @@ namespace  OFEC {
 			m_obj.resize(no);
 		}
 		evaluation_tag evaluate(bool effective_eval=true) {
-			evaluation_tag tag = evaluation_tag::Normal;
-
-			if(m_violation!=violation_type::Boundary)
-			tag = global::ms_global->m_problem->evaluate(*this, caller::Algorithm, effective_eval);
-			else tag = evaluation_tag::Infeasible;
-
-			return tag;
+				
+			return  global::ms_global->m_problem->evaluate(*this, caller::Algorithm, effective_eval);
 		}
 
 		double objective_distance(const solution& rhs) const {			
@@ -170,20 +148,34 @@ namespace  OFEC {
 			return m_var;
 		}
 
-		vector<objective_type>& get_objective() {
+		std::vector<objective_type>& get_objective() {
 			return m_obj.vect();
 		}
 
-		const vector<objective_type>& get_objective()const {
+		const std::vector<objective_type>& get_objective()const {
 			return m_obj.vect();
 		}
 
-		violation_type check_violation() {
-			return m_violation=global::ms_global->m_problem->check_violation(*this);
+		violation_type check_boundary_violation() {
+			return global::ms_global->m_problem->check_boundary_violation(*this);
 		}
 
-		void constraint_value() {
-			global::ms_global->m_problem->constraint_value(m_constraint_value);
+		violation_type check_constraint_violation() {
+			return global::ms_global->m_problem->check_constraint_violation(*this);
+		}
+
+		std::pair<double, std::vector<double>> & constraint_value() {
+			return m_constraint_value;
+		}
+
+		const std::pair<double, std::vector<double>> & constraint_value()const {
+			return m_constraint_value;
+		}
+		size_t number_violation() {
+			size_t count = 0;
+			for (auto &i : m_constraint_value.second)
+				if (i > 0) ++count;
+			return count;
 		}
 
 		void set_objective_infinite() {
@@ -194,14 +186,13 @@ namespace  OFEC {
 		}
 
 	protected:	
-		ObjetiveCompare m_compare;
 		variable_encoding m_var;
 		objective<objective_type> m_obj;
 		std::pair<double, std::vector<double>> m_constraint_value;
-		violation_type m_violation = violation_type::None;
 	};
 
 	
+
 }
 
 #endif // !OFEC_SOLUTION_H
