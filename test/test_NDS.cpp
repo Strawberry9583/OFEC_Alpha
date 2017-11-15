@@ -159,46 +159,60 @@ BOOST_AUTO_TEST_CASE(test_case3) {
 }
 */
 BOOST_AUTO_TEST_CASE(test_case2) {
-	const int data_size(1000);
+	const int data_size(10000);
 	const int obj_num(3);
-	OFEC::random rand1(0.5);
-	time_t start(0), end(0);
+	OFEC::random rand1(0.1);
+	clock_t start(0), end(0);
 
 	NDS::circle_distribution d1(obj_num, data_size, rand1);
 	std::vector<std::vector<double>> data = d1.get_data();
-	std::vector<int> no;
-	std::vector<std::pair<int, std::vector<double>>> md;
-	for (int i = 0; i < data_size; ++i) {
-		no.push_back(i);
-		md.emplace_back(no[i], data[i]);
-	}
+	//std::vector<int> no;
+	//std::vector<std::pair<int, std::vector<double>>> md;
+	//for (int i = 0; i < data_size; ++i) {
+	//	no.push_back(i);
+	//	md.emplace_back(no[i], data[i]);
+	//}
 
-	time(&start);
-	NDS::fast_sort fs(md);
-	fs.sort();
-	time(&end);
-	std::cout<<"fs cost:"<< (end - start) << " seconds" << std::endl << std::endl;
-	auto fs_result = fs.ranking();
-	int fs_numcom = fs.number();
-
-	int te_com = 0;
-	std::vector<int> te_rank(data_size);
-	time(&start);
-	NDS::T_ENS(data, te_com, te_rank);
-	time(&end);
-	std::cout << "te cost:" << (end - start) << " seconds" << std::endl << std::endl;
+	//start = clock();
+	//NDS::fast_sort fs(md);
+	//fs.sort();
+	//end = clock();
+	//std::cout<<"fs cost:"<< (end - start) << " milliseconds" << std::endl << std::endl;
+	//auto fs_result = fs.ranking();
+	//int fs_numcom = fs.number();
 
 	std::vector<std::vector<double>> data2(obj_num, std::vector<double>(data_size));
 	for (int i = 0; i < data_size; ++i)
 		for (int j = 0; j < obj_num; ++j)
 			data2[j][i] = data[i][j];
-
 	int ls_com = 0;
 	std::vector<int> ls_rank(data_size);
-	time(&start);
+	start = clock();
 	NDS::LinkSort(data2, ls_rank, ls_com);
-	time(&end);
-	std::cout << "ls cost:" << (end - start) << " seconds" << std::endl << std::endl;
+	end = clock();
+	std::cout << "ls cost:" << (end - start) << " milliseconds" << std::endl << std::endl;
+
+	start = clock();
+	NDS::LinkSort(data2, ls_rank, ls_com);
+	end = clock();
+	std::cout << "ls cost:" << (end - start) << " milliseconds" << std::endl << std::endl;
+
+	start = clock();
+	NDS::LinkSort(data2, ls_rank, ls_com);
+	end = clock();
+	std::cout << "ls cost:" << (end - start) << " milliseconds" << std::endl << std::endl;
+
+	start = clock();
+	NDS::LinkSort(data2, ls_rank, ls_com);
+	end = clock();
+	std::cout << "ls cost:" << (end - start) << " milliseconds" << std::endl << std::endl;
+
+	int te_com = 0;
+	std::vector<int> te_rank(data_size);
+	start = clock();
+	NDS::T_ENS(data, te_com, te_rank);
+	end = clock();
+	std::cout << "te cost:" << (end - start) << " milliseconds" << std::endl << std::endl;
 
 	//std::cout << (ls_result == fs_result ? "match" : "not match") << std::endl;
 	system("pause");
