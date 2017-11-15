@@ -6,7 +6,7 @@
 #include <list>
 
 namespace NDS {
-	void LinkSort(std::vector<std::vector<double>>& data, std::map<int, int>& rank, int& comp);
+	void LinkSort(std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp);
 }
 
 #endif // !LINKSORT_H
