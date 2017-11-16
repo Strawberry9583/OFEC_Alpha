@@ -252,3 +252,4 @@ OFEC.vcxproj
 utility/random/extreal.h
 OFEC.vcxproj
 *.vcxproj
+.gitattributes
