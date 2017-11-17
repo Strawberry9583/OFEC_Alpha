@@ -69,6 +69,7 @@ namespace NDS {
 			}
 			return m_label;
 		}
+		std::vector<int>& rank_result() { return rank; }
 		int number() {
 			return m_num;
 		}

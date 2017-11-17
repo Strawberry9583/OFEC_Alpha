@@ -64,10 +64,9 @@ namespace NDS {
 	private:
 		const int m_obj_num;
 		const int m_data_size;
-		OFEC::random rand;
 		std::vector<std::vector<double>> m_data;
 	public:
-		ellipse_distribution(const int obj_num, const int data_size) :m_obj_num(obj_num), m_data_size(data_size), rand(0.5) {
+		ellipse_distribution(const int obj_num, const int data_size, OFEC::random& rand) :m_obj_num(obj_num), m_data_size(data_size){
 			for (int i = 0; i < m_data_size;) {
 				std::vector<double> temp;
 				std::vector<double> p(2, 0);
@@ -94,7 +93,7 @@ namespace NDS {
 				}
 			}
 		}
-		std::vector<double> new_one() {
+		std::vector<double> new_one(OFEC::random& rand) {
 			while (true) {
 				std::vector<double> temp;
 				std::vector<double> p(2, 0);
@@ -138,10 +137,9 @@ namespace NDS {
 	private:
 		const int m_obj_num;
 		const int m_data_size;
-		OFEC::random rand;
 		std::vector<std::vector<double>> m_data;
 	public:
-		hyperbola_distribution(const int obj_num, const int data_size) :m_obj_num(obj_num), m_data_size(data_size), rand(0.5) {
+		hyperbola_distribution(const int obj_num, const int data_size, OFEC::random& rand) :m_obj_num(obj_num), m_data_size(data_size){
 			for (int i = 0; i < m_data_size;) {
 				std::vector<double> temp;
 				std::vector<double> p(2, 0);
@@ -168,7 +166,7 @@ namespace NDS {
 				}
 			}
 		}
-		void update() {
+		void update(OFEC::random& rand) {
 			for (int i = 0; i < m_data_size;) {
 				std::vector<double> temp;
 				std::vector<double> p(2, 0);
@@ -214,10 +212,9 @@ namespace NDS {
 	private:
 		const int m_obj_num;
 		const int m_data_size;
-		OFEC::random rand;
 		std::vector<std::vector<double>> m_data;
 	public:
-		points_distribution(const int obj_num, const int data_size) :m_obj_num(obj_num), m_data_size(data_size), rand(0.5) {
+		points_distribution(const int obj_num, const int data_size, OFEC::random& rand) :m_obj_num(obj_num), m_data_size(data_size){
 			for (int i = 0; i < m_data_size;) {
 				std::vector<double> temp;
 				std::vector<std::vector<double>> points(m_obj_num, std::vector<double>(m_obj_num, 0.3));
@@ -245,7 +242,7 @@ namespace NDS {
 				}
 			}
 		}
-		void update() {
+		void update(OFEC::random& rand) {
 			for (int i = 0; i < m_data_size;) {
 				std::vector<double> temp;
 				std::vector<std::vector<double>> points(m_obj_num, std::vector<double>(m_obj_num, 0.2));
@@ -292,10 +289,9 @@ namespace NDS {
 	private:
 		const int m_obj_num;
 		const int m_data_size;
-		OFEC::random rand;
 		std::vector<std::vector<double>> m_data;
 	public:
-		line_distribution(const int obj_num, const int data_size) :m_obj_num(obj_num), m_data_size(data_size), rand(0.5) {
+		line_distribution(const int obj_num, const int data_size, OFEC::random& rand) :m_obj_num(obj_num), m_data_size(data_size){
 			for (int i = 0; i < m_data_size;) {
 				std::vector<double> temp;
 				double dis(0);
@@ -309,7 +305,7 @@ namespace NDS {
 				}
 			}
 		}
-		std::vector<double> new_one() {
+		std::vector<double> new_one(OFEC::random& rand) {
 			while (true) {
 				std::vector<double> temp;
 				double dis(0);

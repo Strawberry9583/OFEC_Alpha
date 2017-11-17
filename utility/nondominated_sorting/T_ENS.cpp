@@ -1,8 +1,10 @@
 #include "T_ENS.h"
+#include <iostream>
+#include <time.h>
 
 namespace NDS {
-	void T_ENS(std::vector<std::vector<double>>& Population, int & Noc, std::vector<int>& te_rank, int nSort) {
-
+	void T_ENS(const std::vector<std::vector<double>>& Pop, int & Noc, std::vector<int>& te_rank, int nSort) {
+		std::vector<std::vector<double>> Population = Pop;
 		const int N = Population.size(); //N = population size
 		if (nSort == -1)
 			nSort = N;
@@ -152,8 +154,8 @@ namespace NDS {
 				}
 			}
 		}
-		std::vector<int> FrontNo_index;
-		OFEC::quick_sort(rank, rank.size(), FrontNo_index);
+		std::vector<int> FrontNo_index(N);
+		OFEC::quick_sort(rank, N, FrontNo_index);
 		for (size_t i = 0; i < FrontNo_index.size(); ++i)
 			te_rank[i] = FrontNo[FrontNo_index[i]];
 	}

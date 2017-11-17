@@ -69,8 +69,9 @@ namespace NDS {
 		}
 		return(cur);
 	}
-	void cornerSort(double ** POP, unsigned int m, unsigned int n, unsigned int * rank, int * comp, int & comparisons) {
-		unsigned int i, j, cout = 0, markcout = 0, r = 0, cur, obj_index, flag;
+	void cornerSort(double ** POP, unsigned int m, unsigned int n, int * rank, int * comp, int & comparisons) {
+		unsigned int i, j, cout = 0, markcout = 0, cur, obj_index, flag;
+		int r = -1;
 		node *head = NULL, *mh = NULL, *p = NULL, *newone = NULL;
 		//initialize linked list(rank and mark)
 		for (i = 0; i < n; i++)

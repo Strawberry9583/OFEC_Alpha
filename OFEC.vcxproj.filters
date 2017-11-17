@@ -97,8 +97,16 @@
     <Filter Include="instance\problem\continuous\multi_modal\classical">
       <UniqueIdentifier>{1402a732-1211-40d3-9dbe-65bd62831c97}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="test">
       <UniqueIdentifier>{c38e572b-eb1a-4a97-bf0a-12c2b7400f48}</UniqueIdentifier>
+=======
+    <Filter Include="instance\problem\continuous\multi_modal\CEC2013">
+      <UniqueIdentifier>{14cf970e-81b4-4c45-ba24-6dbee0a3ea3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utility\mapbox">
+      <UniqueIdentifier>{d61d59a0-b18e-4e07-b565-e6b59e95eb6c}</UniqueIdentifier>
+>>>>>>> master
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -636,6 +644,7 @@
     <ClInclude Include="instance\problem\continuous\multi_modal\classical\waves.h">
       <Filter>instance\problem\continuous\multi_modal\classical</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="utility\nondominated_sorting\LinkSort.h">
       <Filter>utility\nondominated_sorting</Filter>
     </ClInclude>
@@ -644,6 +653,67 @@
     </ClInclude>
     <ClInclude Include="utility\nondominated_sorting\FastNondominatedSort.h">
       <Filter>test</Filter>
+=======
+    <ClInclude Include="instance\problem\continuous\multi_modal\CEC2013\F1_F8.h">
+      <Filter>instance\problem\continuous\multi_modal\CEC2013</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\CEC2013\F9_composition1.h">
+      <Filter>instance\problem\continuous\multi_modal\CEC2013</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\CEC2013\F10_composition2.h">
+      <Filter>instance\problem\continuous\multi_modal\CEC2013</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\CEC2013\F11_composition3.h">
+      <Filter>instance\problem\continuous\multi_modal\CEC2013</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\CEC2013\F12_composition4.h">
+      <Filter>instance\problem\continuous\multi_modal\CEC2013</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\global\classical\different_powers.h">
+      <Filter>instance\problem\continuous\global\classical</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\classical\expanded_decreasing_minima.h">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\classical\expanded_equal_maxima.h">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\classical\expanded_five_uneven_peak_trap.h">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\classical\expanded_himmelblau.h">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\classical\expanded_six_hump_camel_back.h">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\classical\expanded_two_peak_trap.h">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\classical\expanded_uneven_minima.h">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\continuous\multi_modal\classical\modified_vincent.h">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\mapbox\optional.hpp">
+      <Filter>utility\mapbox</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\mapbox\recursive_wrapper.hpp">
+      <Filter>utility\mapbox</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\mapbox\variant.hpp">
+      <Filter>utility\mapbox</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\mapbox\variant_cast.hpp">
+      <Filter>utility\mapbox</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\mapbox\variant_io.hpp">
+      <Filter>utility\mapbox</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\mapbox\variant_visitor.hpp">
+      <Filter>utility\mapbox</Filter>
+>>>>>>> master
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1151,11 +1221,52 @@
     <ClCompile Include="instance\problem\continuous\multi_modal\classical\waves.cpp">
       <Filter>instance\problem\continuous\multi_modal\classical</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="utility\nondominated_sorting\LinkSort.cpp">
       <Filter>utility\nondominated_sorting</Filter>
     </ClCompile>
     <ClCompile Include="test\test_NDS.cpp">
       <Filter>test</Filter>
+=======
+    <ClCompile Include="instance\problem\continuous\multi_modal\CEC2013\F9_composition1.cpp">
+      <Filter>instance\problem\continuous\multi_modal\CEC2013</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\CEC2013\F10_composition2.cpp">
+      <Filter>instance\problem\continuous\multi_modal\CEC2013</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\CEC2013\F11_composition3.cpp">
+      <Filter>instance\problem\continuous\multi_modal\CEC2013</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\CEC2013\F12_composition4.cpp">
+      <Filter>instance\problem\continuous\multi_modal\CEC2013</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\global\classical\different_powers.cpp">
+      <Filter>instance\problem\continuous\global\classical</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\classical\expanded_decreasing_minima.cpp">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\classical\expanded_equal_maxima.cpp">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\classical\expanded_five_uneven_peak_trap.cpp">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\classical\expanded_himmelblau.cpp">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\classical\expanded_six_hump_camel_back.cpp">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\classical\expanded_two_peak_trap.cpp">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\classical\expanded_uneven_minima.cpp">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\continuous\multi_modal\classical\modified_vincent.cpp">
+      <Filter>instance\problem\continuous\multi_modal\classical</Filter>
+>>>>>>> master
     </ClCompile>
   </ItemGroup>
 </Project>
