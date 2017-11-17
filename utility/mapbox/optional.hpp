@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <utility>
 
-#include <mapbox/variant.hpp>
+#include "variant.hpp"
 
 namespace mapbox {
 namespace util {
