@@ -3,9 +3,8 @@
 #include <time.h>
 
 namespace NDS {
-	void T_ENS(std::vector<std::vector<double>>& Population, int & Noc, std::vector<int>& te_rank, int nSort) {
-
-		clock_t time_start, time_finish, time_part1(0), time_part2(0), time_part3(0), time_part4(0);
+	void T_ENS(const std::vector<std::vector<double>>& Pop, int & Noc, std::vector<int>& te_rank, int nSort) {
+		std::vector<std::vector<double>> Population = Pop;
 		const int N = Population.size(); //N = population size
 		if (nSort == -1)
 			nSort = N;
@@ -15,10 +14,7 @@ namespace NDS {
 											 /*sort the population in ascending order according to the first
 											 objective value, if two solutions have the same value on the first
 											 objective value, sort them according to the next objective value*/
-		time_start = clock();
 		std::vector<int> rank = preSorting(Population, Noc);
-		time_finish = clock();
-		time_part2 += (time_finish - time_start);
 		/*the set of fronts(trees)
 		Forest[i] means the NO.of the root of the i-th tree
 		e.g., Population[Forest[i]] is the root of the i-th tree*/
@@ -44,20 +40,10 @@ namespace NDS {
 			for (size_t i = 0; i < N; ++i)
 				temp_col[i] = Population[i][j + 1];
 			std::vector<int> temp_index;
-
-			time_start = clock();
 			Noc += OFEC::quick_sort(temp_col, N, temp_index);
-			time_finish = clock();
-			time_part2 += (time_finish - time_start);
-
 			std::vector<int> temp_index2(temp_index);
 			temp_index.clear();
-
-			time_start = clock();
 			OFEC::quick_sort(temp_index2, N, temp_index);
-			time_finish = clock();
-			time_part3 += (time_finish - time_start);
-
 			for (size_t i = 0; i < N; ++i)
 				ORank[i][j] = -temp_index[i];
 		}
@@ -66,12 +52,7 @@ namespace NDS {
 			for (size_t j = 0; j < M - 1; ++j)
 				temp_row[j] = ORank[i][j];
 			std::vector<int> temp_index;
-
-			time_start = clock();
 			OFEC::quick_sort(temp_row, M - 1, temp_index);
-			time_finish = clock();
-			time_part4 += (time_finish - time_start);
-
 			for (size_t j = 0; j < M - 1; ++j)
 				ORank[i][j] = temp_index[j] + 1;
 		}
@@ -173,14 +154,9 @@ namespace NDS {
 				}
 			}
 		}
-		std::vector<int> FrontNo_index;
-		OFEC::quick_sort(rank, rank.size(), FrontNo_index);
+		std::vector<int> FrontNo_index(N);
+		OFEC::quick_sort(rank, N, FrontNo_index);
 		for (size_t i = 0; i < FrontNo_index.size(); ++i)
 			te_rank[i] = FrontNo[FrontNo_index[i]];
-
-		std::cout << "time_part1 cost: " << time_part1 << " milliseconds." << std::endl;
-		std::cout << "time_part2 cost: " << time_part2 << " milliseconds." << std::endl;
-		std::cout << "time_part3 cost: " << time_part3 << " milliseconds." << std::endl;
-		std::cout << "time_part4 cost: " << time_part4 << " milliseconds." << std::endl;
 	}
 }

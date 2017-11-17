@@ -30,8 +30,8 @@ namespace NDS{
 
 	//==================================================================
 	//void  cornerSort(double **POP,unsigned int m,unsigned int n,unsigned int *rank)
-	//POP-population??m-No. of Objectives??n-size of POP??rank-the ranking result as output
+	//POP-population  m-No. of Objectives  n-size of POP  rank-the ranking result as output
 	//==================================================================
-	void  cornerSort(double **POP, unsigned int m, unsigned int n, unsigned int *rank, int* comp, int &comparisons);
+	void  cornerSort(double **POP, unsigned int m, unsigned int n, int *rank, int* comp, int &comparisons);
 }
 #endif

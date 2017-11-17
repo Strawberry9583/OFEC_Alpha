@@ -7,7 +7,7 @@ namespace OFEC {
 		double** POP = new double*[data_size];
 		for (size_t i = 0; i < data_size; ++i)
 			POP[i] = m_offspring[i].get_objective().data();
-		unsigned int* cs_rank = new unsigned int[data_size];
+		int* cs_rank = new int[data_size];
 		int* cs_com = new int[obj_num] { 0 };
 		NDS::cornerSort(POP, obj_num, data_size, cs_rank, cs_com, m_objcomp);
 		for (size_t i = 0; i < data_size; ++i)
