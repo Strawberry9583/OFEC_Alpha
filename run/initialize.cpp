@@ -115,7 +115,6 @@ namespace OFEC {
 
 		RIGIESTER(algorithm, FNS_NSGAII, "NSGAII", std::set<problem_tag>({ problem_tag::MOP,problem_tag::CONT }));
 		RIGIESTER(algorithm, CS_NSGAII, "CS_NSGAII", std::set<problem_tag>({ problem_tag::MOP,problem_tag::CONT }));
-		RIGIESTER(algorithm, DG_NSGAII, "DG_NSGAII", std::set<problem_tag>({ problem_tag::MOP,problem_tag::CONT }));
 		RIGIESTER(algorithm, T_ENS_NSGAII, "T_ENS_NSGAII", std::set<problem_tag>({ problem_tag::MOP,problem_tag::CONT }));
 	}
 

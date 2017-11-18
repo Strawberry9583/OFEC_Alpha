@@ -62,6 +62,7 @@ namespace NDS {
 			NoF++;
 			//let the first solution in the remanining population be the root of the NoF-th tree
 			std::vector<int> Remain;
+			Remain.reserve(N);
 			for (size_t i = 0; i < FrontNo.size(); ++i)
 				if (FrontNo[i] == 100000)
 					Remain.push_back(i);

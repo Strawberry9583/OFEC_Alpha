@@ -21,7 +21,6 @@
 #include "../instance/problem/continuous/multi_objective/MOEA_F/MOEA_F9.h"
 
 #include "../instance/algorithm/MOEA/NSGAII/CS_NSGAII.h"
-#include "../instance/algorithm/MOEA/NSGAII/DG_NSGAII.h"
 #include "../instance/algorithm/MOEA/NSGAII/T_ENS_NSGAII.h"
 
 

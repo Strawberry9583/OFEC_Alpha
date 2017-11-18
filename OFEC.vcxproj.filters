@@ -103,9 +103,6 @@
     <Filter Include="utility\mapbox">
       <UniqueIdentifier>{d61d59a0-b18e-4e07-b565-e6b59e95eb6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test">
-      <UniqueIdentifier>{695049d2-6921-42ea-a200-6944acbb01cf}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\algorithm\encoding.h">
@@ -267,9 +264,6 @@
     <ClInclude Include="utility\nondominated_sorting\CornerSort.h">
       <Filter>utility\nondominated_sorting</Filter>
     </ClInclude>
-    <ClInclude Include="utility\nondominated_sorting\DominanceGraphSort.h">
-      <Filter>utility\nondominated_sorting</Filter>
-    </ClInclude>
     <ClInclude Include="utility\nondominated_sorting\preSorting.h">
       <Filter>utility\nondominated_sorting</Filter>
     </ClInclude>
@@ -340,12 +334,6 @@
       <Filter>instance\problem\continuous\multi_objective\ZDT</Filter>
     </ClInclude>
     <ClInclude Include="instance\algorithm\MOEA\NSGAII\CS_NSGAII.h">
-      <Filter>instance\algorithm\MOEA\NSGAII</Filter>
-    </ClInclude>
-    <ClInclude Include="instance\algorithm\MOEA\NSGAII\DG_NSGAII.h">
-      <Filter>instance\algorithm\MOEA\NSGAII</Filter>
-    </ClInclude>
-    <ClInclude Include="instance\algorithm\MOEA\NSGAII\DG_NSGAIIindividual.h">
       <Filter>instance\algorithm\MOEA\NSGAII</Filter>
     </ClInclude>
     <ClInclude Include="instance\algorithm\MOEA\NSGAII\NSGAII.h">
@@ -854,9 +842,6 @@
     <ClCompile Include="instance\algorithm\MOEA\NSGAII\CS_NSGAII.cpp">
       <Filter>instance\algorithm\MOEA\NSGAII</Filter>
     </ClCompile>
-    <ClCompile Include="instance\algorithm\MOEA\NSGAII\DG_NSGAII.cpp">
-      <Filter>instance\algorithm\MOEA\NSGAII</Filter>
-    </ClCompile>
     <ClCompile Include="instance\algorithm\MOEA\NSGAII\T_ENS_NSGAII.cpp">
       <Filter>instance\algorithm\MOEA\NSGAII</Filter>
     </ClCompile>
@@ -1259,8 +1244,8 @@
     <ClCompile Include="utility\nondominated_sorting\LinkSort.cpp">
       <Filter>utility\nondominated_sorting</Filter>
     </ClCompile>
-    <ClCompile Include="test\test_NDS.cpp">
-      <Filter>test</Filter>
+    <ClCompile Include="utility\nondominated_sorting\test_NDS.cpp">
+      <Filter>utility\nondominated_sorting</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

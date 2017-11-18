@@ -167,7 +167,6 @@
     <ClCompile Include="core\problem\continuous\function.cpp" />
     <ClCompile Include="core\problem\problem.cpp" />
     <ClCompile Include="instance\algorithm\MOEA\NSGAII\CS_NSGAII.cpp" />
-    <ClCompile Include="instance\algorithm\MOEA\NSGAII\DG_NSGAII.cpp" />
     <ClCompile Include="instance\algorithm\MOEA\NSGAII\NSGAIIpopulation.cpp" />
     <ClCompile Include="instance\algorithm\MOEA\NSGAII\T_ENS_NSGAII.cpp" />
     <ClCompile Include="instance\problem\continuous\constrained\CEC2017\C01.cpp" />
@@ -328,10 +327,10 @@
     <ClCompile Include="instance\problem\continuous\multi_objective\ZDT\ZDT4.cpp" />
     <ClCompile Include="instance\problem\continuous\multi_objective\ZDT\ZDT6.cpp" />
     <ClCompile Include="run\initialize.cpp" />
-    <ClCompile Include="test\test_NDS.cpp" />
     <ClCompile Include="utility\matrix.cpp" />
     <ClCompile Include="utility\nondominated_sorting\CornerSort.cpp" />
     <ClCompile Include="utility\nondominated_sorting\LinkSort.cpp" />
+    <ClCompile Include="utility\nondominated_sorting\test_NDS.cpp" />
     <ClCompile Include="utility\nondominated_sorting\T_ENS.cpp" />
     <ClCompile Include="utility\random\extreal.cpp" />
     <ClCompile Include="utility\random\newran.cpp" />
@@ -360,8 +359,6 @@
     <ClInclude Include="core\problem\optima.h" />
     <ClInclude Include="core\problem\problem.h" />
     <ClInclude Include="instance\algorithm\MOEA\NSGAII\CS_NSGAII.h" />
-    <ClInclude Include="instance\algorithm\MOEA\NSGAII\DG_NSGAII.h" />
-    <ClInclude Include="instance\algorithm\MOEA\NSGAII\DG_NSGAIIindividual.h" />
     <ClInclude Include="instance\algorithm\MOEA\NSGAII\NSGAII.h" />
     <ClInclude Include="instance\algorithm\MOEA\NSGAII\NSGAIIpopulation.h" />
     <ClInclude Include="instance\algorithm\MOEA\NSGAII\T_ENS_NSGAII.h" />
@@ -535,7 +532,6 @@
     <ClInclude Include="utility\matrix.h" />
     <ClInclude Include="utility\myexcept.h" />
     <ClInclude Include="utility\nondominated_sorting\CornerSort.h" />
-    <ClInclude Include="utility\nondominated_sorting\DominanceGraphSort.h" />
     <ClInclude Include="utility\nondominated_sorting\FastNondominatedSort.h" />
     <ClInclude Include="utility\nondominated_sorting\LinkSort.h" />
     <ClInclude Include="utility\nondominated_sorting\nodes_initialize.h" />
