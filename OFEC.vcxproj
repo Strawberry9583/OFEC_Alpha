@@ -330,6 +330,7 @@
     <ClCompile Include="utility\matrix.cpp" />
     <ClCompile Include="utility\nondominated_sorting\CornerSort.cpp" />
     <ClCompile Include="utility\nondominated_sorting\LinkSort.cpp" />
+    <ClCompile Include="utility\nondominated_sorting\static_population.cpp" />
     <ClCompile Include="utility\nondominated_sorting\test_NDS.cpp" />
     <ClCompile Include="utility\nondominated_sorting\T_ENS.cpp" />
     <ClCompile Include="utility\random\extreal.cpp" />
@@ -536,6 +537,7 @@
     <ClInclude Include="utility\nondominated_sorting\LinkSort.h" />
     <ClInclude Include="utility\nondominated_sorting\nodes_initialize.h" />
     <ClInclude Include="utility\nondominated_sorting\preSorting.h" />
+    <ClInclude Include="utility\nondominated_sorting\static_population.h" />
     <ClInclude Include="utility\nondominated_sorting\T_ENS.h" />
     <ClInclude Include="utility\random\extreal.h" />
     <ClInclude Include="utility\random\newran.h" />

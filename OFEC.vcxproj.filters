@@ -103,6 +103,9 @@
     <Filter Include="utility\mapbox">
       <UniqueIdentifier>{d61d59a0-b18e-4e07-b565-e6b59e95eb6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="unit_test">
+      <UniqueIdentifier>{a9cd74b8-99da-4f14-a585-ddf2a243f509}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\algorithm\encoding.h">
@@ -699,6 +702,9 @@
     <ClInclude Include="utility\nondominated_sorting\FastNondominatedSort.h">
       <Filter>utility\nondominated_sorting</Filter>
     </ClInclude>
+    <ClInclude Include="utility\nondominated_sorting\static_population.h">
+      <Filter>utility\nondominated_sorting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utility\random\extreal.cpp">
@@ -1242,6 +1248,9 @@
       <Filter>instance\problem\continuous\multi_modal\classical</Filter>
     </ClCompile>
     <ClCompile Include="utility\nondominated_sorting\LinkSort.cpp">
+      <Filter>utility\nondominated_sorting</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\nondominated_sorting\static_population.cpp">
       <Filter>utility\nondominated_sorting</Filter>
     </ClCompile>
     <ClCompile Include="utility\nondominated_sorting\test_NDS.cpp">

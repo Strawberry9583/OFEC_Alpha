@@ -3,19 +3,19 @@
 #include "../../utility/nondominated_sorting/T_ENS.h"
 #include "../../utility/nondominated_sorting/LinkSort.h"
 #include "../../utility/nondominated_sorting/preSorting.h"
-#include "../../utility/nondominated_sorting/nodes_initialize.h"
+#include "nodes_initialize.h"
+#include "static_population.h"
 
 #include <time.h>
 #include <fstream>
 
 int main() {
-	const int data_size(10000);
-	const int obj_num(3);
-	OFEC::random rand1(0.2);
+	const int data_size(6000);
+	const int obj_num(5);
 	clock_t start(0), end(0);
 
-	NDS::circle_distribution d1(obj_num, data_size, rand1);
-	std::vector<std::vector<double>> data = d1.get_data();
+	NDS::uniform_population u1(obj_num, data_size, 0.5);
+	std::vector<std::vector<double>> data = u1.generate_new(1);
 
 	/*for (int i = 0; i < 500; ++i)
 		data[i][0] = 0;*/
@@ -32,7 +32,7 @@ int main() {
 		md.emplace_back(no[i], data[i]);
 	}
 
-	const int run_num = 10;
+	const int run_num = 5;
 	clock_t time_cost(0);
 
 	std::vector<int> ls_rank(data_size);
@@ -46,6 +46,7 @@ int main() {
 		end = clock();
 		std::cout << end - start << " ";
 		time_cost += end - start;
+		std::cout << "\nLinkSort compares:" << ls_com << " times\n";
 	}
 	std::cout << "\nLinkSort cost:" << time_cost / run_num << " milliseconds\n\n";
 	time_cost = 0;
@@ -56,6 +57,7 @@ int main() {
 		NDS::T_ENS(data, te_com, te_rank);
 		end = clock();
 		std::cout << end - start << " ";
+		std::cout << "\nT-ENS compares:" << te_com << " times\n";
 		time_cost += end - start;
 	}
 	std::cout << "\nT-ENS cost:" << time_cost / run_num << " milliseconds\n\n";
@@ -71,6 +73,7 @@ int main() {
 		NDS::cornerSort(POP, obj_num, data_size, cs_rank.data(), cs_comp.data(), num_comp);
 		end = clock();
 		std::cout << end - start << " ";
+		std::cout << "\nCornerSort compares:" << num_comp << " times\n";
 		time_cost += end - start;
 	}
 	std::cout << "\nCorner_Sort cost:" << time_cost / run_num << " milliseconds\n\n";
@@ -80,7 +83,8 @@ int main() {
 	start = clock();
 	fs.sort();
 	end = clock();
-	std::cout << "\nFNS cost:" << end - start << " milliseconds\n\n";
+	std::cout << "\nFNS cost:" << end - start << " milliseconds\n";
+	std::cout << "\nFNS compares:" << fs.number() << " times\n";
 	std::vector<int>& fs_rank = fs.rank_result();
 
 	std::cout << (fs_rank == te_rank ? "fs_rank == te_rank" : "fs_rank != te_rank") << std::endl;

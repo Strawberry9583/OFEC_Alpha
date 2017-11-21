@@ -9,6 +9,7 @@ It has several initial objective-space distributions of solutions.
 #include "../random/newran.h"
 #include <math.h>
 #include <fstream>
+#include <vector>
 
 namespace NDS {
 	class circle_distribution {
