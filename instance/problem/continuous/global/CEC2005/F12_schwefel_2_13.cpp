@@ -1,19 +1,21 @@
 #include "F12_schwefel_2_13.h"
 
 namespace OFEC {
+#pragma warning(disable:4996)
 	namespace CEC2005 {
 		F12_schwefel_2_13::F12_schwefel_2_13(param_map &v) :problem((v[param_proName]), (v[param_numDim]), 1), \
 			function((v[param_proName]), (v[param_numDim]), 1), m_a(v[param_numDim], std::vector<int>(v[param_numDim])), \
 			m_b(v[param_numDim], std::vector<int>(v[param_numDim])), m_alpha(v[param_numDim]) {
 
 			set_range(-OFEC_PI, OFEC_PI);
+			set_init_range(-OFEC_PI, OFEC_PI);
 			initialize();
 		}
 		F12_schwefel_2_13::F12_schwefel_2_13(const std::string &name, size_t size_var, size_t size_obj) :problem(name, size_var, size_obj), \
 			function(name, size_var, size_obj), m_a(size_var, std::vector<int>(size_var)), m_b(size_var, std::vector<int>(size_var)), \
 			m_alpha(size_var) {
-
 			set_range(-OFEC_PI, OFEC_PI);
+			set_init_range(-OFEC_PI, OFEC_PI);
 			initialize();
 		}
 
@@ -54,7 +56,6 @@ namespace OFEC {
 			sprintf(astr, "%d", (int)m_variable_size);
 			strcat(astr, "Dim.txt");
 			salpha = astr;
-
 			salpha.insert(0, m_name + "_alpha_");
 
 			salpha.insert(0, path);

@@ -13,7 +13,7 @@ namespace OFEC {
 	void DTLZ::generateAdLoadPF() {
 		const std::string problem_name[] = { "DTLZ1", "DTLZ2", "DTLZ3", "DTLZ4" };
 		std::stringstream os;
-		os << global::ms_arg[param_workingDir] << "FunctionOpt/PF_" << global::ms_arg[param_proName] << "(" << global::ms_arg[param_numObj] << ")" << "_Opt.txt";
+		os << "./data/PF_" << global::ms_arg[param_proName] << "(" << global::ms_arg[param_numObj] << ")" << "_Opt.txt";
 
 		for (size_t i = 0; i<4; i += 1) // problem
 		{
@@ -68,14 +68,14 @@ namespace OFEC {
 	void generate_recursive(TFront * pf, TObjVec * pt, size_t num_objs, size_t left, size_t total, size_t element) {
 		if (element == num_objs - 1)
 		{
-			(*pt)[element] = left;
+			(*pt)[element] = (double)left;
 			pf->push_back(*pt);
 		}
 		else
 		{
 			for (size_t i = 0; i <= left; i += 1)
 			{
-				(*pt)[element] = i;
+				(*pt)[element] = (double)i;
 				generate_recursive(pf, pt, num_objs, left - i, total, element + 1);
 			}
 		}

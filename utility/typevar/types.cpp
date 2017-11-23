@@ -72,7 +72,7 @@ namespace OFEC {
 
 	typevar::operator size_type() const {
 		try {
-			if (is_size_t())      return mapbox::util::get<size_type>(_var);
+			if (is_size_t())     return mapbox::util::get<size_type>(_var);
 			else if (is_int()) return static_cast<size_type>(mapbox::util::get<int>(_var));
 		}
 		catch (const mapbox::util::bad_variant_access&) {
@@ -83,7 +83,7 @@ namespace OFEC {
 	/// @return type name
 	///
 	template<>
-	struct typevar::name_visitor<std::string> //: public boost::static_visitor<std::string>
+	struct typevar::name_visitor<std::string> 
 	{
 		using result_type = std::string;
 		result_type operator () (const null_t&) const { return "null"; }
