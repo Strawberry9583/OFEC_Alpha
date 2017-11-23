@@ -1,5 +1,6 @@
 #include "static_population.h"
 #include <list>
+#include <fstream>
 
 namespace NDS {
 	std::vector<std::vector<double>> uniform_population::generate_new(const int rank_num)
@@ -41,5 +42,12 @@ namespace NDS {
 			}
 		}
 		return data;
+	}
+	void uniform_population::generate_output(const int rank_num) {
+		std::vector<std::vector<double>>& data = generate_new(rank_num);
+		std::ofstream outputfile("E://uniform_population_2_30_3.csv");
+		for (auto& row : data)
+			outputfile << row[0] << ", " << row[1] << std::endl;
+		outputfile.close();
 	}
 }

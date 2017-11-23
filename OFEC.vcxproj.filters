@@ -61,9 +61,6 @@
     <Filter Include="core\measure">
       <UniqueIdentifier>{b23dc8bb-aeab-40f5-8977-07e3ad28233f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="utility\nondominated_sorting">
-      <UniqueIdentifier>{b318126c-b12d-4cd0-a21e-ae372c76ba5e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="instance\problem\continuous\multi_objective">
       <UniqueIdentifier>{e31d3315-3eb6-4b2e-9bee-26c289946db8}</UniqueIdentifier>
     </Filter>
@@ -105,6 +102,9 @@
     </Filter>
     <Filter Include="unit_test">
       <UniqueIdentifier>{a9cd74b8-99da-4f14-a585-ddf2a243f509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utility\NDS">
+      <UniqueIdentifier>{b318126c-b12d-4cd0-a21e-ae372c76ba5e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -263,15 +263,6 @@
     </ClInclude>
     <ClInclude Include="core\measure\measure.h">
       <Filter>core\measure</Filter>
-    </ClInclude>
-    <ClInclude Include="utility\nondominated_sorting\CornerSort.h">
-      <Filter>utility\nondominated_sorting</Filter>
-    </ClInclude>
-    <ClInclude Include="utility\nondominated_sorting\preSorting.h">
-      <Filter>utility\nondominated_sorting</Filter>
-    </ClInclude>
-    <ClInclude Include="utility\nondominated_sorting\T_ENS.h">
-      <Filter>utility\nondominated_sorting</Filter>
     </ClInclude>
     <ClInclude Include="instance\problem\continuous\multi_objective\DTLZ\DTLZ.h">
       <Filter>instance\problem\continuous\multi_objective\DTLZ</Filter>
@@ -693,17 +684,23 @@
     <ClInclude Include="utility\mapbox\optional.hpp">
       <Filter>utility\mapbox</Filter>
     </ClInclude>
-    <ClInclude Include="utility\nondominated_sorting\nodes_initialize.h">
-      <Filter>utility\nondominated_sorting</Filter>
+    <ClInclude Include="utility\NDS\CornerSort.h">
+      <Filter>utility\NDS</Filter>
     </ClInclude>
-    <ClInclude Include="utility\nondominated_sorting\LinkSort.h">
-      <Filter>utility\nondominated_sorting</Filter>
+    <ClInclude Include="utility\NDS\LinkSort.h">
+      <Filter>utility\NDS</Filter>
     </ClInclude>
-    <ClInclude Include="utility\nondominated_sorting\FastNondominatedSort.h">
-      <Filter>utility\nondominated_sorting</Filter>
+    <ClInclude Include="utility\NDS\quick_sort.h">
+      <Filter>utility\NDS</Filter>
     </ClInclude>
-    <ClInclude Include="utility\nondominated_sorting\static_population.h">
-      <Filter>utility\nondominated_sorting</Filter>
+    <ClInclude Include="utility\NDS\static_population.h">
+      <Filter>utility\NDS</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\NDS\T_ENS.h">
+      <Filter>utility\NDS</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\NDS\FastSort.h">
+      <Filter>utility\NDS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -916,12 +913,6 @@
     </ClCompile>
     <ClCompile Include="instance\algorithm\MOEA\NSGAII\NSGAIIpopulation.cpp">
       <Filter>instance\algorithm\MOEA\NSGAII</Filter>
-    </ClCompile>
-    <ClCompile Include="utility\nondominated_sorting\CornerSort.cpp">
-      <Filter>utility\nondominated_sorting</Filter>
-    </ClCompile>
-    <ClCompile Include="utility\nondominated_sorting\T_ENS.cpp">
-      <Filter>utility\nondominated_sorting</Filter>
     </ClCompile>
     <ClCompile Include="run\initialize.cpp">
       <Filter>run</Filter>
@@ -1247,14 +1238,23 @@
     <ClCompile Include="instance\problem\continuous\multi_modal\classical\modified_vincent.cpp">
       <Filter>instance\problem\continuous\multi_modal\classical</Filter>
     </ClCompile>
-    <ClCompile Include="utility\nondominated_sorting\LinkSort.cpp">
-      <Filter>utility\nondominated_sorting</Filter>
+    <ClCompile Include="utility\NDS\CornerSort.cpp">
+      <Filter>utility\NDS</Filter>
     </ClCompile>
-    <ClCompile Include="utility\nondominated_sorting\static_population.cpp">
-      <Filter>utility\nondominated_sorting</Filter>
+    <ClCompile Include="utility\NDS\LinkSort.cpp">
+      <Filter>utility\NDS</Filter>
     </ClCompile>
-    <ClCompile Include="utility\nondominated_sorting\test_NDS.cpp">
-      <Filter>utility\nondominated_sorting</Filter>
+    <ClCompile Include="utility\NDS\main.cpp">
+      <Filter>utility\NDS</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\NDS\static_population.cpp">
+      <Filter>utility\NDS</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\NDS\T_ENS.cpp">
+      <Filter>utility\NDS</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\NDS\FastSort.cpp">
+      <Filter>utility\NDS</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

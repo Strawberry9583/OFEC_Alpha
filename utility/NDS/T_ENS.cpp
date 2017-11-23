@@ -1,6 +1,7 @@
 #include "T_ENS.h"
 #include <iostream>
 #include <time.h>
+#include "quick_sort.h"
 
 namespace NDS {
 	void T_ENS(const std::vector<std::vector<double>>& Pop, int & Noc, std::vector<int>& te_rank, int nSort) {
@@ -10,11 +11,12 @@ namespace NDS {
 			nSort = N;
 		const int M = Population[0].size(); //M = number of objectives
 		int NoF = -1; //Number of last fronts
-		std::vector<int> FrontNo(N, 100000); //front number of each solution
+		std::vector<int> FrontNo(N, INT_MAX); //front number of each solution
 											 /*sort the population in ascending order according to the first
 											 objective value, if two solutions have the same value on the first
 											 objective value, sort them according to the next objective value*/
-		std::vector<int> rank = preSorting(Population, Noc);
+		std::vector<int> rank;
+		Noc += quick_sort(Population, rank, 0, true, true);
 		/*the set of fronts(trees)
 		Forest[i] means the NO.of the root of the i-th tree
 		e.g., Population[Forest[i]] is the root of the i-th tree*/
@@ -57,14 +59,14 @@ namespace NDS {
 				ORank[i][j] = temp_index[j] + 1;
 		}
 		//start the non-dominated sorting
-		while (([FrontNo]() {int temp_sum(0); for (auto x : FrontNo) if (x < 100000) temp_sum++; return temp_sum; }()) < ([](int a, int b) {return a > b ? b : a; }(nSort, N))) {
+		while (([FrontNo]() {int temp_sum(0); for (auto x : FrontNo) if (x < INT_MAX) temp_sum++; return temp_sum; }()) < ([](int a, int b) {return a > b ? b : a; }(nSort, N))) {
 			//start sorting on a new front (tree)
 			NoF++;
 			//let the first solution in the remanining population be the root of the NoF-th tree
 			std::vector<int> Remain;
 			Remain.reserve(N);
 			for (size_t i = 0; i < FrontNo.size(); ++i)
-				if (FrontNo[i] == 100000)
+				if (FrontNo[i] == INT_MAX)
 					Remain.push_back(i);
 			Forest[NoF] = Remain[0];
 			FrontNo[Remain[0]] = NoF;

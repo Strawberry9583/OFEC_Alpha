@@ -1,7 +1,7 @@
 #include "CornerSort.h"
 
 namespace NDS {
-	unsigned int min_obj(double ** POP, unsigned int obj_index, node ** head, node ** mh, int * comp, int & comparisons) {
+	unsigned int min_obj(double ** POP, unsigned int obj_index, node ** head, node ** mh, int * comp, int & comparisons, const unsigned int m) {
 		unsigned int i = 0, cur;
 		node *p = *mh, *q = NULL;
 		cur = p->index;
@@ -16,13 +16,48 @@ namespace NDS {
 					cur = p->marknext->index;
 					q = p->marknext;
 				}
+				else if (POP[p->marknext->index][obj_index] == POP[cur][obj_index])
+				{
+					unsigned int i = 0;
+					while (i < m)
+					{
+						unsigned int temp_obj_index = (obj_index + i) % m;
+						if (POP[p->marknext->index][temp_obj_index] < POP[cur][temp_obj_index]) {
+							cur = p->marknext->index;
+							q = p->marknext;
+							break;
+						}
+						else if (POP[p->marknext->index][temp_obj_index] > POP[cur][temp_obj_index])
+							break;
+						else
+							i++;
+					}
+				}
 			}
-			else {
+			else 
+			{
 				comparisons++;
 				if (POP[p->marknext->index][obj_index] > POP[cur][obj_index])
 				{
 					cur = p->marknext->index;
 					q = p->marknext;
+				}
+				else if (POP[p->marknext->index][obj_index] == POP[cur][obj_index])
+				{
+					unsigned int i = 0;
+					while (i < m)
+					{
+						unsigned int temp_obj_index = (obj_index + i) % m;
+						if (POP[p->marknext->index][temp_obj_index] > POP[cur][temp_obj_index]) {
+							cur = p->marknext->index;
+							q = p->marknext;
+							break;
+						}
+						else if (POP[p->marknext->index][temp_obj_index] < POP[cur][temp_obj_index])
+							break;
+						else
+							i++;
+					}
 				}
 			}
 
@@ -110,7 +145,7 @@ namespace NDS {
 				for (obj_index = 0; mh != NULL&&obj_index < m; ++obj_index)
 				{
 					// find solution of the best objective obj_index among unmarked ones
-					cur = min_obj(POP, obj_index, &head, &mh, comp, comparisons);// delete it in both mark and rank linked lists
+					cur = min_obj(POP, obj_index, &head, &mh, comp, comparisons, m);// delete it in both mark and rank linked lists
 					rank[cur] = r;
 					cout++;
 					p = mh;

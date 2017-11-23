@@ -2,7 +2,7 @@
 #define CS_NSGAII_H
 
 #include "NSGAII.h"
-#include "../../../../utility/nondominated_sorting/CornerSort.h"
+#include "../../../../utility/NDS/CornerSort.h"
 
 namespace OFEC {
 	class CS_NSGAII final : public NSGAII<> {

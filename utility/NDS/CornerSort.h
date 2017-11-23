@@ -26,12 +26,11 @@ namespace NDS{
 	//POP-population??obj_index-objective index??head-linked list head?? mh-the head of the mark linked list
 	//Output:cur-the index of individual with the minimal obj_index-th objective
 	//==================================================================
-	unsigned int min_obj(double **POP, unsigned int obj_index, node **head, node **mh, int *comp, int& comparisons);
+	unsigned int min_obj(double **POP, unsigned int obj_index, node **head, node **mh, int *comp, int& comparisons, const unsigned int m);
 
 	//==================================================================
 	//void  cornerSort(double **POP,unsigned int m,unsigned int n,unsigned int *rank)
 	//POP-population  m-No. of Objectives  n-size of POP  rank-the ranking result as output
-	//==================================================================
 	void  cornerSort(double **POP, unsigned int m, unsigned int n, int *rank, int* comp, int &comparisons);
 }
 #endif
