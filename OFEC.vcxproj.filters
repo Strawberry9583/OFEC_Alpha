@@ -109,6 +109,9 @@
     <Filter Include="instance\problem\continuous\multi_modal\CEC2015">
       <UniqueIdentifier>{3f6c16e9-6be6-4993-b9fb-7929be678b3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="instance\problem\realworld">
+      <UniqueIdentifier>{9fc0a97e-1f27-44a1-b2b7-6b4db10191da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\algorithm\encoding.h">
@@ -846,6 +849,12 @@
     <ClInclude Include="instance\problem\continuous\multi_modal\CEC2015\F15_composition2015_C7.h">
       <Filter>instance\problem\continuous\multi_modal\CEC2015</Filter>
     </ClInclude>
+    <ClInclude Include="instance\problem\realworld\FGear_Train.h">
+      <Filter>instance\problem\realworld</Filter>
+    </ClInclude>
+    <ClInclude Include="instance\problem\realworld\FParEst_FMSoundWaves.h">
+      <Filter>instance\problem\realworld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utility\random\extreal.cpp">
@@ -1537,6 +1546,12 @@
     </ClCompile>
     <ClCompile Include="instance\problem\continuous\multi_modal\CEC2015\F15_composition2015_C7.cpp">
       <Filter>instance\problem\continuous\multi_modal\CEC2015</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\realworld\FGear_Train.cpp">
+      <Filter>instance\problem\realworld</Filter>
+    </ClCompile>
+    <ClCompile Include="instance\problem\realworld\FParEst_FMSoundWaves.cpp">
+      <Filter>instance\problem\realworld</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -16,12 +16,13 @@ int main(int argc, char* argv[]) {
 	clock_t start(0), end(0), time_cost(0);
 	NDS::uniform_population u1(obj_num, data_size, 0.5);
 	std::vector<std::vector<double>> data = u1.generate_new(rank_num);
+	std::cout << "done" << std::endl;
 
-	for (int i = 0; i < 500; ++i)
-		data[i][1] = 0;
+	//for (int i = 0; i < 500; ++i)
+	//	data[i][1] = 0;
 
-	for (int i = 800; i < 1800; ++i)
-		data[i][1] = 1;
+	//for (int i = 800; i < 1800; ++i)
+	//	data[i][1] = 1;
 
 	//for (int i = 2000; i < 2800; ++i)
 	//	data[i][0] = 1;

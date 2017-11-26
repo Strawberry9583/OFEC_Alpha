@@ -1,89 +1,135 @@
 #include "LinkSort.h"
-//#include "../functional.h"
+#include "../functional.h"
 #include "quick_sort.h"
 #include <algorithm>
 #include <iostream>
-#include <bitset>
+#include <limits.h>
+#include <string.h>
 
 namespace NDS {
 
-	// P.S.!! data[i][j] means solution[j]'s [i]th objective !!
 	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp)
 	{
-		const int M = data.size();
+		const int M = data.size(); // number of solution
 		if (M == 0)
 			return;
-		const int N = data[0].size();
-		std::vector<std::vector<double>> pop = data;
+		const int N = data[0].size(); // number of obective
+		if (rank.empty() || rank.size() != M)
+			rank.resize(M);
 
-		std::vector<std::vector<int>> SolSeq_byOneObj(N); // each row stores indexs of solutions in ascending order by objective value
+		// ******************************************
+
+		std::vector<std::vector<int>> SeqByObj(N); // SeqByObj[i] means sequence of solution sorted by the [i]th objetive
 		for (int i = 0; i < N; ++i) {
-			comp += quick_sort(pop, SolSeq_byOneObj[i], i);
+			comp += quick_sort(data, SeqByObj[i], i);
 		}
-		int cur_rank = 0;
+
+		std::vector<LS_list> SeqByObj_Lists(N); // same as SeqByObj but in form of LS_list
+		std::vector<std::vector<LS_node*>> PosInObjLists(M); // PosInObjLists[i] stores solution[i]'s all LS_node addresses 
+		for (int i = 0; i < N; ++i) {
+			for (const int SolIndex : SeqByObj[i])
+				PosInObjLists[SolIndex].push_back(SeqByObj_Lists[i].push_back(SolIndex));
+		}
+
+		std::vector<std::vector<int>> SolStas(M); // SolStas[i] stores solution[i]'s all single objective sequence numbers
+		for (int i = 0; i < N; ++i) {
+			int SeqNum = 0;
+			for (LS_node* iter = SeqByObj_Lists[i].begin(); iter != nullptr; iter = iter->m_next) {
+				SolStas[iter->m_value].push_back(SeqNum);
+				SeqNum++;
+			}
+		}
+
+		std::vector<int> MinVals(M); // MinVals[i] means value of solution[i]'s minimum single objective sequence number
+		std::vector<int> MinIdxs(M); // MinIdxs[i] means index of solution[i]'s minimum single objective sequence number
+		std::vector<int> SumVals(M); // SumVals[i] means sum of solution[i]'s all single objective sequence numbers
+		for (int i = 0; i < M; ++i) {
+			int min_val = INT_MAX; // value of solution's minimum single objective sequence number
+			int min_idx; // index of solution's minimum single objective sequence number
+			for (int ObjIdx = 0; ObjIdx < N; ++ObjIdx) {
+				if (SolStas[i][ObjIdx] < min_val) {
+					min_val = SolStas[i][ObjIdx];
+					min_idx = ObjIdx;
+				}
+				SumVals[i] += SolStas[i][ObjIdx];
+			}
+			MinVals[i] = min_val;
+			MinIdxs[i] = min_idx;
+		}
+
+		std::vector<int> SeqBySumVals(M); // sequence of solution sorted by sum of all single objective sequence numbers
+		OFEC::quick_sort(SumVals, M, SeqBySumVals);
+		LS_list SeqBySumVals_Lists; // Same as SeqByMinVals but in form of LS_list
+		for (const int SolIndex : SeqBySumVals)
+			PosInObjLists[SolIndex].push_back(SeqBySumVals_Lists.push_back(SolIndex));
+
+		// ******************************************
+
+		int CurRankNumber = 0; // current rank number
 		int num_not_ranked = M; // number of solutions not ranked
-		bool* nominated_last = new bool[M]; //whether in the candidate of last generation
-		bool* nominated_cur = new bool[M]; // whether already in the candidate of curent generation
-		std::vector<int> candidate; // the indexs of solutions nominated 
-		candidate.reserve(M);
-		int link;
-		memset(nominated_last, true, M);
-		memset(nominated_cur, false, M);
+		std::vector<int> CurRankCandidate; // the candidate solutions of current rank
+		CurRankCandidate.reserve(M);
+		bool* InCurRankCandiate = new bool[M]; // whether in CurRankCandidate
+		memset(InCurRankCandiate, false, M);
+		int link; // the solution chosen to generate CurRankCandidate
 		while (num_not_ranked > 0) {
-			bool flag_found = false;
-			for (int i = 0; i < N; ++i) {
-				for (auto j = SolSeq_byOneObj[i].begin(); j != SolSeq_byOneObj[i].end(); ++j) {
-					link = *j;
-					flag_found = true;
-					break;
-				}
-				if (flag_found)
-					break;
-			}
-			while (true) {
-				for (int i = 0; i < N; ++i)
-					for (auto j = SolSeq_byOneObj[i].begin(); j != SolSeq_byOneObj[i].end(); ++j) 
-						if (*j == link)
-							break;
-						else if (nominated_last[*j] && !nominated_cur[*j]) {
-							nominated_cur[*j] = true;
-							candidate.push_back(*j);
-						}
-				rank[link] = cur_rank;
-				num_not_ranked--;
-				for (int i = 0; i < N; ++i)
-					for (auto j = SolSeq_byOneObj[i].begin(); j != SolSeq_byOneObj[i].end(); ++j)
-						if (*j == link) {
-							SolSeq_byOneObj[i].erase(j);
-							break;
-						}
-				if (candidate.size() == 0) {
-					memset(nominated_last, true, M);
-					break;
-				}
-				else if (candidate.size() == 1) {
-					link = candidate.front();
-					rank[link] = cur_rank;
-					num_not_ranked--;
-					for (int i = 0; i < N; ++i) {
-						SolSeq_byOneObj[i].erase(std::remove(SolSeq_byOneObj[i].begin(), SolSeq_byOneObj[i].end(), link));
+			// set link
+			link = SeqBySumVals_Lists.begin()->m_value;
+			rank[link] = CurRankNumber;
+			num_not_ranked--;
+			// generate CurRankCandidate by link
+			for (auto SeqByObj_List : SeqByObj_Lists) {
+				for (auto iter = SeqByObj_List.begin(); iter != nullptr; iter = iter->m_next) {
+					if (iter->m_value == link)
+						break;
+					else if (!InCurRankCandiate[iter->m_value]) {
+						InCurRankCandiate[iter->m_value] = true;
+						CurRankCandidate.push_back(iter->m_value);
 					}
-					memset(nominated_last, true, M);
-					nominated_cur[candidate.front()] = false;
-					candidate.clear();
-					break;
-				}
-				else {
-					for (int i = 0; i < M; ++i)
-						nominated_last[i] = nominated_cur[i];
-					memset(nominated_cur, false, M);
-					link = candidate.front();
-					candidate.clear();
 				}
 			}
-			cur_rank++;
+			// remove solution[link]'s all LS_nodes
+			for (int i = 0; i < N; ++i)
+				SeqByObj_Lists[i].erase(PosInObjLists[link][i]);
+			SeqBySumVals_Lists.erase(PosInObjLists[link][N]);
+			// filter the CurRankCandidate
+			for (auto candidate : CurRankCandidate) {
+				bool FlagInCurRank(true); // whether candidate is in current rank 
+				for (auto iter = SeqByObj_Lists[MinIdxs[candidate]].begin(); iter != nullptr; iter = iter->m_next) {
+					if (iter->m_value == candidate)
+						break;
+					else {
+						// check whether solution[iter->m_value] donminate solution[candidate] or not
+						bool FlagDominate(true);
+						for (int i = 0; i < N; ++i)
+							if (SolStas[iter->m_value][i] > SolStas[candidate][i]) {
+								FlagDominate = false;
+								break;
+							}
+						if (FlagDominate) {
+							FlagInCurRank = false;
+							break;
+						}
+					}
+				}
+				if (!FlagInCurRank)
+					InCurRankCandiate[candidate] = false;
+			}
+			// set rank for filtered CurRankCandidate and remove their LS_nodes
+			for (auto candidate : CurRankCandidate) {
+				if (InCurRankCandiate[candidate]) {
+					rank[candidate] = CurRankNumber;
+					num_not_ranked--;
+					for (int i = 0; i < N; ++i)
+						SeqByObj_Lists[i].erase(PosInObjLists[candidate][i]);
+					SeqBySumVals_Lists.erase(PosInObjLists[candidate][N]);
+				}
+			}
+			// goto next rank
+			CurRankNumber++;
+			CurRankCandidate.clear();
+			memset(InCurRankCandiate, false, M);
 		}
-		delete[] nominated_cur;
-		delete[] nominated_last;
+		delete InCurRankCandiate;
 	}
 }

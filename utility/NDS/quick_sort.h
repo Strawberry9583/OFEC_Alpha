@@ -3,12 +3,13 @@
 
 #include "../../core/algorithm/encoding.h"
 #include "../../core/definition.h"
+#include <algorithm>
 //#include <numeric>
 
 namespace NDS {
 
 	template<typename T>
-	bool greater(std::vector<T>& a, std::vector<T>& b, const int obj_idx, int& Noc) {
+	bool greater(const std::vector<T>& a, const std::vector<T>& b, const int obj_idx, int& Noc) {
 		size_t obj_num = a.size();
 		for (size_t i = 0; i < obj_num; ++i) {
 			int idx = (i + obj_idx) % obj_num;
@@ -22,7 +23,7 @@ namespace NDS {
 	}
 
 	template<typename T>
-	int Partition(std::vector<std::vector<T>>& data, std::vector<int>& A, const int obj_idx, int low, int high, int& Noc)
+	int Partition(const std::vector<std::vector<T>>& data, std::vector<int>& A, const int obj_idx, int low, int high, int& Noc)
 	{
 		int pivot = A[low];
 		while (low < high)
@@ -42,7 +43,7 @@ namespace NDS {
 	}
 
 	template<typename T>
-	void QuickSort(std::vector<std::vector<T>>& data, std::vector<int>& A, const int obj_idx, int low, int high, int& Noc)
+	void QuickSort(const std::vector<std::vector<T>>& data, std::vector<int>& A, const int obj_idx, int low, int high, int& Noc)
 	{
 		if (low < high) //µÝ¹éÌø³öÌõ¼þ
 		{
@@ -56,26 +57,16 @@ namespace NDS {
 	}
 
 	template<typename T>
-	int quick_sort(std::vector<std::vector<T>>& data, std::vector<int>& index, const int obj_idx = 0, bool ascending = true, bool replace = false) {
-
-		if (index.size() == 0 || index.size() != data.size())		index.resize(data.size());
+	int quick_sort(const std::vector<std::vector<T>>& data, std::vector<int>& index, const int obj_idx = 0, bool ascending = true) {
+		const int N = data.size();
+		if (index.size() == 0 || index.size() != N)		index.resize(N);
 		for (auto i = index.begin(); i != index.end(); ++i) *i = i - index.begin();
 		int Noc(0);
 		QuickSort(data, index, obj_idx, 0, index.size() - 1, Noc);
-
 		if (!ascending) {
-			std::vector<int> new_index(index.size());
-			for (size_t i = 0; i < data.size(); i++)
-				new_index[i] = index[index.size() - 1 - i];
-			index = new_index;
+			for (size_t i = 0; i < data.size() / 2; i++)
+				std::swap(index[i], index[N - 1 - i]);
 		}
-		if (replace) {
-			std::vector<std::vector<T>> new_data(data.size());
-			for (size_t i = 0; i < data.size(); i++)
-				new_data[i] = data[index[i]];
-			data = new_data;
-		}
-
 		return Noc;
 	}
 }

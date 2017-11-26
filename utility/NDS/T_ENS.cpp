@@ -2,21 +2,26 @@
 #include <iostream>
 #include <time.h>
 #include "quick_sort.h"
+#include <limits.h>
 
 namespace NDS {
 	void T_ENS(const std::vector<std::vector<double>>& Pop, int & Noc, std::vector<int>& te_rank, int nSort) {
-		std::vector<std::vector<double>> Population = Pop;
-		const int N = Population.size(); //N = population size
+		const int N = Pop.size(); //N = population size
 		if (nSort == -1)
 			nSort = N;
-		const int M = Population[0].size(); //M = number of objectives
+		if (Pop.empty())
+			return;
+		const int M = Pop[0].size(); //M = number of objectives
 		int NoF = -1; //Number of last fronts
 		std::vector<int> FrontNo(N, INT_MAX); //front number of each solution
 											 /*sort the population in ascending order according to the first
 											 objective value, if two solutions have the same value on the first
 											 objective value, sort them according to the next objective value*/
 		std::vector<int> rank;
-		Noc += quick_sort(Population, rank, 0, true, true);
+		Noc += quick_sort(Pop, rank, 0, true);
+		std::vector<std::vector<double>> Population(N);
+		for (int i = 0; i < N; ++i)
+			Population[i] = Pop[rank[i]];
 		/*the set of fronts(trees)
 		Forest[i] means the NO.of the root of the i-th tree
 		e.g., Population[Forest[i]] is the root of the i-th tree*/
