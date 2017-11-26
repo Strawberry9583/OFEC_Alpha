@@ -855,6 +855,9 @@
     <ClInclude Include="instance\problem\realworld\FParEst_FMSoundWaves.h">
       <Filter>instance\problem\realworld</Filter>
     </ClInclude>
+    <ClInclude Include="utility\NDS\new_static_population.h">
+      <Filter>utility\NDS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utility\random\extreal.cpp">
@@ -1552,6 +1555,9 @@
     </ClCompile>
     <ClCompile Include="instance\problem\realworld\FParEst_FMSoundWaves.cpp">
       <Filter>instance\problem\realworld</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\NDS\new_static_population.cpp">
+      <Filter>utility\NDS</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 #include "T_ENS.h"
 #include "LinkSort.h"
 #include "static_population.h"
+#include "new_static_population.h"
 
 #include <time.h>
 #include <fstream>
@@ -14,7 +15,7 @@ int main(int argc, char* argv[]) {
 	const int run_num(10);
 	std::cout << "data_size:" << data_size << "  obj_num:" << obj_num << "  rank_num:" << rank_num << "  run_num:" << run_num << std::endl;
 	clock_t start(0), end(0), time_cost(0);
-	NDS::uniform_population u1(obj_num, data_size, 0.5);
+	NDS::new_uniform_population u1(obj_num, data_size, 0.5);
 	std::vector<std::vector<double>> data = u1.generate_new(rank_num);
 	std::cout << "done" << std::endl;
 

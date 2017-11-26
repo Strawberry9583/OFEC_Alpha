@@ -380,6 +380,7 @@
     <ClCompile Include="utility\NDS\FastSort.cpp" />
     <ClCompile Include="utility\NDS\LinkSort.cpp" />
     <ClCompile Include="utility\NDS\main.cpp" />
+    <ClCompile Include="utility\NDS\new_static_population.cpp" />
     <ClCompile Include="utility\NDS\static_population.cpp" />
     <ClCompile Include="utility\NDS\T_ENS.cpp" />
     <ClCompile Include="utility\random\extreal.cpp" />
@@ -633,6 +634,7 @@
     <ClInclude Include="utility\NDS\CornerSort.h" />
     <ClInclude Include="utility\NDS\FastSort.h" />
     <ClInclude Include="utility\NDS\LinkSort.h" />
+    <ClInclude Include="utility\NDS\new_static_population.h" />
     <ClInclude Include="utility\NDS\quick_sort.h" />
     <ClInclude Include="utility\NDS\static_population.h" />
     <ClInclude Include="utility\NDS\T_ENS.h" />
