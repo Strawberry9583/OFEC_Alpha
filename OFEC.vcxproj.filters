@@ -858,6 +858,15 @@
     <ClInclude Include="utility\NDS\new_static_population.h">
       <Filter>utility\NDS</Filter>
     </ClInclude>
+    <ClInclude Include="utility\NDS\nodes_initialize.h">
+      <Filter>utility\NDS</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\NDS\DeductiveSort.h">
+      <Filter>utility\NDS</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\NDS\YiyaSort.h">
+      <Filter>utility\NDS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utility\random\extreal.cpp">
@@ -1557,6 +1566,12 @@
       <Filter>instance\problem\realworld</Filter>
     </ClCompile>
     <ClCompile Include="utility\NDS\new_static_population.cpp">
+      <Filter>utility\NDS</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\NDS\DeductiveSort.cpp">
+      <Filter>utility\NDS</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\NDS\YiyaSort.cpp">
       <Filter>utility\NDS</Filter>
     </ClCompile>
   </ItemGroup>

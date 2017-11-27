@@ -46,11 +46,15 @@ namespace NDS {
 		}
 		return data;
 	}
-	void new_uniform_population::generate_output(const int rank_num) {
+	std::vector<std::vector<double>> new_uniform_population::generate_output(const int rank_num) {
 		std::vector<std::vector<double>> data = generate_new(rank_num);
-		std::ofstream outputfile("E://uniform_population_2_30_3.csv");
-		for (auto& row : data)
-			outputfile << row[0] << ", " << row[1] << std::endl;
+		std::ofstream outputfile("E://new_uniform_population.csv");
+		for (auto& row : data) {
+			for (int i = 0; i < m_obj_num - 1; ++i)
+				outputfile << row[i] << ", ";
+			outputfile << row[m_obj_num - 1] << std::endl;
+		}
 		outputfile.close();
+		return data;
 	}
 }

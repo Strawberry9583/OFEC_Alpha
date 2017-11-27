@@ -2,8 +2,11 @@
 #include "CornerSort.h"
 #include "T_ENS.h"
 #include "LinkSort.h"
+#include "YiyaSort.h"
+#include "DeductiveSort.h"
 #include "static_population.h"
 #include "new_static_population.h"
+#include "nodes_initialize.h"
 
 #include <time.h>
 #include <fstream>
@@ -11,12 +14,16 @@
 int main(int argc, char* argv[]) {
 	int data_size(atoi(argv[1]));
 	int obj_num(atoi(argv[2]));
-	int rank_num(atoi(argv[3]));
-	const int run_num(10);
-	std::cout << "data_size:" << data_size << "  obj_num:" << obj_num << "  rank_num:" << rank_num << "  run_num:" << run_num << std::endl;
+	//int rank_num(atoi(argv[3]));
+	int rank_num;
+	const int run_num(5);
+	std::cout << "data_size:" << data_size << "  obj_num:" << obj_num /*<< "  rank_num:" << rank_num*/ << "  run_num:" << run_num << std::endl;
 	clock_t start(0), end(0), time_cost(0);
-	NDS::new_uniform_population u1(obj_num, data_size, 0.5);
-	std::vector<std::vector<double>> data = u1.generate_new(rank_num);
+	//NDS::new_uniform_population u1(obj_num, data_size, 0.5);
+	//std::vector<std::vector<double>> data = u1.generate_output(rank_num);
+	OFEC::uniform rand(0.5);
+	NDS::circle_distribution u1(obj_num, data_size, rand);
+	std::vector<std::vector<double>> data = u1.get_data();
 	std::cout << "done" << std::endl;
 
 	//for (int i = 0; i < 500; ++i)
@@ -35,30 +42,41 @@ int main(int argc, char* argv[]) {
 		md.emplace_back(no[i], data[i]);
 	}
 
-	std::vector<int> ls_rank(data_size);
-	std::vector<int> te_rank(data_size);
-	std::vector<int> cs_rank(data_size);
-	std::vector<int> lg_rank(data_size);
-	std::vector<int> fs_rank(data_size);
+	std::vector<int> YiyaSort_rank(data_size);
+	std::vector<int> LinkSort_rank(data_size);
+	std::vector<int> T_ENS_rank(data_size);
+	std::vector<int> CornerSort_rank(data_size);
+	std::vector<int> DeductiveSort_rank(data_size);
+	std::vector<int> FastSort_rank(data_size);
+
+	for (int runID = 0; runID < run_num; ++runID) {
+		start = clock();
+		NDS::YiyaSort ys;
+		ys.RankObjectiveLinkSort(data, YiyaSort_rank);
+		end = clock();
+		time_cost += end - start;
+	}
+	std::cout << "\nYiyaSort:\t" << time_cost / run_num << " milliseconds\n";
+	time_cost = 0;
 
 	for (int runID = 0; runID < run_num; ++runID) {
 		int ls_com = 0;
 		start = clock();
-		NDS::LinkSort(data, ls_rank, ls_com);
+		NDS::LinkSort(data, LinkSort_rank, ls_com);
 		end = clock();
 		time_cost += end - start;
 	}
-	std::cout << "\nLS:\t" << time_cost / run_num << " milliseconds\n";
+	std::cout << "\nLinkSort:\t" << time_cost / run_num << " milliseconds\n";
 	time_cost = 0;
 
 	for (int runID = 0; runID < run_num; ++runID) {
 		int te_com = 0;
 		start = clock();
-		NDS::T_ENS(data, te_com, te_rank);
+		NDS::T_ENS(data, te_com, T_ENS_rank);
 		end = clock();
 		time_cost += end - start;
 	}
-	std::cout << "\nT-ENS:\t" << time_cost / run_num << " milliseconds\n";
+	std::cout << "\nTree-ENS:\t" << time_cost / run_num << " milliseconds\n";
 	time_cost = 0;
 
 	for (int runID = 0; runID < run_num; ++runID) {
@@ -68,42 +86,42 @@ int main(int argc, char* argv[]) {
 		std::vector<int> cs_comp(data_size, 0);
 		int num_comp;
 		start = clock();
-		NDS::cornerSort(POP, obj_num, data_size, cs_rank.data(), cs_comp.data(), num_comp);
+		NDS::cornerSort(POP, obj_num, data_size, CornerSort_rank.data(), cs_comp.data(), num_comp);
 		end = clock();
 		time_cost += end - start;
 	}
-	std::cout << "\nCS:\t" << time_cost / run_num << " milliseconds\n";
+	std::cout << "\nCornerSort:\t" << time_cost / run_num << " milliseconds\n";
 	time_cost = 0;
 
-	//for (int runID = 0; runID < run_num; ++runID) {
-	//	start = clock();
-	//	NDS::ObjecitveLink_Graph_Sort lg(data_size, data);
-	//	lg.initGraphLinkSort();
-	//	end = clock();
-	//	time_cost += end - start;
-	//	lg.getRank(lg_rank);
-	//}
-	//std::cout << "\nLGS:\t" << time_cost / run_num << " milliseconds\n";
-	//time_cost = 0;
+	for (int runID = 0; runID < run_num; ++runID) {
+		int ds_com = 0;
+		start = clock();
+		NDS::DeductiveSort(data, DeductiveSort_rank, ds_com);
+		end = clock();
+		time_cost += end - start;
+	}
+	std::cout << "\nDeductiveSort:\t" << time_cost / run_num << " milliseconds\n";
+	time_cost = 0;
 
 	for (int runID = 0; runID < run_num; ++runID) {
-		NDS::fast_sort fs(md);
 		start = clock();
+		NDS::fast_sort fs(md);
 		fs.sort();
 		end = clock();
 		time_cost += end - start;
-		fs_rank = fs.rank_result();
+		FastSort_rank = fs.rank_result();
 		rank_num = fs.rank_num();
 	}
-	std::cout << "\nFS:\t" << time_cost / run_num << " milliseconds\n" << std::endl;
+	std::cout << "\nFastSort:\t" << time_cost / run_num << " milliseconds\n" << std::endl;
 	time_cost = 0;
 
-	std::cout << "rank_num:\t" << rank_num << std::endl << std::endl;
+	std::cout << "rank_num:" << rank_num << std::endl << std::endl;
 
-	std::cout << (fs_rank == te_rank ? "fs_rank == te_rank" : "fs_rank != te_rank") << std::endl;
-	std::cout << (fs_rank == ls_rank ? "fs_rank == ls_rank" : "fs_rank != ls_rank") << std::endl;
-	std::cout << (fs_rank == cs_rank ? "fs_rank == cs_rank" : "fs_rank != cs_rank") << std::endl;
-	//std::cout << (fs_rank == lg_rank ? "fs_rank == lg_rank" : "fs_rank != lg_rank") << std::endl;
+	std::cout << "YiyaSort\t" << (FastSort_rank == YiyaSort_rank ? "succeed" : "failded") << std::endl;
+	std::cout << "Tree_ENS\t" << (FastSort_rank == T_ENS_rank ? "succeed" : "failded") << std::endl;
+	std::cout << "LinkSort\t" << (FastSort_rank == LinkSort_rank ? "succeed" : "failded") << std::endl;
+	std::cout << "CornerSort\t" << (FastSort_rank == CornerSort_rank ? "succeed" : "failded") << std::endl;
+	std::cout << "DeductiveSort\t" << (FastSort_rank == DeductiveSort_rank ? "succeed" : "failded") << std::endl;
 
 	system("pause");
 	return 0;
