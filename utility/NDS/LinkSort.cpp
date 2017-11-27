@@ -5,17 +5,17 @@
 #include <iostream>
 #include <limits.h>
 #include <string.h>
-#ifdef OFEC_DEMON
+#ifdef CONCURRENT
 #include <thread>
 #include <mutex>
-#endif // OFEC_DEMON
+#endif // CONCURRENT
 
 
 namespace NDS {
 
-#ifdef OFEC_DEMON
+#ifdef CONCURRENT
 	std::mutex ls_mutex;
-#endif // OFEC_DEMON
+#endif // CONCURRENT
 
 	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp)
 	{
@@ -102,7 +102,7 @@ namespace NDS {
 				SeqByObj_Lists[i].erase(PosInObjLists[link][i]);
 			SeqBySumVals_Lists.erase(PosInObjLists[link][N]);
 			// filter the CurRankCandidate
-#ifdef OFEC_DEMON
+#ifdef CONCURRENT
 			int TaskSize = CurRankCandidate.size();
 			int numTask = std::thread::hardware_concurrency();
 			if (numTask > TaskSize) numTask = TaskSize;
@@ -137,7 +137,7 @@ namespace NDS {
 				if (!FlagInCurRank)
 					InCurRankCandiate[candidate] = false;
 			}
-#endif // OFEC_DEMON
+#endif // CONCURRENT
 			// set rank for filtered CurRankCandidate and remove their LS_nodes
 			for (auto candidate : CurRankCandidate) {
 				if (InCurRankCandiate[candidate]) {
@@ -155,7 +155,7 @@ namespace NDS {
 		}
 		delete InCurRankCandiate;
 	}
-#ifdef OFEC_DEMON
+#ifdef CONCURRENT
 	void MultiThreadFilter(const std::vector<int> candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
 		for (int candidate : candidates) {
 			bool FlagInCurRank(true); // whether candidate is in current rank 
@@ -183,5 +183,5 @@ namespace NDS {
 			}
 		}
 	}
-#endif // OFEC_DEMON
+#endif // CONCURRENT
 }
