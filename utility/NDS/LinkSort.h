@@ -3,15 +3,16 @@
 
 #include <vector>
 
+#define OFEC_DEMON
+
 namespace NDS {
-	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp);
 	struct LS_node
 	{
 		LS_node(const int value, LS_node* last = nullptr, LS_node* next = nullptr) : m_value(value), m_last(last), m_next(next) {}
 		const int m_value;
 		LS_node* m_last;
 		LS_node* m_next;
-	};
+};
 	class LS_list
 	{
 	public:
@@ -38,7 +39,7 @@ namespace NDS {
 				node->m_next->m_last = nullptr;
 				m_begin = node->m_next;
 			}
-			else if (node == m_end && node!= m_begin) {
+			else if (node == m_end && node != m_begin) {
 				node->m_last->m_next = nullptr;
 				m_end = node->m_last;
 			}
@@ -54,6 +55,11 @@ namespace NDS {
 		LS_node* m_begin;
 		LS_node* m_end;
 	};
+	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp);
+#ifdef OFEC_DEMON
+	void MultiThreadFilter(const std::vector<int> candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate);
+#endif // OFEC_DEMON
+
 }
 
 #endif // !LINKSORT_H

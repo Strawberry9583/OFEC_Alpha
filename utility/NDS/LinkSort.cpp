@@ -5,8 +5,17 @@
 #include <iostream>
 #include <limits.h>
 #include <string.h>
+#ifdef OFEC_DEMON
+#include <thread>
+#include <mutex>
+#endif // OFEC_DEMON
+
 
 namespace NDS {
+
+#ifdef OFEC_DEMON
+	std::mutex ls_mutex;
+#endif // OFEC_DEMON
 
 	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp)
 	{
@@ -93,6 +102,19 @@ namespace NDS {
 				SeqByObj_Lists[i].erase(PosInObjLists[link][i]);
 			SeqBySumVals_Lists.erase(PosInObjLists[link][N]);
 			// filter the CurRankCandidate
+#ifdef OFEC_DEMON
+			int TaskSize = CurRankCandidate.size();
+			int numTask = std::thread::hardware_concurrency();
+			if (numTask > TaskSize) numTask = TaskSize;
+			std::vector<std::thread> thrd;
+			for (int i = 0; i < numTask; ++i) {
+				std::vector<int> candidates;
+				for (int idx = i; idx < TaskSize; idx += numTask)
+					candidates.push_back(CurRankCandidate[idx]);
+				thrd.push_back(std::thread(MultiThreadFilter, candidates, SeqByObj_Lists, MinIdxs, N, SolStas, InCurRankCandiate));
+			}
+			for (auto&t : thrd) t.join();
+#else
 			for (auto candidate : CurRankCandidate) {
 				bool FlagInCurRank(true); // whether candidate is in current rank 
 				for (auto iter = SeqByObj_Lists[MinIdxs[candidate]].begin(); iter != nullptr; iter = iter->m_next) {
@@ -115,6 +137,7 @@ namespace NDS {
 				if (!FlagInCurRank)
 					InCurRankCandiate[candidate] = false;
 			}
+#endif // OFEC_DEMON
 			// set rank for filtered CurRankCandidate and remove their LS_nodes
 			for (auto candidate : CurRankCandidate) {
 				if (InCurRankCandiate[candidate]) {
@@ -132,4 +155,33 @@ namespace NDS {
 		}
 		delete InCurRankCandiate;
 	}
+#ifdef OFEC_DEMON
+	void MultiThreadFilter(const std::vector<int> candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
+		for (int candidate : candidates) {
+			bool FlagInCurRank(true); // whether candidate is in current rank 
+			for (auto iter = SeqByObj_Lists[MinIdxs[candidate]].begin(); iter != nullptr; iter = iter->m_next) {
+				if (iter->m_value == candidate)
+					break;
+				else {
+					// check whether solution[iter->m_value] donminate solution[candidate] or not
+					bool FlagDominate(true);
+					for (int i = 0; i < N; ++i)
+						if (SolStas[iter->m_value][i] > SolStas[candidate][i]) {
+							FlagDominate = false;
+							break;
+						}
+					if (FlagDominate) {
+						FlagInCurRank = false;
+						break;
+					}
+				}
+			}
+			if (!FlagInCurRank) {
+				ls_mutex.lock();
+				InCurRankCandiate[candidate] = false;
+				ls_mutex.unlock();
+			}
+		}
+	}
+#endif // OFEC_DEMON
 }
