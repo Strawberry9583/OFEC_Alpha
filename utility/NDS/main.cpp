@@ -8,7 +8,8 @@
 #include "new_static_population.h"
 #include "nodes_initialize.h"
 
-#include <time.h>
+#include <chrono>
+//#include <time.h>
 #include <fstream>
 
 int main(int argc, char* argv[]) {
@@ -18,7 +19,9 @@ int main(int argc, char* argv[]) {
 	int rank_num;
 	const int run_num(5);
 	std::cout << "data_size:" << data_size << "  obj_num:" << obj_num /*<< "  rank_num:" << rank_num*/ << "  run_num:" << run_num << std::endl;
-	clock_t start(0), end(0), time_cost(0);
+	//clock_t start(0), end(0), time_cost(0);
+	std::chrono::time_point<std::chrono::system_clock> start_time;
+	std::chrono::milliseconds time_cost;
 	//NDS::new_uniform_population u1(obj_num, data_size, 0.5);
 	//std::vector<std::vector<double>> data = u1.generate_output(rank_num);
 	OFEC::uniform rand(0.5);
@@ -49,71 +52,69 @@ int main(int argc, char* argv[]) {
 	std::vector<int> DeductiveSort_rank(data_size);
 	std::vector<int> FastSort_rank(data_size);
 
+	time_cost = time_cost.zero();
 	for (int runID = 0; runID < run_num; ++runID) {
-		start = clock();
+		start_time = std::chrono::system_clock::now();
+		//start = clock();
 		NDS::YiyaSort ys;
 		ys.RankObjectiveLinkSort(data, YiyaSort_rank);
-		end = clock();
-		time_cost += end - start;
-	}
-	std::cout << "\nYiyaSort:\t" << time_cost / run_num << " milliseconds\n";
-	time_cost = 0;
+		//end = clock();
+		//time_cost += end - start;
+		time_cost += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start_time);
 
+	}
+	std::cout << "\nYiyaSort:\t" << time_cost.count() / run_num << " milliseconds\n";
+
+	time_cost = time_cost.zero();
 	for (int runID = 0; runID < run_num; ++runID) {
 		int ls_com = 0;
-		start = clock();
+		start_time = std::chrono::system_clock::now();
 		NDS::LinkSort(data, LinkSort_rank, ls_com);
-		end = clock();
-		time_cost += end - start;
+		time_cost += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start_time);
 	}
-	std::cout << "\nLinkSort:\t" << time_cost / run_num << " milliseconds\n";
-	time_cost = 0;
+	std::cout << "\nLinkSort:\t" << time_cost.count() / run_num << " milliseconds\n";
 
+	time_cost = time_cost.zero();
 	for (int runID = 0; runID < run_num; ++runID) {
 		int te_com = 0;
-		start = clock();
+		start_time = std::chrono::system_clock::now();
 		NDS::T_ENS(data, te_com, T_ENS_rank);
-		end = clock();
-		time_cost += end - start;
+		time_cost += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start_time);
 	}
-	std::cout << "\nTree-ENS:\t" << time_cost / run_num << " milliseconds\n";
-	time_cost = 0;
+	std::cout << "\nTree-ENS:\t" << time_cost.count() / run_num << " milliseconds\n";
 
+	time_cost = time_cost.zero();
 	for (int runID = 0; runID < run_num; ++runID) {
 		double** POP = new double*[data_size];
 		for (int i = 0; i < data_size; ++i)
 			POP[i] = data[i].data();
 		std::vector<int> cs_comp(data_size, 0);
 		int num_comp;
-		start = clock();
+		start_time = std::chrono::system_clock::now();
 		NDS::cornerSort(POP, obj_num, data_size, CornerSort_rank.data(), cs_comp.data(), num_comp);
-		end = clock();
-		time_cost += end - start;
+		time_cost += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start_time);
 	}
-	std::cout << "\nCornerSort:\t" << time_cost / run_num << " milliseconds\n";
-	time_cost = 0;
+	std::cout << "\nCornerSort:\t" << time_cost.count() / run_num << " milliseconds\n";
 
+	time_cost = time_cost.zero();
 	for (int runID = 0; runID < run_num; ++runID) {
 		int ds_com = 0;
-		start = clock();
+		start_time = std::chrono::system_clock::now();
 		NDS::DeductiveSort(data, DeductiveSort_rank, ds_com);
-		end = clock();
-		time_cost += end - start;
+		time_cost += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start_time);
 	}
-	std::cout << "\nDeductiveSort:\t" << time_cost / run_num << " milliseconds\n";
-	time_cost = 0;
+	std::cout << "\nDeductiveSort:\t" << time_cost.count() / run_num << " milliseconds\n";
 
+	time_cost = time_cost.zero();
 	for (int runID = 0; runID < run_num; ++runID) {
-		start = clock();
+		start_time = std::chrono::system_clock::now();
 		NDS::fast_sort fs(md);
 		fs.sort();
-		end = clock();
-		time_cost += end - start;
+		time_cost += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start_time);
 		FastSort_rank = fs.rank_result();
 		rank_num = fs.rank_num();
 	}
-	std::cout << "\nFastSort:\t" << time_cost / run_num << " milliseconds\n" << std::endl;
-	time_cost = 0;
+	std::cout << "\nFastSort:\t" << time_cost.count() / run_num << " milliseconds\n" << std::endl;
 
 	std::cout << "rank_num:" << rank_num << std::endl << std::endl;
 

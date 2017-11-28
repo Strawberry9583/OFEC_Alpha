@@ -10,9 +10,7 @@
 #endif // USING_CONCURRENT
 
 namespace NDS {
-
-	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp)
-	{
+	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp){
 		const int M = data.size(); // number of solution
 		if (M == 0)
 			return;
@@ -22,39 +20,28 @@ namespace NDS {
 
 		// ******************************************
 
-		int** SeqByObj = new int*[N];
-		for (int i = 0; i < N; ++i)
-			SeqByObj[i] = new int[M];
-#ifdef USING_CONCURRENT
+		std::vector<std::vector<int>> SeqByObj(N);
+        #ifdef USING_CONCURRENT
 		int TaskSize = N;
 		int numTask = std::thread::hardware_concurrency();
-		//int numTask = 2;
 		if (numTask > TaskSize) numTask = TaskSize;
 		std::vector<std::thread> thrd;
 		for (int i = 0; i < numTask; ++i) {
 			std::vector<int> ObjIdxs;
-			//std::vector<int*> SeqByObjs;
-			for (int idx = i; idx < TaskSize; idx += numTask) {
+			for (int idx = i; idx < TaskSize; idx += numTask)
 				ObjIdxs.push_back(idx);
-				//SeqByObjs.push_back(SeqByObj[idx]);
-			}
-			thrd.push_back(std::thread(ParallelQuickSort, std::cref(data), SeqByObj, std::move(ObjIdxs)));
+			thrd.push_back(std::thread(ParallelQuickSort, std::cref(data), std::ref(SeqByObj), std::move(ObjIdxs)));
 		}
 		for (auto&t : thrd) t.join();
-#else
-		for (int i = 0; i < N; ++i) {
-			std::vector<int> index;
-			comp += quick_sort(data, index, i);
-			for (int j = 0; j < M; ++j)
-				SeqByObj[i][j] = index[j];
-		}
-#endif // USING_CONCURRENT
-
+        #else
+		for (int i = 0; i < N; ++i)
+			comp += quick_sort(data, SeqByObj[i], i);
+        #endif // USING_CONCURRENT
 		std::vector<LS_list> SeqByObj_Lists(N); // same as SeqByObj but in form of LS_list
 		std::vector<std::vector<LS_node*>> PosInObjLists(M); // PosInObjLists[i] stores solution[i]'s all LS_node addresses 
 		for (int i = 0; i < N; ++i) {
-			for (int j = 0; j < M; ++j)
-				PosInObjLists[SeqByObj[i][j]].push_back(SeqByObj_Lists[i].push_back(SeqByObj[i][j]));
+			for (int SolIdx : SeqByObj[i])
+				PosInObjLists[SolIdx].push_back(SeqByObj_Lists[i].push_back(SolIdx));
 		}
 
 		std::vector<std::vector<int>> SolStas(M); // SolStas[i] stores solution[i]'s all single objective sequence numbers
@@ -171,12 +158,9 @@ namespace NDS {
 			memset(InCurRankCandiate, false, M);
 		}
 		delete InCurRankCandiate;
-		for (int i = 0; i < N; ++i)
-			delete SeqByObj[i];
-		delete SeqByObj;
 	}
 #ifdef USING_CONCURRENT
-	void ParallelFilter(std::vector<int>&& candidates,std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
+	void ParallelFilter(std::vector<int>&& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
 		for (int candidate : candidates) {
 			bool FlagInCurRank(true); // whether candidate is in current rank 
 			for (auto iter = SeqByObj_Lists[MinIdxs[candidate]].begin(); iter != nullptr; iter = iter->m_next) {
@@ -200,13 +184,9 @@ namespace NDS {
 				InCurRankCandiate[candidate] = false;
 		}
 	}
-	void ParallelQuickSort(const std::vector<std::vector<double>>& data, int** SeqByObj, std::vector<int>&& ObjIdxs) {
-		for (int ObjIdx : ObjIdxs) {
-			std::vector<int> index;
-			quick_sort(data, index, ObjIdx);
-			for (int j = 0; j < index.size(); ++j)
-				SeqByObj[ObjIdx][j] = index[j];
-		}
+	void ParallelQuickSort(const std::vector<std::vector<double>>& data, std::vector<std::vector<int>>& SeqByObj, std::vector<int>&& ObjIdxs) {
+		for (int ObjIdx : ObjIdxs)
+			quick_sort(data, SeqByObj[ObjIdx], ObjIdx);
 	}
 #endif // USING_CONCURRENT
 }
