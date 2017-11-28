@@ -7,15 +7,9 @@
 #include <string.h>
 #ifdef CONCURRENT
 #include <thread>
-#include <mutex>
 #endif // CONCURRENT
-
 
 namespace NDS {
-
-#ifdef CONCURRENT
-	std::mutex ls_mutex;
-#endif // CONCURRENT
 
 	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp)
 	{
@@ -28,16 +22,39 @@ namespace NDS {
 
 		// ******************************************
 
-		std::vector<std::vector<int>> SeqByObj(N); // SeqByObj[i] means sequence of solution sorted by the [i]th objetive
-		for (int i = 0; i < N; ++i) {
-			comp += quick_sort(data, SeqByObj[i], i);
+		int** SeqByObj = new int*[N];
+		for (int i = 0; i < N; ++i)
+			SeqByObj[i] = new int[M];
+#ifdef CONCURRENT
+		int TaskSize = N;
+		//int numTask = std::thread::hardware_concurrency();
+		int numTask = 16;
+		if (numTask > TaskSize) numTask = TaskSize;
+		std::vector<std::thread> thrd;
+		for (int i = 0; i < numTask; ++i) {
+			std::vector<int> ObjIdxs;
+			//std::vector<int*> SeqByObjs;
+			for (int idx = i; idx < TaskSize; idx += numTask) {
+				ObjIdxs.push_back(idx);
+				//SeqByObjs.push_back(SeqByObj[idx]);
+			}
+			thrd.push_back(std::thread(ParallelQuickSort, data, SeqByObj, ObjIdxs));
 		}
+		for (auto&t : thrd) t.join();
+#else
+		for (int i = 0; i < N; ++i) {
+			std::vector<int> index;
+			comp += quick_sort(data, index, i);
+			for (int j = 0; j < M; ++j)
+				SeqByObj[i][j] = index[j];
+		}
+#endif // CONCURRENT
 
 		std::vector<LS_list> SeqByObj_Lists(N); // same as SeqByObj but in form of LS_list
 		std::vector<std::vector<LS_node*>> PosInObjLists(M); // PosInObjLists[i] stores solution[i]'s all LS_node addresses 
 		for (int i = 0; i < N; ++i) {
-			for (const int SolIndex : SeqByObj[i])
-				PosInObjLists[SolIndex].push_back(SeqByObj_Lists[i].push_back(SolIndex));
+			for (int j = 0; j < M; ++j)
+				PosInObjLists[SeqByObj[i][j]].push_back(SeqByObj_Lists[i].push_back(SeqByObj[i][j]));
 		}
 
 		std::vector<std::vector<int>> SolStas(M); // SolStas[i] stores solution[i]'s all single objective sequence numbers
@@ -103,15 +120,14 @@ namespace NDS {
 			SeqBySumVals_Lists.erase(PosInObjLists[link][N]);
 			// filter the CurRankCandidate
 #ifdef CONCURRENT
-			int TaskSize = CurRankCandidate.size();
-			int numTask = std::thread::hardware_concurrency();
+			TaskSize = CurRankCandidate.size();
 			if (numTask > TaskSize) numTask = TaskSize;
-			std::vector<std::thread> thrd;
+			thrd.clear();
 			for (int i = 0; i < numTask; ++i) {
 				std::vector<int> candidates;
 				for (int idx = i; idx < TaskSize; idx += numTask)
 					candidates.push_back(CurRankCandidate[idx]);
-				thrd.push_back(std::thread(MultiThreadFilter, candidates, SeqByObj_Lists, MinIdxs, N, SolStas, InCurRankCandiate));
+				thrd.push_back(std::thread(ParallelFilter, candidates, ref(SeqByObj_Lists), MinIdxs, N, SolStas, InCurRankCandiate));
 			}
 			for (auto&t : thrd) t.join();
 #else
@@ -154,9 +170,12 @@ namespace NDS {
 			memset(InCurRankCandiate, false, M);
 		}
 		delete InCurRankCandiate;
+		for (int i = 0; i < N; ++i)
+			delete SeqByObj[i];
+		delete SeqByObj;
 	}
 #ifdef CONCURRENT
-	void MultiThreadFilter(const std::vector<int> candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
+	void ParallelFilter(const std::vector<int>& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
 		for (int candidate : candidates) {
 			bool FlagInCurRank(true); // whether candidate is in current rank 
 			for (auto iter = SeqByObj_Lists[MinIdxs[candidate]].begin(); iter != nullptr; iter = iter->m_next) {
@@ -176,11 +195,16 @@ namespace NDS {
 					}
 				}
 			}
-			if (!FlagInCurRank) {
-				ls_mutex.lock();
+			if (!FlagInCurRank)
 				InCurRankCandiate[candidate] = false;
-				ls_mutex.unlock();
-			}
+		}
+	}
+	void ParallelQuickSort(const std::vector<std::vector<double>>& data, int** SeqByObj, const std::vector<int>& ObjIdxs) {
+		for (int ObjIdx : ObjIdxs) {
+			std::vector<int> index;
+			quick_sort(data, index, ObjIdx);
+			for (int j = 0; j < index.size(); ++j)
+				SeqByObj[ObjIdx][j] = index[j];
 		}
 	}
 #endif // CONCURRENT

@@ -11,8 +11,6 @@
 #include <time.h>
 #include <fstream>
 
-#define CONCURRENT
-
 int main(int argc, char* argv[]) {
 	int data_size(atoi(argv[1]));
 	int obj_num(atoi(argv[2]));

@@ -1,9 +1,7 @@
 #ifndef LINKSORT_H
 #define LINKSORT_H
-
+#define CONCURRENT
 #include <vector>
-
-#define OFEC_DEMON
 
 namespace NDS {
 	struct LS_node
@@ -56,9 +54,10 @@ namespace NDS {
 		LS_node* m_end;
 	};
 	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp);
-#ifdef OFEC_DEMON
-	void MultiThreadFilter(const std::vector<int> candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate);
-#endif // OFEC_DEMON
+#ifdef CONCURRENT
+	void ParallelFilter(const std::vector<int>& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate);
+	void ParallelQuickSort(const std::vector<std::vector<double>>& data, int** SeqByObj, const std::vector<int>& ObjIdxs);
+#endif // CONCURRENT
 
 }
 

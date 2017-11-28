@@ -1,10 +1,8 @@
 #ifndef NDS_QUICK_SORT_H
 #define NDS_QUICK_SORT_H
 
-#include "../../core/algorithm/encoding.h"
-#include "../../core/definition.h"
+#include <vector>
 #include <algorithm>
-//#include <numeric>
 
 namespace NDS {
 
