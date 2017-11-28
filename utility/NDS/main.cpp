@@ -123,6 +123,6 @@ int main(int argc, char* argv[]) {
 	std::cout << "CornerSort\t" << (FastSort_rank == CornerSort_rank ? "succeed" : "failded") << std::endl;
 	std::cout << "DeductiveSort\t" << (FastSort_rank == DeductiveSort_rank ? "succeed" : "failded") << std::endl;
 
-	system("pause");
+	//system("pause");
 	return 0;
 }

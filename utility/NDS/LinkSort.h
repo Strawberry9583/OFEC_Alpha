@@ -1,6 +1,6 @@
 #ifndef LINKSORT_H
 #define LINKSORT_H
-#define CONCURRENT
+#define USING_CONCURRENT
 #include <vector>
 
 namespace NDS {
@@ -54,10 +54,10 @@ namespace NDS {
 		LS_node* m_end;
 	};
 	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp);
-#ifdef CONCURRENT
-	void ParallelFilter(const std::vector<int>& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate);
-	void ParallelQuickSort(const std::vector<std::vector<double>>& data, int** SeqByObj, const std::vector<int>& ObjIdxs);
-#endif // CONCURRENT
+#ifdef USING_CONCURRENT
+	void ParallelFilter(std::vector<int>&& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate);
+	void ParallelQuickSort(const std::vector<std::vector<double>>& data, int** SeqByObj, std::vector<int>&& ObjIdxs);
+#endif // USING_CONCURRENT
 
 }
 
