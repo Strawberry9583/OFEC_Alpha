@@ -3,29 +3,14 @@
 
 #include<map>
 #include <list>
-
+#include <vector>
 #include "../functional.h"
 
 namespace NDS {
-	class fast_sort {
-	public:
-		fast_sort(std::vector<std::pair<int, std::vector<double>>> && data);
-		fast_sort(const std::vector<std::pair<int, std::vector<double>>> & data);
-		void sort();
-		std::vector<int>& rank_result() { return rank; }
-		int number() { return m_num; }
-		int rank_num() { return m_rank_num; }
-	private:
-		size_t m_objsnum;
-		size_t m_popsize;
-		std::vector<std::pair<int, std::vector<double>>> m_pop;
-		std::vector<int> rank_, count, rank;
-		std::list<std::vector<int> > cset;
-		int m_num = 0;
-		int m_rank_num;
-
-		std::map<int, int> m_label;
-	};
+	int FastSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& num_comp);
+#ifdef USING_CONCURRENT
+	void ParallelCompare(int popsize, const std::vector<int>&& ks, const std::vector<std::vector<double>>& data, std::vector<int>& rank_, std::vector<int>& count, std::vector<std::vector<int>>& cset);
+#endif // USING_CONCURRENT
 }
 
 

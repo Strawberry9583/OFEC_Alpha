@@ -1,7 +1,7 @@
 #include "CornerSort.h"
 
 namespace NDS {
-	unsigned int min_obj(double ** POP, unsigned int obj_index, node ** head, node ** mh, int * comp, int & comparisons, const unsigned int m) {
+	unsigned int min_obj(const double ** POP, unsigned int obj_index, node ** head, node ** mh, int * comp, int & comparisons, const unsigned int m) {
 		unsigned int i = 0, cur;
 		node *p = *mh, *q = NULL;
 		cur = p->index;
@@ -104,7 +104,7 @@ namespace NDS {
 		}
 		return(cur);
 	}
-	void cornerSort(double ** POP, unsigned int m, unsigned int n, int * rank, int * comp, int & comparisons) {
+	void cornerSort(const double ** POP, unsigned int m, unsigned int n, int * rank, int * comp, int & comparisons) {
 		unsigned int i, j, cout = 0, markcout = 0, cur, obj_index, flag;
 		int r = -1;
 		node *head = NULL, *mh = NULL, *p = NULL, *newone = NULL;
@@ -198,5 +198,16 @@ namespace NDS {
 				}
 			}
 		}
+	}
+	void CornerSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp) {
+		const int data_size = data.size();
+		if (data_size == 0) return;
+		const int obj_num = data.front().size();
+		const double** POP = new const double*[data_size];
+		for (int i = 0; i < data_size; ++i)
+			POP[i] = data[i].data();
+		std::vector<int> cs_comp(data_size, 0);
+		NDS::cornerSort(POP, obj_num, data_size, rank.data(), cs_comp.data(), comp);
+		delete[] POP;
 	}
 }

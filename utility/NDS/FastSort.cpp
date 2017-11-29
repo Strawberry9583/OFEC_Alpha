@@ -1,45 +1,60 @@
 #include "FastSort.h"
 
+#ifdef USING_CONCURRENT
+#include <mutex>
+#include <iostream>
+std::mutex l_mutex;
+#endif // USING_CONCURRENT
+
 namespace NDS {
-	fast_sort::fast_sort(std::vector<std::pair<int, std::vector<double>>> && data) :m_popsize(data.size()), m_pop(std::move(data)), rank_(m_popsize), rank(m_popsize), count(m_popsize),
-		cset(m_popsize, std::vector<int>(m_popsize)) {
-		if (!data.empty())
-			m_objsnum = data[0].second.size();
-	}
-	fast_sort::fast_sort(const std::vector<std::pair<int, std::vector<double>>> & data) :m_popsize(data.size()), m_pop(data), rank_(m_popsize), rank(m_popsize), count(m_popsize),
-		cset(m_popsize, std::vector<int>(m_popsize)) {
-		if (!data.empty())
-			m_objsnum = data[0].second.size();
-	}
-	void fast_sort::sort() {
-		for (int i = 0; i < m_popsize; i++) {
+	int FastSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int & num_comp)
+	{
+		const size_t popsize(data.size());
+		if (popsize == 0) return 0;
+		const size_t objsnum(data.front().size());
+		std::vector<int> rank_(popsize);
+		std::vector<int> count(popsize);
+		std::vector<std::vector<int>> cset(popsize, std::vector<int>(popsize));
+		for (int i = 0; i < popsize; i++) {
 			rank[i] = -1;
 		}
-		auto i = cset.begin();
-		for (int k = 0; k < m_popsize; k++, ++i) {
-			for (int j = 0; j<m_popsize; j++) {
+        #ifdef USING_CONCURRENT
+		int numTask = std::thread::hardware_concurrency();
+		int TaskSize = popsize;
+		if (numTask > TaskSize) numTask = TaskSize;
+		std::vector<std::thread> thrd;
+		for (int i = 0; i < numTask; ++i) {
+			std::vector<int> ks;
+			for (int k = i; k < TaskSize; k += numTask)
+				ks.push_back(k);
+			thrd.push_back(std::thread(ParallelCompare, popsize, std::move(ks), std::cref(data), std::ref(rank_), std::ref(count), std::ref(cset)));
+		}
+		for (auto&t : thrd) t.join();
+        #else
+		for (int k = 0; k < popsize; k++) {
+			for (int j = 0; j<popsize; j++) {
 				if (k != j) {
-					auto compare_result = OFEC::objective_compare(m_pop[j].second, m_pop[k].second, OFEC::optimization_mode::Minimization);
-					m_num += compare_result.second;
-					if (compare_result.first == OFEC::dominationship::Dominating) {//*m_pop[j]>*m_pop[k]
+					auto compare_result = OFEC::objective_compare(data[j], data[k], OFEC::optimization_mode::Minimization);
+					if (compare_result.first == OFEC::dominationship::Dominating) {//*data[j]>*data[k]
 						rank_[k]++;
 					}
-					else if (compare_result.first == OFEC::dominationship::Dominated) {//*m_pop[k]>*m_pop[j]
-						(*i)[count[k]] = j;
+					else if (compare_result.first == OFEC::dominationship::Dominated) {//*data[k]>*data[j]
+						cset[k][count[k]] = j;
 						count[k]++;
 					}
 				}
 			}
 		}
+        #endif // USING_CONCURRENT
 		int m_curRank = 0;
-		std::vector<int> rank2(m_popsize);
+		std::vector<int> rank2(popsize);
 		while (1)
 		{
 			int stop_count = 0;
-			for (int k = 0; k<m_popsize; k++)
+			for (int k = 0; k<popsize; k++)
 				rank2[k] = rank_[k];
 			auto i = cset.begin();
-			for (int k = 0; k<m_popsize; k++, ++i)
+			for (int k = 0; k<popsize; k++, ++i)
 			{
 				if (rank[k] == -1 && rank_[k] == 0)
 				{
@@ -52,14 +67,31 @@ namespace NDS {
 					}
 				}
 			}
-			for (int k = 0; k<m_popsize; k++)
+			for (int k = 0; k<popsize; k++)
 				rank_[k] = rank2[k];
 			m_curRank++;
 			if (stop_count == 0) {
-				m_rank_num = m_curRank;
-				break;
+				return m_curRank;
 			}
 		}
 	}
+    #ifdef USING_CONCURRENT
+	void ParallelCompare(int popsize, const std::vector<int>&& ks, const std::vector<std::vector<double>>& data, std::vector<int>& rank_, std::vector<int>& count, std::vector<std::vector<int>>& cset){
+		for (int k : ks) {
+			for (int j = 0; j<popsize; j++) {
+				if (k != j) {
+					auto compare_result = OFEC::objective_compare(data[j], data[k], OFEC::optimization_mode::Minimization);
+					if (compare_result.first == OFEC::dominationship::Dominating) {//*data[j]>*data[k]
+						rank_[k]++;
+					}
+					else if (compare_result.first == OFEC::dominationship::Dominated) {//*data[k]>*data[j]
+						cset[k][count[k]] = j;
+						count[k]++;
+					}
+				}
+			}
+		}
+	}
+    #endif // USING_CONCURRENT
 }
 

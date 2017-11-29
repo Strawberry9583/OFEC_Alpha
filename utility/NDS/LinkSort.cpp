@@ -32,7 +32,8 @@ namespace NDS {
 				ObjIdxs.push_back(idx);
 			thrd.push_back(std::thread(ParallelQuickSort, std::cref(data), std::ref(SeqByObj), std::move(ObjIdxs)));
 		}
-		for (auto&t : thrd) t.join();
+		for (auto&t : thrd) 
+			t.join();
         #else
 		for (int i = 0; i < N; ++i)
 			comp += quick_sort(data, SeqByObj[i], i);
@@ -114,10 +115,10 @@ namespace NDS {
 				std::vector<int> candidates;
 				for (int idx = i; idx < TaskSize; idx += numTask)
 					candidates.push_back(CurRankCandidate[idx]);
-
 				thrd.push_back(std::thread(ParallelFilter, std::move(candidates), std::ref(SeqByObj_Lists), std::cref(MinIdxs), N, std::cref(SolStas), InCurRankCandiate));
 			}
-			for (auto&t : thrd) t.join();
+			for (auto&t : thrd) 
+				t.join();
 #else
 			for (auto candidate : CurRankCandidate) {
 				bool FlagInCurRank(true); // whether candidate is in current rank 
@@ -160,7 +161,7 @@ namespace NDS {
 		delete InCurRankCandiate;
 	}
 #ifdef USING_CONCURRENT
-	void ParallelFilter(std::vector<int>&& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
+	void ParallelFilter(const std::vector<int>&& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
 		for (int candidate : candidates) {
 			bool FlagInCurRank(true); // whether candidate is in current rank 
 			for (auto iter = SeqByObj_Lists[MinIdxs[candidate]].begin(); iter != nullptr; iter = iter->m_next) {
@@ -184,7 +185,7 @@ namespace NDS {
 				InCurRankCandiate[candidate] = false;
 		}
 	}
-	void ParallelQuickSort(const std::vector<std::vector<double>>& data, std::vector<std::vector<int>>& SeqByObj, std::vector<int>&& ObjIdxs) {
+	void ParallelQuickSort(const std::vector<std::vector<double>>& data, std::vector<std::vector<int>>& SeqByObj, const std::vector<int>&& ObjIdxs) {
 		for (int ObjIdx : ObjIdxs)
 			quick_sort(data, SeqByObj[ObjIdx], ObjIdx);
 	}

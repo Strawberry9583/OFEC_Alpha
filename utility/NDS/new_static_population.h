@@ -1,7 +1,7 @@
 #ifndef NEW_STATIC_POPULATION_H
 #define NEW_STATIC_POPULATION_H
 
-#include "../vector.h"
+#include <vector>
 #include "../random/newran.h"
 
 namespace NDS {

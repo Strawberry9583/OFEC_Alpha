@@ -1,7 +1,6 @@
 #include "new_static_population.h"
 #include <list>
 #include <fstream>
-//#include <math.h>
 
 namespace NDS {
 	std::vector<std::vector<double>> new_uniform_population::generate_new(const int rank_num)
