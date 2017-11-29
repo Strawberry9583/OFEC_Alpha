@@ -1,6 +1,7 @@
 #include "FastSort.h"
 
 #ifdef USING_CONCURRENT
+#include <thread>
 #include <mutex>
 #include <iostream>
 std::mutex l_mutex;

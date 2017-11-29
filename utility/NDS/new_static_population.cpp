@@ -1,6 +1,7 @@
 #include "new_static_population.h"
 #include <list>
 #include <fstream>
+#include <cmath>
 
 namespace NDS {
 	std::vector<std::vector<double>> new_uniform_population::generate_new(const int rank_num)
@@ -22,16 +23,16 @@ namespace NDS {
 				double pow_sum(0);
 				for (int j = 0; j < m_obj_num; ++j) {
 					if (j != i)
-						pow_sum += pow(rand_bound[j],2);
+						pow_sum += std::pow(rand_bound[j],2);
 				}
-				upper_bound[i] = sqrt(1 - pow_sum);
+				upper_bound[i] = std::sqrt(1 - pow_sum);
 			}
 			for (int i = 0; i < m_obj_num; ++i)
 				new_node[i] = rand.next_non_standard(rand_bound[i], upper_bound[i]);
 			double lenth(0);
 			for (double x : new_node)
-				lenth += pow(x, 2);
-			lenth = sqrt(lenth);
+				lenth += std::pow(x, 2);
+			lenth = std::sqrt(lenth);
 			for (double& x : new_node)
 				x = x / lenth * radius;
 			data.push_back(new_node);
