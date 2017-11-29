@@ -8,9 +8,12 @@
 #ifdef USING_CONCURRENT
 #include <thread>
 #endif // USING_CONCURRENT
-
+#include <chrono>
 namespace NDS {
 	void LinkSort(const std::vector<std::vector<double>>& data, std::vector<int>& rank, int& comp){
+		std::chrono::time_point<std::chrono::system_clock> start_time;
+		std::chrono::milliseconds time_cost;
+		time_cost = time_cost.zero();
 		const int M = data.size(); // number of solution
 		if (M == 0)
 			return;
@@ -54,28 +57,51 @@ namespace NDS {
 			}
 		}
 
+		//std::vector<int> MinIdxs(M); // MinIdxs[i] means index of solution[i]'s minimum single objective sequence number
+		//std::vector<int> SumVals(M); // SumVals[i] means sum of solution[i]'s all single objective sequence numbers
+		//for (int i = 0; i < M; ++i) {
+		//	int min_val = INT_MAX; // value of solution's minimum single objective sequence number
+		//	int min_idx; // index of solution's minimum single objective sequence number
+		//	for (int ObjIdx = 0; ObjIdx < N; ++ObjIdx) {
+		//		if (SolStas[i][ObjIdx] < min_val) {
+		//			min_val = SolStas[i][ObjIdx];
+		//			min_idx = ObjIdx;
+		//		}
+		//		SumVals[i] += SolStas[i][ObjIdx];
+		//	}
+		//	MinIdxs[i] = min_idx;
+		//}
+
+		std::vector<int> MaxIdxs(M);
 		std::vector<int> MinIdxs(M); // MinIdxs[i] means index of solution[i]'s minimum single objective sequence number
-		std::vector<int> MaxIdxs(M); // MaxIdxs[i] means index of solution[i]'s maximum single objective sequence number
 		std::vector<int> SumVals(M); // SumVals[i] means sum of solution[i]'s all single objective sequence numbers
 		for (int i = 0; i < M; ++i) {
-			int min_val = INT_MAX; // value of solution's minimum single objective sequence number
-			int max_val = 0; 
-			int min_idx; // index of solution's minimum single objective sequence number
+			int max_val = 0;
 			int max_idx;
+			int min_val = INT_MAX; // value of solution's minimum single objective sequence number
+			int min_idx; // index of solution's minimum single objective sequence number
 			for (int ObjIdx = 0; ObjIdx < N; ++ObjIdx) {
 				if (SolStas[i][ObjIdx] < min_val) {
 					min_val = SolStas[i][ObjIdx];
 					min_idx = ObjIdx;
 				}
 				if (SolStas[i][ObjIdx] > max_val) {
-				max_val = SolStas[i][ObjIdx];
-				max_idx = ObjIdx;
+					max_val = SolStas[i][ObjIdx];
+					max_idx = ObjIdx;
 				}
 				SumVals[i] += SolStas[i][ObjIdx];
 			}
 			MinIdxs[i] = min_idx;
 			MaxIdxs[i] = max_idx;
 		}
+
+		//std::vector<int> SumVals(M); // SumVals[i] means sum of solution[i]'s all single objective sequence numbers
+		//for (int i = 0; i < M; ++i)
+		//	for (int ObjIdx = 0; ObjIdx < N; ++ObjIdx) 
+		//		SumVals[i] += SolStas[i][ObjIdx];
+		//std::vector<std::vector<int>> MaxIdxss(M); //MinIdxs[i][j] means index of solution[i]'s [j]th maximum single objective sequence number
+		//for (int i = 0; i < M; ++i)
+		//	OFEC::quick_sort(SolStas[i], N, MaxIdxss[i]);
 
 		std::vector<int> SeqBySumVals(M); // sequence of solution sorted by sum of all single objective sequence numbers
 		OFEC::quick_sort(SumVals, M, SeqBySumVals);
@@ -127,21 +153,27 @@ namespace NDS {
 			for (auto&t : thrd) 
 				t.join();
 #else
+			start_time = std::chrono::system_clock::now();
 			for (auto candidate : CurRankCandidate) {
 				bool FlagInCurRank(true); // whether candidate is in current rank 
 				for (auto iter = SeqByObj_Lists[MinIdxs[candidate]].begin(); iter != nullptr; iter = iter->m_next) {
+				//for (auto iter = SeqByObj_Lists[MaxIdxss[candidate][N - 1]].begin(); iter != nullptr; iter = iter->m_next) {
 					if (iter->m_value == candidate)
 						break;
 					else {
-						// check whether solution[iter->m_value] donminate solution[candidate] or not
 						if (SolStas[iter->m_value][MaxIdxs[iter->m_value]] > SolStas[candidate][MaxIdxs[iter->m_value]])
 							continue;
+						// check whether solution[iter->m_value] donminate solution[candidate] or not
 						bool FlagDominate(true);
-						for (int i = 0; i < N; ++i)
+						for (int i = 0; i < N; ++i) {
 							if (i != MaxIdxs[iter->m_value] && SolStas[iter->m_value][i] > SolStas[candidate][i]) {
+							//if (SolStas[iter->m_value][i] > SolStas[candidate][i]) {
+							//int objidx = MaxIdxss[iter->m_value][i];
+							//if (SolStas[iter->m_value][objidx] > SolStas[candidate][objidx]) {
 								FlagDominate = false;
 								break;
 							}
+						}
 						if (FlagDominate) {
 							FlagInCurRank = false;
 							break;
@@ -151,6 +183,7 @@ namespace NDS {
 				if (!FlagInCurRank)
 					InCurRankCandiate[candidate] = false;
 			}
+			time_cost += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start_time);
 #endif // USING_CONCURRENT
 			// set rank for filtered CurRankCandidate and remove their LS_nodes
 			for (auto candidate : CurRankCandidate) {
@@ -168,6 +201,7 @@ namespace NDS {
 			memset(InCurRankCandiate, false, M);
 		}
 		delete InCurRankCandiate;
+		std::cout << "Dominance check cost:" << time_cost.count() << std::endl;
 	}
 #ifdef USING_CONCURRENT
 	void ParallelFilter(const std::vector<int>&& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
