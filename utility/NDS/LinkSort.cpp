@@ -76,7 +76,7 @@ namespace NDS {
 		std::vector<int> MinIdxs(M); // MinIdxs[i] means index of solution[i]'s minimum single objective sequence number
 		std::vector<int> SumVals(M); // SumVals[i] means sum of solution[i]'s all single objective sequence numbers
 		for (int i = 0; i < M; ++i) {
-			int max_val = 0;
+			int max_val = -1;
 			int max_idx;
 			int min_val = INT_MAX; // value of solution's minimum single objective sequence number
 			int min_idx; // index of solution's minimum single objective sequence number

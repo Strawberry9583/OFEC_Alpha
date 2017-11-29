@@ -13,17 +13,17 @@
 int main(int argc, char* argv[]) {
 	int data_size(atoi(argv[1]));
 	int obj_num(atoi(argv[2]));
-	//int rank_num(atoi(argv[3]));
-	int rank_num;
+	int rank_num(atoi(argv[3]));
+	//int rank_num;
 	const int run_num(5);
 	std::cout << "data_size:" << data_size << "  obj_num:" << obj_num /*<< "  rank_num:" << rank_num*/ << "  run_num:" << run_num << std::endl;
 	std::chrono::time_point<std::chrono::system_clock> start_time;
 	std::chrono::milliseconds time_cost;
-	//NDS::new_uniform_population u1(obj_num, data_size, 0.5);
-	//std::vector<std::vector<double>> data = u1.generate_output(rank_num);
-	OFEC::uniform rand(0.5);
-	NDS::circle_distribution u1(obj_num, data_size, rand);
-	std::vector<std::vector<double>> data = u1.get_data();
+	NDS::new_uniform_population u1(obj_num, data_size, 0.5);
+	std::vector<std::vector<double>> data = u1.generate_output(rank_num);
+	//OFEC::uniform rand(0.5);
+	//NDS::circle_distribution u1(obj_num, data_size, rand);
+	//std::vector<std::vector<double>> data = u1.get_data();
 	std::cout << "done" << std::endl;
 
 	//for (int i = 0; i < 500; ++i)
