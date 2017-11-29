@@ -54,21 +54,27 @@ namespace NDS {
 			}
 		}
 
-		std::vector<int> MinVals(M); // MinVals[i] means value of solution[i]'s minimum single objective sequence number
 		std::vector<int> MinIdxs(M); // MinIdxs[i] means index of solution[i]'s minimum single objective sequence number
+		std::vector<int> MaxIdxs(M); // MaxIdxs[i] means index of solution[i]'s maximum single objective sequence number
 		std::vector<int> SumVals(M); // SumVals[i] means sum of solution[i]'s all single objective sequence numbers
 		for (int i = 0; i < M; ++i) {
 			int min_val = INT_MAX; // value of solution's minimum single objective sequence number
+			int max_val = 0; 
 			int min_idx; // index of solution's minimum single objective sequence number
+			int max_idx;
 			for (int ObjIdx = 0; ObjIdx < N; ++ObjIdx) {
 				if (SolStas[i][ObjIdx] < min_val) {
 					min_val = SolStas[i][ObjIdx];
 					min_idx = ObjIdx;
 				}
+				if (SolStas[i][ObjIdx] > max_val) {
+				max_val = SolStas[i][ObjIdx];
+				max_idx = ObjIdx;
+				}
 				SumVals[i] += SolStas[i][ObjIdx];
 			}
-			MinVals[i] = min_val;
 			MinIdxs[i] = min_idx;
+			MaxIdxs[i] = max_idx;
 		}
 
 		std::vector<int> SeqBySumVals(M); // sequence of solution sorted by sum of all single objective sequence numbers
@@ -108,6 +114,7 @@ namespace NDS {
 			SeqBySumVals_Lists.erase(PosInObjLists[link][N]);
 			// filter the CurRankCandidate
 #ifdef USING_CONCURRENT
+			numTask = std::thread::hardware_concurrency();
 			TaskSize = CurRankCandidate.size();
 			if (numTask > TaskSize) numTask = TaskSize;
 			thrd.clear();
@@ -127,9 +134,11 @@ namespace NDS {
 						break;
 					else {
 						// check whether solution[iter->m_value] donminate solution[candidate] or not
+						if (SolStas[iter->m_value][MaxIdxs[iter->m_value]] > SolStas[candidate][MaxIdxs[iter->m_value]])
+							continue;
 						bool FlagDominate(true);
 						for (int i = 0; i < N; ++i)
-							if (SolStas[iter->m_value][i] > SolStas[candidate][i]) {
+							if (i != MaxIdxs[iter->m_value] && SolStas[iter->m_value][i] > SolStas[candidate][i]) {
 								FlagDominate = false;
 								break;
 							}
