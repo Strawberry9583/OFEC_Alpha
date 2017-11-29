@@ -28,7 +28,7 @@ namespace OFEC {
 	#define USING_DOUBLE                    // elements of type double
 	//#define USING_FLOAT                   // elements of type float
 	//#define OFEC_DEMON
-    //#define USING_CONCURRENT
+    #define USING_CONCURRENT
 	#define OFEC_CONSOLE
 
 #ifdef USING_FLOAT                      // set precision type to float

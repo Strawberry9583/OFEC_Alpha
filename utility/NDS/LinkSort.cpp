@@ -148,7 +148,7 @@ namespace NDS {
 				std::vector<int> candidates;
 				for (int idx = i; idx < TaskSize; idx += numTask)
 					candidates.push_back(CurRankCandidate[idx]);
-				thrd.push_back(std::thread(ParallelFilter, std::move(candidates), std::ref(SeqByObj_Lists), std::cref(MinIdxs), N, std::cref(SolStas), InCurRankCandiate));
+				thrd.push_back(std::thread(ParallelFilter, std::move(candidates), std::ref(SeqByObj_Lists), std::cref(MaxIdxs), std::cref(MinIdxs), N, std::cref(SolStas), InCurRankCandiate));
 			}
 			for (auto&t : thrd) 
 				t.join();
@@ -204,17 +204,20 @@ namespace NDS {
 		std::cout << "Dominance check cost:" << time_cost.count() << std::endl;
 	}
 #ifdef USING_CONCURRENT
-	void ParallelFilter(const std::vector<int>&& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
+	void ParallelFilter(const std::vector<int>&& candidates, std::vector<LS_list>& SeqByObj_Lists, const std::vector<int>& MaxIdxs, const std::vector<int>& MinIdxs, const int N, const std::vector<std::vector<int>>& SolStas, bool* InCurRankCandiate) {
 		for (int candidate : candidates) {
 			bool FlagInCurRank(true); // whether candidate is in current rank 
 			for (auto iter = SeqByObj_Lists[MinIdxs[candidate]].begin(); iter != nullptr; iter = iter->m_next) {
 				if (iter->m_value == candidate)
 					break;
 				else {
+					if (SolStas[iter->m_value][MaxIdxs[iter->m_value]] > SolStas[candidate][MaxIdxs[iter->m_value]])
+						continue;
 					// check whether solution[iter->m_value] donminate solution[candidate] or not
 					bool FlagDominate(true);
 					for (int i = 0; i < N; ++i)
-						if (SolStas[iter->m_value][i] > SolStas[candidate][i]) {
+						if (i != MaxIdxs[iter->m_value] && SolStas[iter->m_value][i] > SolStas[candidate][i]) {
+						//if (SolStas[iter->m_value][i] > SolStas[candidate][i]) {
 							FlagDominate = false;
 							break;
 						}
